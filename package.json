@@ -1,0 +1,12 @@
+{
+  "name": "com.hedgewizards.utils",
+  "version": "0.1.0",
+  "displayName": "Wizard Utils",
+  "description": "A bunch of small stuff I use in all my projects",
+  "Unity": "2021.2",
+  "author": {
+    "name": "Drew",
+    "url": "https://twitter.com/weekendwizardry"
+  },
+  "type": "library"
+}
