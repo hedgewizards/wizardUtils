@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace WizardUtils.Inspector
+namespace WizardUtils.UI.Inspector
 {
     [CustomEditor(typeof(PauseMenuController))]
-    class PauseMenuControllerEditor : MenuControllerEditor
+    class PauseMenuControllerEditor : ToggleableUIElementEditor
     {
     }
 }

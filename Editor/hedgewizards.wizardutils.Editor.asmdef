@@ -1,0 +1,16 @@
+{
+    "name": "hedgewizards.wizardutils.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a542c6e10d33ab5489053d8ec3204111"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
