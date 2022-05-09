@@ -2,7 +2,7 @@
 
 namespace WizardUtils
 {
-    static class VectorExtensions
+    public static class VectorExtensions
     {
         public static int BoolToAxis(bool positive, bool negative)
         {
@@ -38,20 +38,6 @@ namespace WizardUtils
         public static Vector3 Flatten(this Vector3 vec)
         {
             vec.y = 0;
-            return vec;
-        }
-
-        /// <summary>
-        /// Scales each component of a Vector3 by another vector3's components
-        /// </summary>
-        /// <param name="vec"></param>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public static Vector3 Scale(this Vector3 vec, Vector3 other)
-        {
-            vec.x *= other.x;
-            vec.y *= other.y;
-            vec.z *= other.z;
             return vec;
         }
 
