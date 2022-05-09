@@ -55,7 +55,7 @@ namespace WizardUtils.Vectors
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public Direction Rotate(RotationType rotation)
+        public Direction Rotate(GridRotationType rotation)
         {
             if (this == Direction.up || this == Direction.down)
             {
@@ -64,15 +64,15 @@ namespace WizardUtils.Vectors
 
             // Convert our initial direction to 0-4 turns from forward
             // add to that 0-4 turns
-            int turns = (toTurns() + RotationHelper.rotationToTurns(rotation)) % 4;
+            int turns = (toTurns() + GridRotationHelper.rotationToTurns(rotation)) % 4;
 
             // convert back to direction
             return fromTurns(turns);
         }
 
-        public RotationType GetRotationFrom(Direction origin)
+        public GridRotationType GetRotationFrom(Direction origin)
         {
-            return RotationHelper.turnsToRotation(this.countTurns(origin));
+            return GridRotationHelper.turnsToRotation(this.countTurns(origin));
         }
         int countTurns(Direction origin)
         {
