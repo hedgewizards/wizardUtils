@@ -8,41 +8,77 @@ using UnityEngine;
 namespace WizardUtils.Vectors
 {
     [Serializable]
-    public class Direction : IEquatable<Direction>
+    public struct Direction : IEquatable<Direction>
     {
-        [SerializeField]
-        Vector3Int vector;
+        public enum Directions
+        {
+            zero,
+            up,
+            down,
+            left,
+            right,
+            forward,
+            back
+        }
+
+        public Directions DirectionType;
+
         public Vector3Int Vector
         {
-            get => vector;
+            get => DirectionType switch
+            {
+                Directions.zero => Vector3Int.zero,
+                Directions.up => Vector3Int.up,
+                Directions.down => Vector3Int.down,
+                Directions.left => Vector3Int.left,
+                Directions.right => Vector3Int.right,
+                Directions.forward => Vector3Int.forward,
+                Directions.back => Vector3Int.back,
+            };
             set
             {
-                if (!IsValidVector(value)) throw new ArgumentOutOfRangeException();
-                vector = value;
+                if (value == Vector3Int.up)
+                    DirectionType = Directions.up;
+                else if (value == Vector3Int.down)
+                    DirectionType = Directions.down;
+                else if (value == Vector3Int.left)
+                    DirectionType = Directions.left;
+                else if (value == Vector3Int.right)
+                    DirectionType = Directions.right;
+                else if (value == Vector3Int.forward)
+                    DirectionType = Directions.forward;
+                else if (value == Vector3Int.back)
+                    DirectionType = Directions.back;
+                else if (value == Vector3Int.zero)
+                    DirectionType = Directions.zero;
+                else
+                    throw new ArgumentOutOfRangeException($"{value} is not a direction");
             }
         }
         public int x => Vector.x;
         public int y => Vector.y;
         public int z => Vector.z;
 
-        public Direction()
+        public Direction(Vector3Int vector)
         {
-
-        }
-
-        public Direction(Vector3Int vector) : base()
-        {
+            DirectionType = Directions.zero;
             Vector = vector;
         }
 
-        public Direction(Vector3 fuzzyDirection) : base()
+        public Direction(Vector3 fuzzyDirection)
         {
+            DirectionType = Directions.zero;
             Vector = new Vector3Int
             {
                 x = Mathf.RoundToInt(fuzzyDirection.x),
                 y = Mathf.RoundToInt(fuzzyDirection.y),
                 z = Mathf.RoundToInt(fuzzyDirection.z),
             };
+        }
+
+        public Direction (Directions direction)
+        {
+            DirectionType = direction;
         }
 
         public static bool IsValidVector(Vector3Int vector)
@@ -105,15 +141,15 @@ namespace WizardUtils.Vectors
         const float oneOverRoot2 = 0.707107f;
         public Quaternion GetQuaternionFromForward()
         {
-            return vector == Vector3Int.up ? new Quaternion(-oneOverRoot2, 0, 0, oneOverRoot2)
-                : vector == Vector3Int.down ? new Quaternion(oneOverRoot2, 0, 0, oneOverRoot2)
-                : vector == Vector3Int.left ? new Quaternion(0, -oneOverRoot2, 0, oneOverRoot2)
-                : vector == Vector3Int.right ? new Quaternion(0, oneOverRoot2, 0, oneOverRoot2)
-                : vector == Vector3Int.back ? new Quaternion(0, -1, 0, 0)
+            return DirectionType == Directions.up ? new Quaternion(-oneOverRoot2, 0, 0, oneOverRoot2)
+                : DirectionType == Directions.down ? new Quaternion(oneOverRoot2, 0, 0, oneOverRoot2)
+                : DirectionType == Directions.left ? new Quaternion(0, -oneOverRoot2, 0, oneOverRoot2)
+                : DirectionType == Directions.right ? new Quaternion(0, oneOverRoot2, 0, oneOverRoot2)
+                : DirectionType == Directions.back ? new Quaternion(0, -1, 0, 0)
                 : Quaternion.identity;
         }
         #region Constants
-        public static Direction up { get => new Direction(Vector3Int.up); }
+        public static Direction up { get => new Direction(Directions.up); }
         public static Direction down { get => new Direction(Vector3Int.down); }
         public static Direction left { get => new Direction(Vector3Int.left); }
         public static Direction right { get => new Direction(Vector3Int.right); }
@@ -157,13 +193,23 @@ namespace WizardUtils.Vectors
         }
         public override string ToString()
         {
-            if (this == Direction.up) return "Up";
-            else if (this == Direction.down) return "Down";
-            else if (this == Direction.left) return "Left";
-            else if (this == Direction.right) return "Right";
-            else if (this == Direction.back) return "Back";
-            else if (this == Direction.forward) return "Forward";
-            else return "Invalid";
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return "Up";
+                case Directions.down:
+                    return "Down";
+                case Directions.left:
+                    return "Left";
+                case Directions.right:
+                    return "Right";
+                case Directions.back:
+                    return "Back";
+                case Directions.forward:
+                    return "Forward";
+                default:
+                    return "Invalid";
+            }
         }
 
         #endregion
