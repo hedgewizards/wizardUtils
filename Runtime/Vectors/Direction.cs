@@ -59,6 +59,101 @@ namespace WizardUtils.Vectors
         public int y => Vector.y;
         public int z => Vector.z;
 
+        /// <summary>
+        /// The direction 90 degrees left of our current direction
+        /// </summary>
+        public Direction RotateLeft()
+        {
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return Direction.left;
+                case Directions.down:
+                    return Direction.left;
+                case Directions.left:
+                    return Direction.back;
+                case Directions.right:
+                    return Direction.forward;
+                case Directions.forward:
+                    return Direction.left;
+                case Directions.back:
+                    return Direction.right;
+                default:
+                    return this;
+            }
+        }
+
+        /// <summary>
+        /// The direction 90 degrees left of our current direction
+        /// </summary>
+        public Direction RotateRight()
+        {
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return Direction.right;
+                case Directions.down:
+                    return Direction.right;
+                case Directions.left:
+                    return Direction.forward;
+                case Directions.right:
+                    return Direction.back;
+                case Directions.forward:
+                    return Direction.right;
+                case Directions.back:
+                    return Direction.left;
+                default:
+                    return this;
+            }
+        }
+        /// <summary>
+        /// The direction 90 degrees left of our current direction
+        /// </summary>
+        public Direction RotateUp()
+        {
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return Direction.back;
+                case Directions.down:
+                    return Direction.forward;
+                case Directions.left:
+                    return Direction.up;
+                case Directions.right:
+                    return Direction.up;
+                case Directions.forward:
+                    return Direction.up;
+                case Directions.back:
+                    return Direction.up;
+                default:
+                    return this;
+            }
+        }
+
+        /// <summary>
+        /// The direction 90 degrees left of our current direction
+        /// </summary>
+        public Direction RotateDown()
+        {
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return Direction.forward;
+                case Directions.down:
+                    return Direction.back;
+                case Directions.left:
+                    return Direction.down;
+                case Directions.right:
+                    return Direction.down;
+                case Directions.forward:
+                    return Direction.down;
+                case Directions.back:
+                    return Direction.down;
+                default:
+                    return this;
+            }
+        }
+
         public Direction(Vector3Int vector)
         {
             DirectionType = Directions.zero;
@@ -139,22 +234,31 @@ namespace WizardUtils.Vectors
         }
 
         const float oneOverRoot2 = 0.707107f;
-        public Quaternion GetQuaternionFromForward()
+        public Quaternion QuaternionFromForward()
         {
-            return DirectionType == Directions.up ? new Quaternion(-oneOverRoot2, 0, 0, oneOverRoot2)
-                : DirectionType == Directions.down ? new Quaternion(oneOverRoot2, 0, 0, oneOverRoot2)
-                : DirectionType == Directions.left ? new Quaternion(0, -oneOverRoot2, 0, oneOverRoot2)
-                : DirectionType == Directions.right ? new Quaternion(0, oneOverRoot2, 0, oneOverRoot2)
-                : DirectionType == Directions.back ? new Quaternion(0, -1, 0, 0)
-                : Quaternion.identity;
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return new Quaternion(-oneOverRoot2, 0, 0, oneOverRoot2);
+                case Directions.down:
+                    return new Quaternion(oneOverRoot2, 0, 0, oneOverRoot2);
+                case Directions.left:
+                    return new Quaternion(0, -oneOverRoot2, 0, oneOverRoot2);
+                case Directions.right:
+                    return new Quaternion(0, oneOverRoot2, 0, oneOverRoot2);
+                case Directions.back:
+                    return new Quaternion(0, -1, 0, 0);
+                default:
+                    return Quaternion.identity;
+            }
         }
         #region Constants
         public static Direction up { get => new Direction(Directions.up); }
-        public static Direction down { get => new Direction(Vector3Int.down); }
-        public static Direction left { get => new Direction(Vector3Int.left); }
-        public static Direction right { get => new Direction(Vector3Int.right); }
-        public static Direction forward { get => new Direction(new Vector3Int(0, 0, 1)); }
-        public static Direction back { get => new Direction(new Vector3Int(0, 0, -1)); }
+        public static Direction down { get => new Direction(Directions.down); }
+        public static Direction left { get => new Direction(Directions.left); }
+        public static Direction right { get => new Direction(Directions.right); }
+        public static Direction forward { get => new Direction(Directions.forward); }
+        public static Direction back { get => new Direction(Directions.back); }
 
         public static string[] names => new string[]
         {
@@ -166,6 +270,7 @@ namespace WizardUtils.Vectors
             nameof(back)
         };
         public static Direction[] all => new Direction[] { up, down, left, right, forward, back };
+        public static Vector3Int[] allVectors => new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right, Vector3Int.forward, Vector3Int.back };
         #endregion
 
         #region C# Functions
