@@ -154,6 +154,27 @@ namespace WizardUtils.Vectors
             }
         }
 
+        /// <summary>
+        /// The direction 180 degrees left of our current direction
+        /// </summary>
+        /// <returns></returns>
+        public Direction Rotate180()
+        {
+            switch (DirectionType)
+            {
+                case Directions.left:
+                    return Direction.right;
+                case Directions.right:
+                    return Direction.left;
+                case Directions.forward:
+                    return Direction.back;
+                case Directions.back:
+                    return Direction.forward;
+                default: //up, down
+                    return this;
+            }
+        }
+
         public Direction(Vector3Int vector)
         {
             DirectionType = Directions.zero;

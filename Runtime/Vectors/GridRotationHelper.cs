@@ -26,6 +26,26 @@ namespace WizardUtils.Vectors
                 : turns == 3 ? GridRotation.r270
                 : GridRotation.r0);
         }
+        public static GridRotation FromDegrees(float degrees)
+        {
+            float rangedDegrees = (degrees + 360) % 360;
+            if (rangedDegrees < 45 || rangedDegrees > 315)
+            {
+                return r0;
+            }
+            else if (rangedDegrees < 135)
+            {
+                return r90;
+            }
+            else if (rangedDegrees < 225)
+            {
+                return r180;
+            }
+            else
+            {
+                return r270;
+            }
+        }
 
         public int ToAngle()
         {
@@ -47,6 +67,11 @@ namespace WizardUtils.Vectors
         public static GridRotation r180 = new GridRotation() { rotation = GridRotationType.r180 };
         public static GridRotation r270 = new GridRotation() { rotation = GridRotationType.r270 };
         public static GridRotation r0 = new GridRotation() { rotation = GridRotationType.r0 };
+
+        public GridRotation(GridRotationType rotation)
+        {
+            this.rotation = rotation;
+        }
         #endregion
     }
 
