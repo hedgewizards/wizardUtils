@@ -59,6 +59,51 @@ namespace WizardUtils.Vectors
         public int y => Vector.y;
         public int z => Vector.z;
 
+        public Direction(Vector3Int vector)
+        {
+            DirectionType = Directions.zero;
+            Vector = vector;
+        }
+
+        public Direction(Vector3 fuzzyDirection)
+        {
+            DirectionType = Directions.zero;
+            Vector = new Vector3Int
+            {
+                x = Mathf.RoundToInt(fuzzyDirection.x),
+                y = Mathf.RoundToInt(fuzzyDirection.y),
+                z = Mathf.RoundToInt(fuzzyDirection.z),
+            };
+        }
+
+        public Direction(Directions direction)
+        {
+            DirectionType = direction;
+        }
+
+        #region Transformations
+
+        public Direction Mirror()
+        {
+            switch (DirectionType)
+            {
+                case Directions.up:
+                    return Direction.down;
+                case Directions.down:
+                    return Direction.up;
+                case Directions.left:
+                    return Direction.right;
+                case Directions.right:
+                    return Direction.left;
+                case Directions.forward:
+                    return Direction.back;
+                case Directions.back:
+                    return Direction.forward;
+                default:
+                    return this;
+            }
+        }
+
         /// <summary>
         /// The direction 90 degrees left of our current direction
         /// </summary>
@@ -175,39 +220,12 @@ namespace WizardUtils.Vectors
             }
         }
 
-        public Direction(Vector3Int vector)
-        {
-            DirectionType = Directions.zero;
-            Vector = vector;
-        }
-
-        public Direction(Vector3 fuzzyDirection)
-        {
-            DirectionType = Directions.zero;
-            Vector = new Vector3Int
-            {
-                x = Mathf.RoundToInt(fuzzyDirection.x),
-                y = Mathf.RoundToInt(fuzzyDirection.y),
-                z = Mathf.RoundToInt(fuzzyDirection.z),
-            };
-        }
-
-        public Direction (Directions direction)
-        {
-            DirectionType = direction;
-        }
-
-        public static bool IsValidVector(Vector3Int vector)
-        {
-            return vector.magnitude == 1;
-        }
-
         /// <summary>
         /// Rotate this GridEdge around the origin counter clockwise by specified degree
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public Direction Rotate(GridRotationType rotation)
+        public Direction Rotate(GridRotation rotation)
         {
             if (this == Direction.up || this == Direction.down)
             {
@@ -216,11 +234,13 @@ namespace WizardUtils.Vectors
 
             // Convert our initial direction to 0-4 turns from forward
             // add to that 0-4 turns
-            int turns = (toTurns() + GridRotationHelper.rotationToTurns(rotation)) % 4;
+            int turns = (toTurns() + GridRotationHelper.rotationToTurns(rotation.rotation)) % 4;
 
             // convert back to direction
             return fromTurns(turns);
         }
+
+        #endregion
 
         public GridRotationType GetRotationFrom(Direction origin)
         {
@@ -291,6 +311,16 @@ namespace WizardUtils.Vectors
             nameof(back)
         };
         public static Direction[] all => new Direction[] { up, down, left, right, forward, back };
+        public static Direction FromIndex(int index) => index switch
+        {
+            0 => up,
+            1 => down,
+            2 => left,
+            3 => right,
+            4 => forward,
+            5 => back
+            _ => throw new KeyNotFoundException()
+        };
         public static Vector3Int[] allVectors => new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right, Vector3Int.forward, Vector3Int.back };
         #endregion
 

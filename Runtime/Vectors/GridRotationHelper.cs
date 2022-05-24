@@ -13,18 +13,32 @@ namespace WizardUtils.Vectors
 
         public int ToTurns()
         {
-            return (rotation == GridRotationType.r90 ? 1
-                : rotation == GridRotationType.r180 ? 2
-                : rotation == GridRotationType.r270 ? 3
-                : 0);
+            switch (rotation)
+            {
+                case GridRotationType.r90:
+                    return 1;
+                case GridRotationType.r180:
+                    return 2;
+                case GridRotationType.r270:
+                    return 3;
+                default:
+                    return 0;
+            }
         }
 
         public static GridRotation FromTurns(int turns)
         {
-            return (turns == 1 ? GridRotation.r90
-                : turns == 2 ? GridRotation.r180
-                : turns == 3 ? GridRotation.r270
-                : GridRotation.r0);
+            switch (turns % 4)
+            {
+                case 0:
+                    return r0;
+                case 1:
+                    return r90;
+                case 2:
+                    return r180;
+                default:
+                    return r270;
+            }
         }
         public static GridRotation FromDegrees(float degrees)
         {
@@ -47,6 +61,18 @@ namespace WizardUtils.Vectors
             }
         }
 
+        public GridRotation Invert()
+        {
+            switch (rotation)
+            {
+                case GridRotationType.r90:
+                    return r270;
+                case GridRotationType.r270:
+                    return r90;
+                default:
+                    return this;
+            }
+        }
         public int ToAngle()
         {
             switch (rotation)
