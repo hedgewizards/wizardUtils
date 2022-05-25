@@ -234,7 +234,7 @@ namespace WizardUtils.Vectors
 
             // Convert our initial direction to 0-4 turns from forward
             // add to that 0-4 turns
-            int turns = (toTurns() + GridRotationHelper.rotationToTurns(rotation.rotation)) % 4;
+            int turns = (toTurns() + GridRotationHelper.rotationToTurns(rotation)) % 4;
 
             // convert back to direction
             return fromTurns(turns);
@@ -242,7 +242,7 @@ namespace WizardUtils.Vectors
 
         #endregion
 
-        public GridRotationType GetRotationFrom(Direction origin)
+        public GridRotation GetRotationFrom(Direction origin)
         {
             return GridRotationHelper.turnsToRotation(this.countTurns(origin));
         }
@@ -318,7 +318,7 @@ namespace WizardUtils.Vectors
             2 => left,
             3 => right,
             4 => forward,
-            5 => back
+            5 => back,
             _ => throw new KeyNotFoundException()
         };
         public static Vector3Int[] allVectors => new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right, Vector3Int.forward, Vector3Int.back };

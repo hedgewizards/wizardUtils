@@ -30,13 +30,13 @@ namespace WizardUtils
             GridEdge translatedEdge = newEdge;
 
             // rotate
-            GridRotationType rotation = Direction.forward.GetRotationFrom(origin.Direction);
+            GridRotation rotation = Direction.forward.GetRotationFrom(origin.Direction);
             GridEdge rotatedEdge = newEdge.Rotated(rotation);
             newEdge = newEdge.Rotated(rotation);
             
             return newEdge;
         }
-        public GridEdge ToLevelSpace(Vector3Int origin, GridRotationType rotation)
+        public GridEdge ToLevelSpace(Vector3Int origin, GridRotation rotation)
         {
             GridEdge newEdge = this;
 
@@ -57,18 +57,19 @@ namespace WizardUtils
                 GridEdge newEdge = this;
 
                 newEdge.Position = this.Position + Direction.Vector;
-                newEdge.Direction = this.Direction.Rotate(GridRotationType.r180);
+                newEdge.Direction = this.Direction.Rotate(GridRotation.r180);
 
                 return newEdge;
             }
         }
-        
+        public Vector3Int FacingPosition => this.Position + Direction.Vector;
+
         /// <summary>
         /// Rotate this GridEdge around the origin counter clockwise by specified degree
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public GridEdge Rotated(GridRotationType rotation)
+        public GridEdge Rotated(GridRotation rotation)
         {
             GridEdge newEdge = this;
 

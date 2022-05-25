@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace WizardUtils.Vectors
 {
-    public enum GridRotationType { r0, r90, r180, r270 }
+    internal enum GridRotationType { r0, r90, r180, r270 }
 
     public struct GridRotation
     {
-        public GridRotationType rotation;
+        internal GridRotationType rotation;
 
         public int ToTurns()
         {
@@ -94,7 +94,7 @@ namespace WizardUtils.Vectors
         public static GridRotation r270 = new GridRotation() { rotation = GridRotationType.r270 };
         public static GridRotation r0 = new GridRotation() { rotation = GridRotationType.r0 };
 
-        public GridRotation(GridRotationType rotation)
+        internal GridRotation(GridRotationType rotation)
         {
             this.rotation = rotation;
         }
@@ -103,24 +103,24 @@ namespace WizardUtils.Vectors
 
     public static class GridRotationHelper
     {
-        public static int rotationToTurns(GridRotationType rotation)
+        public static int rotationToTurns(GridRotation rotation)
         {
-            return (rotation == GridRotationType.r90 ? 1
-                : rotation == GridRotationType.r180 ? 2
-                : rotation == GridRotationType.r270 ? 3
+            return (rotation.rotation == GridRotationType.r90 ? 1
+                : rotation.rotation == GridRotationType.r180 ? 2
+                : rotation.rotation == GridRotationType.r270 ? 3
                 : 0);
         }
-        public static GridRotationType turnsToRotation(int turns)
+        public static GridRotation turnsToRotation(int turns)
         {
-            return (turns == 1 ? GridRotationType.r90
-                : turns == 2 ? GridRotationType.r180
-                : turns == 3 ? GridRotationType.r270
-                : GridRotationType.r0);
+            return (turns == 1 ? GridRotation.r90
+                : turns == 2 ? GridRotation.r180
+                : turns == 3 ? GridRotation.r270
+                : GridRotation.r0);
         }
 
-        public static int ToAngle(this GridRotationType self)
+        public static int ToAngle(this GridRotation self)
         {
-            switch (self)
+            switch (self.rotation)
             {
                 case GridRotationType.r90:
                     return 90;
@@ -133,12 +133,12 @@ namespace WizardUtils.Vectors
             }
         }
 
-        public static Vector3Int ToLevelSpace(this Vector3Int localPosition, Vector3Int origin, GridRotationType rotation)
+        public static Vector3Int ToLevelSpace(this Vector3Int localPosition, Vector3Int origin, GridRotation rotation)
         {
             return origin + localPosition.Rotate(rotation);
         }
 
-        public static Vector3Int Rotate(this Vector3Int position, GridRotationType rotation)
+        public static Vector3Int Rotate(this Vector3Int position, GridRotation rotation)
         {
             Vector3Int newPosition = position;
             
