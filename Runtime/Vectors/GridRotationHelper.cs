@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace WizardUtils.Vectors
 {
-    internal enum GridRotationType { r0, r90, r180, r270 }
 
     public struct GridRotation
     {
-        internal GridRotationType rotation;
+        public enum GridRotationType { r0, r90, r180, r270 }
+        public GridRotationType rotation;
 
         public int ToTurns()
         {
@@ -105,9 +105,9 @@ namespace WizardUtils.Vectors
     {
         public static int rotationToTurns(GridRotation rotation)
         {
-            return (rotation.rotation == GridRotationType.r90 ? 1
-                : rotation.rotation == GridRotationType.r180 ? 2
-                : rotation.rotation == GridRotationType.r270 ? 3
+            return (rotation.rotation == GridRotation.GridRotationType.r90 ? 1
+                : rotation.rotation == GridRotation.GridRotationType.r180 ? 2
+                : rotation.rotation == GridRotation.GridRotationType.r270 ? 3
                 : 0);
         }
         public static GridRotation turnsToRotation(int turns)
@@ -122,11 +122,11 @@ namespace WizardUtils.Vectors
         {
             switch (self.rotation)
             {
-                case GridRotationType.r90:
+                case GridRotation.GridRotationType.r90:
                     return 90;
-                case GridRotationType.r180:
+                case GridRotation.GridRotationType.r180:
                     return 180;
-                case GridRotationType.r270:
+                case GridRotation.GridRotationType.r270:
                     return 270;
                 default:
                     return 0;

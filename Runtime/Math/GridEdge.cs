@@ -91,6 +91,31 @@ namespace WizardUtils
             return $"({Position.x}, {Position.y}, {Position.z}) {Direction}";
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is GridEdge) return Equals((GridEdge)obj);
+            return false;
+        }
+        public bool Equals(GridEdge other)
+        {
+            return Direction.Equals(other.Direction)
+                && Position.Equals(other.Position);
+        }
+
+        public static bool operator ==(GridEdge a, GridEdge b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator !=(GridEdge a, GridEdge b)
+        {
+            return !a.Equals(b);
+        }
+
+        public override int GetHashCode()
+        {
+            return Direction.GetHashCode() * Position.GetHashCode();
+        }
+
         #endregion
     }
 }

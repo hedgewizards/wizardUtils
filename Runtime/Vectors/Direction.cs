@@ -321,6 +321,17 @@ namespace WizardUtils.Vectors
             5 => back,
             _ => throw new KeyNotFoundException()
         };
+        public int ToIndex() => this.DirectionType switch
+        {
+            Directions.up => 0,
+            Directions.down => 1,
+            Directions.left => 2,
+            Directions.right => 3,
+            Directions.forward => 4,
+            Directions.back => 5,
+            _ => throw new KeyNotFoundException()
+        };
+
         public static Vector3Int[] allVectors => new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right, Vector3Int.forward, Vector3Int.back };
         #endregion
 
@@ -337,15 +348,15 @@ namespace WizardUtils.Vectors
         }
         public bool Equals(Direction other)
         {
-            return Vector.Equals(other.Vector);
+            return DirectionType.Equals(other.DirectionType);
         }
         public static bool operator ==(Direction a, Direction b)
         {
-            return a.Vector.Equals(b.Vector);
+            return a.DirectionType.Equals(b.DirectionType);
         }
         public static bool operator !=(Direction a, Direction b)
         {
-            return !a.Vector.Equals(b.Vector);
+            return !a.DirectionType.Equals(b.DirectionType);
         }
         public override string ToString()
         {
