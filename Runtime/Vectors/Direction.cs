@@ -301,6 +301,13 @@ namespace WizardUtils.Vectors
         public static Direction forward { get => new Direction(Directions.forward); }
         public static Direction back { get => new Direction(Directions.back); }
 
+        public const int up_index = 0;
+        public const int down_index = 1;
+        public const int left_index = 2;
+        public const int right_index = 3;
+        public const int forward_index = 4;
+        public const int back_index = 5;
+
         public static string[] names => new string[]
         {
             nameof(up),
