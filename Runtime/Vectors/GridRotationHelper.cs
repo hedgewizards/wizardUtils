@@ -99,6 +99,25 @@ namespace WizardUtils.Vectors
             this.rotation = rotation;
         }
         #endregion
+
+        #region C# Functions
+        public override string ToString()
+        {
+            switch (rotation)
+            {
+                case GridRotationType.r0:
+                    return "0 Degrees";
+                case GridRotationType.r90:
+                    return "90 Degrees";
+                case GridRotationType.r180:
+                    return "180 Degrees";
+                case GridRotationType.r270:
+                    return "270 Degrees";
+                default:
+                    return $"INVALID Degrees {(int)rotation}";
+            }
+        }
+        #endregion
     }
 
     public static class GridRotationHelper
