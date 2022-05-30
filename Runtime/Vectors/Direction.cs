@@ -293,6 +293,10 @@ namespace WizardUtils.Vectors
                     return Quaternion.identity;
             }
         }
+
+        public bool IsPositiveAxis => x + y + z > 0;
+        public bool IsNegativeAxis => x + y + z < 0;
+
         #region Constants
         public static Direction up { get => new Direction(Directions.up); }
         public static Direction down { get => new Direction(Directions.down); }
