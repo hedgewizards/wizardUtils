@@ -21,5 +21,23 @@
 
             return choices;
         }
+        public static int[] ChooseNFromN(this System.Random random, int n)
+        {
+            int[] choices = new int[n];
+            for (int index = 0; index < n; index++)
+            {
+                choices[index] = index;
+            }
+
+            for (int choice = 0; choice < n; choice++)
+            {
+                var chosenIndex = random.Next(choice, n);
+                var temp = choices[choice];
+                choices[choice] = choices[chosenIndex];
+                choices[chosenIndex] = temp;
+            }
+
+            return choices;
+        }
     }
 }
