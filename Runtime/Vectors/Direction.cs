@@ -34,6 +34,7 @@ namespace WizardUtils.Vectors
                 Directions.right => Vector3Int.right,
                 Directions.forward => Vector3Int.forward,
                 Directions.back => Vector3Int.back,
+                _ => throw new IndexOutOfRangeException(),
             };
             set
             {
@@ -55,6 +56,7 @@ namespace WizardUtils.Vectors
                     throw new ArgumentOutOfRangeException($"{value} is not a direction");
             }
         }
+        public Vector3 Vector3 => Vector;
         public int x => Vector.x;
         public int y => Vector.y;
         public int z => Vector.z;
@@ -83,6 +85,7 @@ namespace WizardUtils.Vectors
 
         #region Transformations
 
+        public Direction Opposite => this.Mirror();
         public Direction Mirror()
         {
             switch (DirectionType)
