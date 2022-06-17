@@ -2,7 +2,7 @@
 using UnityEngine;
 using WizardUtils.Vectors;
 
-namespace WizardUtils
+namespace WizardUtils.Vectors
 {
     [Serializable]
     public struct GridEdge
