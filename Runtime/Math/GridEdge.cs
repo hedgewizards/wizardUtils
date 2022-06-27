@@ -27,11 +27,9 @@ namespace WizardUtils.Vectors
 
             // find newEdge's absolute position relative to origin
             newEdge.Position -= origin.Position;
-            GridEdge translatedEdge = newEdge;
 
             // rotate
             GridRotation rotation = Direction.forward.GetRotationFrom(origin.Direction);
-            GridEdge rotatedEdge = newEdge.Rotated(rotation);
             newEdge = newEdge.Rotated(rotation);
             
             return newEdge;
@@ -114,6 +112,24 @@ namespace WizardUtils.Vectors
         public override int GetHashCode()
         {
             return Direction.GetHashCode() * Position.GetHashCode();
+        }
+
+        public static GridEdge operator +(GridEdge a, Vector3Int offset)
+        {
+            return new GridEdge()
+            {
+                Position = a.Position + offset,
+                Direction = a.Direction
+            };
+        }
+
+        public static GridEdge operator -(GridEdge a, Vector3Int offset)
+        {
+            return new GridEdge()
+            {
+                Position = a.Position - offset,
+                Direction = a.Direction
+            };
         }
 
         #endregion
