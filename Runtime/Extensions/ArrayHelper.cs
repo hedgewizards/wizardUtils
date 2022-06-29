@@ -65,5 +65,31 @@ namespace WizardUtils
 
             array = newArray;
         }
+
+        public static bool Contains<T>(T[] array, T member)
+        {
+            return IndexOf(array, member) != -1;
+        }
+
+        public static int IndexOf<T>(T[] array, T member)
+        {
+            for (int n=0; n < array.Length; n++)
+            {
+                if (array[n].Equals(member)) return n;
+            }
+
+            return -1;
+        }
+
+        public static int[] ToNArray(int n)
+        {
+            int[] arr = new int[n];
+            for (int index = 0; index < n; index++)
+            {
+                arr[index] = index;
+            }
+
+            return arr;
+        }
     }
 }
