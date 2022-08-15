@@ -2,6 +2,12 @@
 {
     public static class RandomHelper
     {
+
+        public static int[] ChooseNFromK(int n, int k)
+        {
+            return ChooseNFromK(new System.Random(), n, k);
+        }
+
         public static int[] ChooseNFromK(this System.Random random, int n, int k)
         {
             int[] options = new int[k];
