@@ -11,19 +11,18 @@ namespace WizardUtils.UI
     {
         [SerializeField]
         Color CurrentColor = Color.white;
-        float CurrentSaturation
-        {
-            get
-            {
-                Color.RGBToHSV(CurrentColor, out _, out float S, out _);
-                return S;
-            }
-        }
+        float CurrentHue => CurrentHSV.x;
+        float CurrentSaturation => CurrentHSV.y;
+        float CurrentValue => CurrentHSV.z;
+        Vector3 CurrentHSV;
 
         public UnityEvent<Color> OnColorChanged;
         public PointerHoldLocator PointerLocator;
-        public DeselectListener DeselectListener;
-        public Image Dot;
+        public Image HueValDot;
+        public Image SatDot;
+        public Image HueValField;
+        public Image SatField;
+        public Slider SatSlider;
         ToggleableUIElement pickerMenu;
 
         [Range(0,1)]
@@ -35,24 +34,32 @@ namespace WizardUtils.UI
         [Range(0, 1)]
         public float BottomPadding;
 
+        int ShaderSaturationId;
+        int ShaderHueId;
+        int ShaderValueId;
+
         private void Awake()
         {
+            UpdateStoredHSV();
+            ShaderSaturationId = Shader.PropertyToID("_ConstantComponentValue");
+            ShaderHueId = Shader.PropertyToID("_Hue");
+            ShaderValueId = Shader.PropertyToID("_Value");
             PointerLocator.OnDrag.AddListener(OnPointerLocated);
-            DeselectListener.OnDeselect.AddListener(Close);
             pickerMenu = GetComponent<ToggleableUIElement>();
+            SatSlider.onValueChanged.AddListener(OnSatSliderChanged);
+        }
+
+        private void OnSatSliderChanged(float newSaturation)
+        {
+            CurrentHSV = new Vector3(CurrentHue, newSaturation, CurrentValue);
+            UpdateStoredRGB();
+            OnColorChanged?.Invoke(CurrentColor);
+            UpdateVisuals();
         }
 
         public void Open()
         {
             pickerMenu.SetOpen(true);
-            EventSystem.current.SetSelectedGameObject(PointerLocator.gameObject);
-            //StartCoroutine(DelayedSetSelectionToPicker());
-        }
-
-        IEnumerator DelayedSetSelectionToPicker()
-        {
-            yield return null;
-            EventSystem.current.SetSelectedGameObject(PointerLocator.gameObject);
         }
 
         public void Close()
@@ -63,53 +70,88 @@ namespace WizardUtils.UI
         public void PickColor(Color color)
         {
             CurrentColor = color;
+            UpdateStoredHSV();
             OnColorChanged?.Invoke(color);
-            UpdateDot();
+            UpdateVisuals();
+        }
+
+        private void UpdateStoredHSV()
+        {
+            Color.RGBToHSV(CurrentColor, out float H, out float S, out float V);
+            CurrentHSV = new Vector3(H, S, V);
+        }
+
+        private void UpdateStoredRGB()
+        {
+            CurrentColor = Color.HSVToRGB(CurrentHue, CurrentSaturation, CurrentValue);
         }
 
         private void OnValidate()
         {
             OnColorChanged?.Invoke(CurrentColor);
-            UpdateDot();
+            UpdateVisuals();
         }
 
-        private void UpdateDot()
+        private void UpdateVisuals()
         {
-            if (Dot != null)
+            if (HueValDot != null)
             {
-                float minColorComponent = Mathf.Min(CurrentColor.r, CurrentColor.g, CurrentColor.b);
-                Dot.color = minColorComponent > 0.5f ? Color.black : Color.white;
+                HueValDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
 
-                var parent = Dot.rectTransform.parent as RectTransform;
+                var parent = HueValDot.rectTransform.parent as RectTransform;
                 var width = parent.rect.width;
                 var height = parent.rect.height;
 
-                Vector2 parametricPoint = CalculateColorSpaceDotPoint();
+                Vector2 parametricPoint = CalculateColorSpaceHueValDotPoint();
 
-                Dot.rectTransform.localPosition = new Vector3()
+                HueValDot.rectTransform.localPosition = new Vector3()
                 {
                     x = parametricPoint.x * width,
                     y = parametricPoint.y * height,
-                    z = Dot.rectTransform.localPosition.z
+                    z = HueValDot.rectTransform.localPosition.z
                 };
+            }
+
+            if (SatDot != null)
+            {
+                SatDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
+            }
+
+            if (HueValField != null)
+            {
+                HueValField.material.SetFloat(ShaderSaturationId, CurrentSaturation);
+            }
+
+            if (SatField != null)
+            {
+                SatField.material.SetFloat(ShaderHueId, CurrentHue);
+                SatField.material.SetFloat(ShaderValueId, CurrentValue);
+            }
+
+            if (SatSlider != null)
+            {
+                SatSlider.value = CurrentSaturation;
             }
         }
 
-        private Vector2 CalculateColorSpaceDotPoint()
+        private Vector2 CalculateColorSpaceHueValDotPoint()
         {
-            Color.RGBToHSV(CurrentColor, out float H, out _, out float V);
-            float x = Mathf.InverseLerp(LeftPadding, 1 - RightPadding, H);
-            float y = Mathf.InverseLerp(BottomPadding, 1 - TopPadding, V);
+            float x = Mathf.Lerp(LeftPadding, 1 - RightPadding, CurrentHue);
+            float y = Mathf.Lerp(BottomPadding, 1 - TopPadding, CurrentValue);
 
             return new Vector2(x, y);
         }
 
         private void OnPointerLocated(Vector2 parametric)
         {
-            float H = Mathf.Lerp(LeftPadding, 1 - RightPadding, parametric.x);
-            float V = Mathf.Lerp(BottomPadding, 1 - TopPadding, parametric.y);
+            float H = Mathf.InverseLerp(LeftPadding, 1 - RightPadding, parametric.x);
+            float V = Mathf.InverseLerp(BottomPadding, 1 - TopPadding, parametric.y);
+            CurrentHSV = new Vector3(H, CurrentSaturation, V);
+            UpdateStoredRGB();
+            OnColorChanged?.Invoke(CurrentColor);
+            UpdateVisuals();
 
-            PickColor(Color.HSVToRGB(H, CurrentSaturation, V));
+            Debug.Log(parametric.x + " " + H);
         }
     }
 }
