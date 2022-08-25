@@ -17,29 +17,30 @@ namespace WizardUtils.Saving
             Manifest = manifest;
         }
 
-        public string GetSaveValue(SaveValueDescriptor descriptor)
+        public string Read(SaveValueDescriptor descriptor)
         {
-            // check LoadedValues
+            return GetSaveValue(descriptor).StringValue;
+        }
+
+        public SaveValue GetSaveValue(SaveValueDescriptor descriptor)
+        {
             if (LoadedValues.TryGetValue(descriptor, out SaveValue value))
             {
-                return value.StringValue;
+                return value;
             }
 
 #if UNITY_EDITOR
             _ = ValidateDescriptor(descriptor);
 #endif
+
             SaveValue newValue = AddFromDescriptor(descriptor);
 
-            return newValue.StringValue;
+            return newValue;
         }
 
-        public void SetSaveValue(SaveValueDescriptor descriptor, string stringValue)
+        public void Write(SaveValueDescriptor descriptor, string stringValue)
         {
-            // check LoadedValues
-            if (LoadedValues.TryGetValue(descriptor, out SaveValue value))
-            {
-                value.StringValue = stringValue;
-            }
+            GetSaveValue(descriptor).StringValue = stringValue;
         }
 
         public abstract void Save();

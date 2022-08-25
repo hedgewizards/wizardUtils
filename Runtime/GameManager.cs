@@ -293,7 +293,18 @@ namespace WizardUtils
             saveDataTracker.Load();
         }
 
-        public string GetMainSaveValue(SaveValueDescriptor descriptor)
+        public void SubscribeMainSave(SaveValueDescriptor descriptor, UnityAction<SaveValueChangedEventArgs> action)
+        {
+            var value = saveDataTracker.GetSaveValue(descriptor);
+            value.OnValueChanged.AddListener(action);
+        }
+        public void UnsubscribeMainSave(SaveValueDescriptor descriptor, UnityAction<SaveValueChangedEventArgs> action)
+        {
+            var value = saveDataTracker.GetSaveValue(descriptor);
+            value.OnValueChanged.RemoveListener(action);
+        }
+
+        public string ReadMainSave(SaveValueDescriptor descriptor)
         {
 #if UNITY_EDITOR
             if (saveDataTracker == null)
@@ -301,10 +312,10 @@ namespace WizardUtils
                 Debug.LogWarning("Tried so load data without a MainSaveManifest", this);
             }
 #endif
-            return saveDataTracker?.GetSaveValue(descriptor)?? null;
+            return saveDataTracker?.Read(descriptor)?? null;
         }
 
-        public void SetMainSaveValue(SaveValueDescriptor descriptor, string stringValue)
+        public void WriteMainSave(SaveValueDescriptor descriptor, string stringValue)
         {
 
 #if UNITY_EDITOR
@@ -313,7 +324,7 @@ namespace WizardUtils
                 Debug.LogWarning("Tried so save data without a MainSaveManifest", this);
             }
 #endif
-            saveDataTracker?.SetSaveValue(descriptor, stringValue);
+            saveDataTracker?.Write(descriptor, stringValue);
         }
 
         public void SaveData()

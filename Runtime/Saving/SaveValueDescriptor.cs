@@ -17,17 +17,39 @@ namespace WizardUtils.Saving
         [TextArea(3,3)]
         public string DeveloperNote;
 
-        public bool IsUnlocked
+        public bool BooleanValue
         {
             get
             {
-                return GameManager.GameInstance?.GetMainSaveValue(this) == "1";
+                return SaveValueHelper.ParseBool(SerializedValue);
             }
             set
             {
-                GameManager.GameInstance?.SetMainSaveValue(this, value ? "1" : "0");
+                SerializedValue = SaveValueHelper.SerializeBool(value);
             }
         }
 
+        public Color ColorValue
+        {
+            get
+            {
+                if (SaveValueHelper.ParseColor(SerializedValue, out Color color))
+                {
+                    return color;
+                }
+                Debug.LogWarning($"Invalid Color {SerializedValue} @ {Key}");
+                return new Color(1, 0, 1);
+            }
+            set
+            {
+                SerializedValue = SaveValueHelper.SerializeColor(value);
+            }
+        }
+
+        public string SerializedValue
+        {
+            get => GameManager.GameInstance?.ReadMainSave(this);
+            set => GameManager.GameInstance?.WriteMainSave(this, value);
+        }
     }
 }

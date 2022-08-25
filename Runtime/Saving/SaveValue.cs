@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace WizardUtils.Saving
 {
@@ -8,6 +9,7 @@ namespace WizardUtils.Saving
     {
         public SaveValueDescriptor Descriptor;
         public string StringValue;
+        public UnityEvent<SaveValueChangedEventArgs> OnValueChanged;
 
         public SaveValue(SaveValue other)
         {

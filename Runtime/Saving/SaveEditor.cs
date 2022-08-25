@@ -1,27 +1,27 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace WizardUtils.Saving
 {
-    public class SaveEditor : MonoBehaviour
+    public abstract class SaveEditor : MonoBehaviour
     {
         public SaveValueDescriptor Save;
+        public bool LoadOnAwake;
 
-        public UnityEvent OnUnlocked;
-
-        public void SetUnlocked(bool newValue)
+        private void Start()
         {
-            if (newValue == Save.IsUnlocked)
+            GameManager.GameInstance?.SubscribeMainSave(Save, CallChangedEvent);
+            if (LoadOnAwake) CallChangedEvent(new SaveValueChangedEventArgs()
             {
-                return;
-            }
-            Save.IsUnlocked = newValue;
+                OldValue = Save.DefaultValue,
+                NewValue = Save.SerializedValue
+            });
+        }
 
-            if (newValue)
-            {
-                OnUnlocked?.Invoke();
-            }
+        protected abstract void CallChangedEvent(SaveValueChangedEventArgs args);
 
+        protected void SaveData()
+        {
             GameManager.GameInstance?.SaveData();
         }
     }
