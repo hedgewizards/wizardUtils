@@ -19,6 +19,15 @@ namespace WizardUtils.Saving
             });
         }
 
+        public void Reload()
+        {
+            CallChangedEvent(new SaveValueChangedEventArgs()
+            {
+                OldValue = Save.DefaultValue,
+                NewValue = Save.SerializedValue
+            });
+        }
+
         bool isSaving;
         public void SetString(string value)
         {
