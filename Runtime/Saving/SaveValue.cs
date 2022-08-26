@@ -21,6 +21,7 @@ namespace WizardUtils.Saving
         {
             Descriptor = descriptor;
             StringValue = descriptor.DefaultValue;
+            OnValueChanged = new UnityEvent<SaveValueChangedEventArgs>();
         }
 
         public SaveValue(SaveValueDescriptor descriptor, string value) : this(descriptor)

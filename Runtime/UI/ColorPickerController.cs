@@ -67,12 +67,16 @@ namespace WizardUtils.UI
             pickerMenu.SetOpen(false);
         }
 
+        bool isSaving;
         public void PickColor(Color color)
         {
+            if (isSaving) return;
+            isSaving = true;
             CurrentColor = color;
             UpdateStoredHSV();
             OnColorChanged?.Invoke(color);
             UpdateVisuals();
+            isSaving = false;
         }
 
         private void UpdateStoredHSV()
@@ -150,8 +154,6 @@ namespace WizardUtils.UI
             UpdateStoredRGB();
             OnColorChanged?.Invoke(CurrentColor);
             UpdateVisuals();
-
-            Debug.Log(parametric.x + " " + H);
         }
     }
 }

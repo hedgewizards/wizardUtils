@@ -21,11 +21,11 @@ namespace WizardUtils.Saving
         {
             get
             {
-                return SaveValueHelper.ParseBool(SerializedValue);
+                return SaveHelper.ParseBool(SerializedValue);
             }
             set
             {
-                SerializedValue = SaveValueHelper.SerializeBool(value);
+                SerializedValue = SaveHelper.SerializeBool(value);
             }
         }
 
@@ -33,7 +33,7 @@ namespace WizardUtils.Saving
         {
             get
             {
-                if (SaveValueHelper.ParseColor(SerializedValue, out Color color))
+                if (SaveHelper.ParseColor(SerializedValue, out Color color))
                 {
                     return color;
                 }
@@ -42,7 +42,7 @@ namespace WizardUtils.Saving
             }
             set
             {
-                SerializedValue = SaveValueHelper.SerializeColor(value);
+                SerializedValue = SaveHelper.SerializeColor(value);
             }
         }
 

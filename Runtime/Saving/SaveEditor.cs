@@ -7,6 +7,7 @@ namespace WizardUtils.Saving
     {
         public SaveValueDescriptor Save;
         public bool LoadOnAwake;
+        public bool SaveOnSet;
 
         private void Start()
         {
@@ -18,11 +19,19 @@ namespace WizardUtils.Saving
             });
         }
 
+        bool isSaving;
+        public void SetString(string value)
+        {
+            if (isSaving) return;
+            isSaving = true;
+            var oldValue = Save.SerializedValue;
+            Save.SerializedValue = value;
+            if (SaveOnSet) SaveHelper.SaveData();
+            CallChangedEvent(new SaveValueChangedEventArgs(oldValue, value));
+            isSaving = false;
+        }
+
         protected abstract void CallChangedEvent(SaveValueChangedEventArgs args);
 
-        protected void SaveData()
-        {
-            GameManager.GameInstance?.SaveData();
-        }
     }
 }

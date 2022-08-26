@@ -40,7 +40,10 @@ namespace WizardUtils.Saving
 
         public void Write(SaveValueDescriptor descriptor, string stringValue)
         {
-            GetSaveValue(descriptor).StringValue = stringValue;
+            SaveValue saveValue = GetSaveValue(descriptor);
+            var oldValue = saveValue.StringValue;
+            saveValue.StringValue = stringValue;
+            saveValue.OnValueChanged?.Invoke(new SaveValueChangedEventArgs(oldValue, stringValue));
         }
 
         public abstract void Save();
