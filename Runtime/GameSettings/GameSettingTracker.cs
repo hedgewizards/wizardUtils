@@ -8,24 +8,31 @@ namespace WizardUtils
 {
     public class GameSettingTracker : MonoBehaviour
     {
-        public GameSettingChangedEvent OnSettingChanged;
+        [HideInInspector]
+        public GameSettingDescriptor GameSettingDescriptor;
+        [HideInInspector]
+        public string SettingKey;
+
+        public UnityEvent<float> OnSettingChanged;
         GameSettingFloat gameSetting;
-        public string SettingName;
+
+        public bool CallEventOnAwake;
+
+        string DisambiguatedKey => GameSettingDescriptor != null ? GameSettingDescriptor.Key : SettingKey;
 
         private void Start()
         {
-            gameSetting = GameManager.GameInstance.FindGameSetting(SettingName);
+            gameSetting = GameManager.GameInstance.FindGameSetting(DisambiguatedKey);
             gameSetting.OnChanged += onGameSettingChanged;
+            if (CallEventOnAwake)
+            {
+                OnSettingChanged?.Invoke(gameSetting.Value);
+            }
         }
 
         private void onGameSettingChanged(object sender, GameSettingChangedEventArgs e)
         {
             OnSettingChanged.Invoke(e.FinalValue);
         }
-    }
-
-    [System.Serializable]
-    public class GameSettingChangedEvent : UnityEvent<float>
-    {
     }
 }
