@@ -15,7 +15,9 @@ namespace WizardUtils
     public abstract class GameManager : MonoBehaviour
     {
         public static GameManager GameInstance;
-        public EventHandler OnSoftQuit;
+
+        [HideInInspector]
+        public UnityEvent OnSoftQuit;
         protected virtual void Awake()
         {
             if (GameInstance != null)
@@ -93,7 +95,6 @@ namespace WizardUtils
         public bool InControlScene => CurrentControlScene != null;
         public bool InGameScene => CurrentControlScene == null;
 
-        public ControlSceneDescriptor MainMenuControlScene;
         [HideInInspector]
         public ControlSceneDescriptor CurrentControlScene;
 
@@ -229,11 +230,7 @@ namespace WizardUtils
             }
             else
             {
-                OnSoftQuit?.Invoke(this, EventArgs.Empty);
-                if (!InControlScene)
-                {
-                    LoadControlScene(MainMenuControlScene);
-                }
+                OnSoftQuit?.Invoke();
             }
         }
         #endregion
