@@ -9,16 +9,26 @@ namespace WizardUtils
 {
     public class GameSettingChanger : MonoBehaviour
     {
-        public string SettingKeyName;
+        [HideInInspector]
+        public GameSettingDescriptor GameSettingDescriptor;
+        [HideInInspector]
+        public string SettingKey;
         GameSettingFloat setting;
         public UnityFloatEvent OnValueLoaded;
 
         private void Start()
         {
-            setting = GameManager.GameInstance.FindGameSetting(SettingKeyName);
+            if (GameSettingDescriptor != null)
+            {
+                setting = GameManager.GameInstance.FindGameSetting(GameSettingDescriptor.Key);
+            }
+            else
+            {
+                setting = GameManager.GameInstance.FindGameSetting(SettingKey);
+            }
             if (setting == null)
             {
-                Debug.LogError($"Could not find GameSetting with Key {SettingKeyName}", gameObject);
+                Debug.LogError($"Could not find GameSetting with Key {SettingKey}", gameObject);
             }
             OnValueLoaded?.Invoke(setting.Value);
         }

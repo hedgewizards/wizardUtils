@@ -25,8 +25,8 @@ namespace WizardUtils
             }
 
             GameInstance = this;
+            RegisterGameSettings();
             DontDestroyOnLoad(gameObject);
-            GameSettings = new List<GameSettingFloat>();
             SetupSaveData();
         }
 
@@ -86,11 +86,8 @@ namespace WizardUtils
         #endregion
 
         #region Scenes
-        public static readonly int[] ignoredScenes =
-        {
-            0, // this is GameScene
-            7, // this is MainMenu
-        };
+        public abstract int[] ControlScene_IgnoreScenes { get; }
+        public bool DontLoadScenesInEditor;
 
         public EventHandler<ControlSceneEventArgs> OnControlSceneChanged;
         public bool InControlScene => CurrentControlScene != null;
@@ -129,7 +126,7 @@ namespace WizardUtils
             for (int n = 0; n < SceneManager.sceneCount; n++)
             {
                 Scene scene = SceneManager.GetSceneAt(n);
-                if (!ignoredScenes.Contains(scene.buildIndex))
+                if (!ControlScene_IgnoreScenes.Contains(scene.buildIndex))
                 {
                     if (scene.buildIndex == newScene.BuildIndex)
                     {
@@ -171,7 +168,7 @@ namespace WizardUtils
             for (int n = 0; n < SceneManager.sceneCount; n++)
             {
                 Scene scene = SceneManager.GetSceneAt(n);
-                if (!ignoredScenes.Contains(scene.buildIndex))
+                if (!ControlScene_IgnoreScenes.Contains(scene.buildIndex))
                 {
                     if (scene.buildIndex == newScene.BuildIndex)
                     {
@@ -242,9 +239,27 @@ namespace WizardUtils
         #endregion
 
         #region GameSettings
+        public List<GameSettingDescriptor> SettingDescriptors;
         List<GameSettingFloat> GameSettings;
 
-        public bool DontLoadScenesInEditor;
+
+        void RegisterGameSettings()
+        {
+            GameSettings = new List<GameSettingFloat>();
+
+            for (int i = 0; i < SettingDescriptors.Count; i++)
+            {
+                GameSettingDescriptor setting = SettingDescriptors[i];
+                if (setting == null)
+                {
+                    Debug.LogError($"Missing GameSetting in slot {i}");
+                }
+                else
+                {
+                    RegisterGameSetting(new GameSettingFloat(setting.Key, setting.DefaultValue));
+                }
+            }
+        }
 
         protected void RegisterGameSetting(GameSettingFloat setting)
         {
@@ -262,10 +277,6 @@ namespace WizardUtils
             }
             throw new KeyNotFoundException($"Missing GameSetting \"{key}\"");
         }
-
-        public static string KEY_VOLUME_MASTER = "Volume_Master";
-        public static string KEY_VOLUME_EFFECTS = "Volume_Effects";
-        public static string KEY_VOLUME_AMBIENCE = "Volume_Ambience";
         #endregion
 
         #region Saving
