@@ -50,7 +50,7 @@ namespace WizardUtils.Saving
                     }
                     else
                     {
-                        Debug.LogWarning($"Missing SaveData Descriptor for key \"{key}\"");
+                        Debug.LogWarning($"Missing SaveData Descriptor for key \"{key}\" in manifest {Manifest.name}");
                     }
                 }
             }   
