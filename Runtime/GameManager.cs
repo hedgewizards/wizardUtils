@@ -160,7 +160,9 @@ namespace WizardUtils
 
         public virtual void LoadControlScene(ControlSceneDescriptor newScene, Action<List<AsyncOperation>> callback = null)
         {
+#if UNITY_EDITOR
             if (DontLoadScenesInEditor) return;
+#endif
             var initialScene = CurrentControlScene;
             List<AsyncOperation> tasks = new List<AsyncOperation>();
 
