@@ -14,7 +14,7 @@ namespace WizardUtils
         [HideInInspector]
         public string SettingKey;
         GameSettingFloat setting;
-        public UnityFloatEvent OnValueLoaded;
+        public UnityEvent<float> OnValueLoaded;
 
         private void Start()
         {

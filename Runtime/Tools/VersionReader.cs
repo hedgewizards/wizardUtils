@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace WizardUtils
 {
     public class VersionReader : MonoBehaviour
     {
-        public UnityStringEvent OnReadVersion;
+        public UnityEvent<string> OnReadVersion;
 
         private void Awake()
         {

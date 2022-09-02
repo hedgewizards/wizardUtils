@@ -32,5 +32,19 @@ namespace WizardUtils.Saving
         {
             return value ? "1" : "0";
         }
+
+        public static bool ParseInt(string value, out int result)
+        {
+            if (int.TryParse(value, out result))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static string SerializeInt(int value)
+        {
+            return value.ToString();
+        }
     }
 }

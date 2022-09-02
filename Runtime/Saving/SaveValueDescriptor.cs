@@ -38,11 +38,34 @@ namespace WizardUtils.Saving
                     return color;
                 }
                 Debug.LogWarning($"Invalid Color {SerializedValue} @ {Key}");
+                if (SaveHelper.ParseColor(DefaultValue, out color))
+                {
+                    return color;
+                }
+                Debug.LogError($"Invalid Default Color {SerializedValue} @ {Key}");
                 return new Color(1, 0, 1);
             }
             set
             {
                 SerializedValue = SaveHelper.SerializeColor(value);
+            }
+        }
+
+        public int IntValue
+        {
+            get
+            {
+                if (SaveHelper.ParseInt(SerializedValue, out int value))
+                {
+                    return value;
+                }
+                Debug.LogWarning($"Invalid Integer {SerializedValue} @ {Key}");
+                if(SaveHelper.ParseInt(DefaultValue, out value))
+                {
+                    return value;
+                }
+                Debug.LogError($"Invalid Default Integer {SerializedValue} @ {Key}");
+                return 0;
             }
         }
 

@@ -39,6 +39,31 @@ namespace WizardUtils
             }
         }
 
+        public void PlayStoredClip()
+        {
+            if (canPlay())
+            {
+                lastPlay = Time.time;
+                if (RandomizePitch)
+                {
+                    audioSource.pitch = RandomPitch();
+                }
+
+                audioSource.Play();
+            }
+        }
+
+        public float Volume
+        {
+            get => audioSource.volume;
+            set => audioSource.volume = value;
+        }
+        public float Pitch
+        {
+            get => audioSource.pitch;
+            set => audioSource.pitch = value;
+        }
+
         private float RandomPitch()
         {
             return Random.Range(RandomizePitchMinimum, RandomizePitchMaximum);
@@ -48,14 +73,19 @@ namespace WizardUtils
         {
             if (canPlay())
             {
-                if (RandomizePitch)
-                {
-                    audioSource.pitch = RandomPitch();
-                }
-
-                lastPlay = Time.time;
-                audioSource.PlayOneShot(clip);
+                PlayOneShotIgnoreDelay(clip);
             }
+        }
+
+        public void PlayOneShotIgnoreDelay(AudioClip clip)
+        {
+            if (RandomizePitch)
+            {
+                audioSource.pitch = RandomPitch();
+            }
+
+            lastPlay = Time.time;
+            audioSource.PlayOneShot(clip);
         }
 
         private bool canPlay()
