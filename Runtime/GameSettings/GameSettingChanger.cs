@@ -16,6 +16,8 @@ namespace WizardUtils
         GameSettingFloat setting;
         public UnityEvent<float> OnValueLoaded;
 
+        public bool LoadOnAwake;
+
         private void Start()
         {
             if (GameSettingDescriptor != null)
@@ -30,7 +32,7 @@ namespace WizardUtils
             {
                 Debug.LogError($"Could not find GameSetting with Key {SettingKey}", gameObject);
             }
-            OnValueLoaded?.Invoke(setting.Value);
+            if (LoadOnAwake) OnValueLoaded?.Invoke(setting.Value);
         }
 
         public void SetValue(float newValue)
