@@ -37,7 +37,7 @@ namespace WizardUtils.Saving
                 {
                     return color;
                 }
-                Debug.LogWarning($"Invalid Color {SerializedValue} @ {Key}");
+                Debug.LogWarning($"Invalid Color \'{SerializedValue}\' @ {Key}");
                 if (SaveHelper.ParseColor(DefaultValue, out color))
                 {
                     return color;
