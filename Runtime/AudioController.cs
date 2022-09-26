@@ -26,7 +26,7 @@ namespace WizardUtils
         float lastPlay = float.MinValue;
         public void Play()
         {
-            if (canPlay())
+            if (CanPlay)
             {
                 lastPlay = Time.time;
                 int chosenSoundIndex = Random.Range(0, Clips.Length);
@@ -41,7 +41,7 @@ namespace WizardUtils
 
         public void PlayStoredClip()
         {
-            if (canPlay())
+            if (CanPlay)
             {
                 lastPlay = Time.time;
                 if (RandomizePitch)
@@ -58,6 +58,7 @@ namespace WizardUtils
             get => audioSource.volume;
             set => audioSource.volume = value;
         }
+
         public float Pitch
         {
             get => audioSource.pitch;
@@ -69,15 +70,24 @@ namespace WizardUtils
             return Random.Range(RandomizePitchMinimum, RandomizePitchMaximum);
         }
 
+        public void PlayOneShot(AudioClip clip, float volume)
+        {
+            if (CanPlay)
+            {
+                PlayOneShotIgnoreDelay(clip, volume);
+            }
+        }
+
         public void PlayOneShot(AudioClip clip)
         {
-            if (canPlay())
+            if (CanPlay)
             {
                 PlayOneShotIgnoreDelay(clip);
             }
         }
 
-        public void PlayOneShotIgnoreDelay(AudioClip clip)
+        public void PlayOneShotIgnoreDelay(AudioClip clip) => PlayOneShotIgnoreDelay(clip, 1);
+        public void PlayOneShotIgnoreDelay(AudioClip clip, float volume)
         {
             if (RandomizePitch)
             {
@@ -85,12 +95,9 @@ namespace WizardUtils
             }
 
             lastPlay = Time.time;
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip, volume);
         }
 
-        private bool canPlay()
-        {
-            return lastPlay + ReplayDelay < Time.time;
-        }
+        private bool CanPlay => lastPlay + ReplayDelay < Time.time;
     }
 }
