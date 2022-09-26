@@ -40,6 +40,8 @@ namespace WizardUtils.Saving
             isSaving = false;
         }
 
+        public string GetString() => Save.SerializedValue;
+
         protected abstract void CallChangedEvent(SaveValueChangedEventArgs args);
 
     }
