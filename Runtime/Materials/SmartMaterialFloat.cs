@@ -7,12 +7,10 @@ namespace WizardUtils.Materials
     {
         public Renderer Target;
 
-        [HideInInspector]
         public string Parameter;
-        [HideInInspector]
-        public int ParameterId;
+        int ParameterId;
 
-        public void UpdateParameterId()
+        public void Awake()
         {
             ParameterId = Shader.PropertyToID(Parameter);
         }
