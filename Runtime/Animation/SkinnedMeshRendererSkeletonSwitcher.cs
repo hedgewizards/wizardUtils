@@ -6,7 +6,7 @@ using UnityEngine;
 namespace WizardUtils.Animations
 {
     [RequireComponent(typeof(SkinnedMeshRenderer))]
-    public class SkinnedMeshRendererRootUpdater : MonoBehaviour
+    public class SkinnedMeshRendererSkeletonSwitcher : MonoBehaviour
     {
         [ContextMenu("test")]
         public void Test()
@@ -17,37 +17,34 @@ namespace WizardUtils.Animations
                 Debug.Log($"Tap to select bone {bone.name}", bone);
             }
         }
-        public void UpdateRoot(Transform newRoot)
+        public void SwitchSkeleton(Transform newRoot)
         {
             int[] pathBuffer = new int[64];
 
             SkinnedMeshRenderer renderer = GetComponent<SkinnedMeshRenderer>();
-            renderer.enabled = false;
             Transform oldRoot = renderer.rootBone;
             renderer.rootBone = newRoot;
 
+            Transform[] newBones = new Transform[renderer.bones.Length];
             for (int boneIndex = 0; boneIndex < renderer.bones.Length; boneIndex++)
             {
                 int count = GetHierarchyPathNoAlloc(pathBuffer, oldRoot, renderer.bones[boneIndex]);
 
-                Transform newBone = TraverseHierarchyPath(pathBuffer, count, newRoot);
-
-                //Debug.Log($"{boneIndex}: {renderer.bones[boneIndex].name} -> {newBone.name}\npath: {PathToString(pathBuffer, count)}");
-                Transform oldBone = renderer.bones[boneIndex];
-                renderer.bones[boneIndex] = newBone;
-                if (renderer.bones[boneIndex] != newBone)
+                Transform newBone;
+                try
                 {
-                    Debug.LogError("Setting the bone literally did not work.");
+                    newBone = TraverseHierarchyPath(pathBuffer, count, newRoot);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    throw new InvalidOperationException($"Incompatible Skeletons. Couldn't find matching bone for {renderer.bones[boneIndex].name}\nnpath: {PathToString(pathBuffer, count)}\nInnerException: {e}");
                 }
 
-                if (boneIndex == 1)
-                {
-                    Debug.Log("Tap to select OLD bone", oldBone);
-                    Debug.Log("Tap to select NEW bone", renderer.bones[boneIndex]);
-                }
+                Debug.Log($"{boneIndex}: {renderer.bones[boneIndex].name} -> {newBone.name}\npath: {PathToString(pathBuffer, count)}");
+                newBones[boneIndex] = newBone;
             }
 
-            renderer.enabled = true;
+            renderer.bones = newBones;
         }
 
         Transform TraverseHierarchyPath(int[] pathBuffer, int pathCount, Transform rootBone)
@@ -55,6 +52,12 @@ namespace WizardUtils.Animations
             Transform currentBone = rootBone;
             for (int n = pathCount - 1; n >= 0; n--)
             {
+#if DEBUG
+                if (pathBuffer[n] >= currentBone.childCount)
+                {
+                    throw new ArgumentOutOfRangeException($"Couldn't find bone {pathBuffer[n]}>={currentBone.childCount} for {currentBone} (step {n})");
+                }
+#endif
                 currentBone = currentBone.GetChild(pathBuffer[n]);
             }
             return currentBone;
