@@ -40,7 +40,7 @@ namespace WizardUtils.Animations
                     throw new InvalidOperationException($"Incompatible Skeletons. Couldn't find matching bone for {renderer.bones[boneIndex].name}\nnpath: {PathToString(pathBuffer, count)}\nInnerException: {e}");
                 }
 
-                Debug.Log($"{boneIndex}: {renderer.bones[boneIndex].name} -> {newBone.name}\npath: {PathToString(pathBuffer, count)}");
+                //Debug.Log($"{boneIndex}: {renderer.bones[boneIndex].name} -> {newBone.name}\npath: {PathToString(pathBuffer, count)}");
                 newBones[boneIndex] = newBone;
             }
 
