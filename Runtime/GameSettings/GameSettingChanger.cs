@@ -37,7 +37,16 @@ namespace WizardUtils
 
         public void SetValue(float newValue)
         {
-            setting.Value = newValue;
+            if (setting != null)
+            {
+                setting.Value = newValue;
+            }
+#if DEBUG
+            else
+            {
+                Debug.LogWarning("Tried to load a GameSetting before this object was initialized... D:", this);
+            }
+#endif
         }
     }
 }
