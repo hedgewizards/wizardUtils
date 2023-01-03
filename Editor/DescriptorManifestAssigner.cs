@@ -49,15 +49,23 @@ namespace WizardUtils.ManifestPattern
             {
                 bool containsItem = manifest.Contains(item);
 
-                bool newValue = EditorGUILayout.Toggle(manifest.name, containsItem);
+                bool toggle;
+                using (new GUILayout.HorizontalScope())
+                {
+                    using (new EditorGUI.DisabledScope(true))
+                    {
+                        EditorGUILayout.ObjectField(manifest, typeof(ScriptableObject), false);
+                    }
+                    toggle = EditorGUILayout.Toggle(containsItem);
+                }
 
-                if (!newValue && containsItem)
+                if (!toggle && containsItem)
                 {
                     manifest.Remove(item);
                     EditorUtility.SetDirty(manifest);
                     AssetDatabase.SaveAssetIfDirty(manifest);
                 }
-                else if (newValue && !containsItem)
+                else if (toggle && !containsItem)
                 {
                     manifest.Add(item);
                     EditorUtility.SetDirty(manifest);
