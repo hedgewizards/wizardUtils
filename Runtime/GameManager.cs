@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using WizardUtils.GameSettings;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
 
@@ -238,7 +239,7 @@ namespace WizardUtils
         #endregion
 
         #region GameSettings
-        public List<GameSettingDescriptor> SettingDescriptors;
+        public GameSettingManifest SettingManifest;
         List<GameSettingFloat> GameSettings;
 
 
@@ -246,9 +247,9 @@ namespace WizardUtils
         {
             GameSettings = new List<GameSettingFloat>();
 
-            for (int i = 0; i < SettingDescriptors.Count; i++)
+            for (int i = 0; i < SettingManifest.Descriptors.Length; i++)
             {
-                GameSettingDescriptor setting = SettingDescriptors[i];
+                GameSettingDescriptor setting = SettingManifest.Descriptors[i];
                 if (setting == null)
                 {
                     Debug.LogError($"Missing GameSetting in slot {i}");

@@ -2,7 +2,7 @@
 
 namespace WizardUtils
 {
-    [CreateAssetMenu(fileName = "s_", menuName = "WizardUtils/Settings/GameSettingFloatDescriptor", order = 0)]
+    [CreateAssetMenu(fileName = "s_", menuName = "WizardUtils/GameSetting/Descriptor", order = 0)]
     public class GameSettingDescriptor : ScriptableObject
     {
         public string Key;
