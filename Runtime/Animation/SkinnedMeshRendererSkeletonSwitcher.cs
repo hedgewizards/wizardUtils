@@ -105,7 +105,6 @@ namespace WizardUtils.Animations
             string str = "";
 
             Transform currentBone = leafBone;
-            int count = 0;
             while (currentBone != rootBone)
             {
                 Transform parent = currentBone.parent;
