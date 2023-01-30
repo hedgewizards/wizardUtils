@@ -65,7 +65,7 @@ namespace WizardUtils.Extensions
             {
                 Vector3 nextPoint = center + Quaternion.AngleAxis(n * 360f / resolution, pole) * spoke;
 
-                Debug.DrawLine(lastPoint, nextPoint, color, DefaultDrawDuration);
+                Debug.DrawLine(lastPoint, nextPoint, color, duration);
                 lastPoint = nextPoint;
             }
 #endif
