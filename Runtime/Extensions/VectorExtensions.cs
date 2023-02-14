@@ -289,5 +289,8 @@ namespace WizardUtils
         {
             return Quaternion.Euler(0, self.eulerAngles.y, 0);
         }
+
+        // Rays
+        public static Ray RayFromLine(Vector3 a, Vector3 b) => new Ray(a, b - a);
     }
 }
