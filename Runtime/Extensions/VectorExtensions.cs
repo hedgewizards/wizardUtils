@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace WizardUtils
 {
@@ -231,10 +232,12 @@ namespace WizardUtils
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static float SmoothInterpolate(float a, float b, float t)
         {
             return a + (b - a) * t * t * (3 - 2 * t);
         }
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static Color SmoothInterpolate(Color a, Color b, float t)
         {
             for (int n = 0; n < 4; n++)
@@ -244,6 +247,7 @@ namespace WizardUtils
 
             return a;
         }
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static Vector2 SmoothInterpolate(Vector2 a, Vector2 b, float t)
         {
             for (int n = 0; n < 2; n++)
@@ -261,10 +265,12 @@ namespace WizardUtils
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static float AccelerateInterpolate(float a, float b, float t)
         {
             return a + (b - a) * t * t;
         }
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static Color AccelerateInterpolate(Color a, Color b, float t)
         {
             for (int n = 0; n < 4; n++)
@@ -274,6 +280,7 @@ namespace WizardUtils
 
             return a;
         }
+        [Obsolete("Use WizardUtils.Math.InterpolationHelper instead", true)]
         public static Vector2 AccelerateInterpolate(Vector2 a, Vector2 b, float t)
         {
             for (int n = 0; n < 2; n++)
