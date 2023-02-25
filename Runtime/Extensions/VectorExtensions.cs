@@ -56,6 +56,13 @@ namespace WizardUtils
             vec.y *= y;
             vec.z *= z;
             return vec;
+        }
+        public static Vector3 Scale(this Vector3 vec, Vector3 other)
+        {
+            vec.x *= other.x;
+            vec.y *= other.y;
+            vec.z *= other.z;
+            return vec;
 
         }
         /// <summary>
