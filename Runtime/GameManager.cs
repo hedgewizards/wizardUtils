@@ -211,6 +211,23 @@ namespace WizardUtils
             callback?.Invoke(tasks);
         }
 
+        public void ReloadControlScene()
+        {
+            AsyncOperation task = SceneManager.UnloadSceneAsync(CurrentControlScene.BuildIndex);
+
+            StartCoroutine(Reload_WaitForUnload(task));
+        }
+
+        IEnumerator Reload_WaitForUnload(AsyncOperation task)
+        {
+            while (!task.isDone)
+            {
+                yield return new WaitForSecondsRealtime(0.05f);
+            }
+
+            SceneManager.LoadSceneAsync(CurrentControlScene.BuildIndex, LoadSceneMode.Additive);
+        }
+
         public void UnloadControlScene()
         {
             SceneManager.UnloadSceneAsync(CurrentControlScene.BuildIndex);
