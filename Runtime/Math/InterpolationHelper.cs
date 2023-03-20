@@ -11,7 +11,8 @@ namespace WizardUtils.Math
     {
         public static float ConvertRangeToTime(float value, float min, float max)
         {
-            return Mathf.Clamp01((value - min) / max);
+            if (max == min) return max;
+            return Mathf.Clamp01((value - min) / (max - min));
         }
 
         /// <summary>
