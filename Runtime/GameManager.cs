@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Platforms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,13 @@ namespace WizardUtils
     public abstract class GameManager : MonoBehaviour
     {
         public static GameManager GameInstance;
+        public IPlatformService PlatformService;
         public string PersistentDataPath => Application.persistentDataPath;
+        [NonSerialized]
+        public UnityEvent OnQuitToMenu = new UnityEvent();
+        [NonSerialized]
+        public UnityEvent OnQuitToDesktop = new UnityEvent();
 
-        [HideInInspector]
-        public UnityEvent OnSoftQuit;
         protected virtual void Awake()
         {
             if (GameInstance != null)
@@ -29,7 +33,10 @@ namespace WizardUtils
             }
 
             GameInstance = this;
-            RegisterGameSettings();
+            PlatformService = new Platforms.Portable.PortablePlatformService();
+
+            GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
+            
             DontDestroyOnLoad(gameObject);
             SetupSaveData();
         }
@@ -37,6 +44,12 @@ namespace WizardUtils
         protected virtual void Update()
         {
 
+        }
+
+        protected virtual void OnApplicationQuit()
+        {
+            GameSettingService.Save();
+            OnQuitToDesktop.Invoke();
         }
 
         public static bool GameInstanceIsValid()
@@ -251,50 +264,42 @@ namespace WizardUtils
             }
             else
             {
-                OnSoftQuit?.Invoke();
+                OnQuitToMenu?.Invoke();
             }
         }
         #endregion
 
         #region GameSettings
-        public GameSettingManifest SettingManifest;
-        List<GameSettingFloat> GameSettings;
+        IGameSettingService GameSettingService;
 
-
-        void RegisterGameSettings()
+        public void SaveSettingsChanges()
         {
-            GameSettings = new List<GameSettingFloat>();
-
-            for (int i = 0; i < SettingManifest.Descriptors.Length; i++)
-            {
-                GameSettingDescriptor setting = SettingManifest.Descriptors[i];
-                if (setting == null)
-                {
-                    Debug.LogError($"Missing GameSetting in slot {i}");
-                }
-                else
-                {
-                    RegisterGameSetting(new GameSettingFloat(setting.Key, setting.DefaultValue));
-                }
-            }
+            GameSettingService.Save();
         }
-
-        protected void RegisterGameSetting(GameSettingFloat setting)
+        
+        protected virtual List<GameSettingFloat> LoadGameSettings()
         {
-            GameSettings.Add(setting);
+            return new List<GameSettingFloat>()
+            {
+                new GameSettingFloat(KEY_VOLUME_MASTER, 100),
+                new GameSettingFloat(KEY_VOLUME_EFFECTS, 80),
+                new GameSettingFloat(KEY_VOLUME_AMBIENCE, 80),
+                new GameSettingFloat(KEY_VOLUME_MUSIC, 80),
+                new GameSettingFloat(SETTINGKEY_MUTE_ON_ALT_TAB, 0),
+            };
         }
 
         public GameSettingFloat FindGameSetting(string key)
         {
-            foreach(GameSettingFloat setting in GameSettings)
-            {
-                if (setting.Key == key)
-                {
-                    return setting;
-                }
-            }
-            throw new KeyNotFoundException($"Missing GameSetting \"{key}\"");
+            return GameSettingService.GetSetting(key);
         }
+
+        public static string KEY_VOLUME_MASTER = "Volume_Master";
+        public static string KEY_VOLUME_EFFECTS = "Volume_Effects";
+        public static string KEY_VOLUME_AMBIENCE = "Volume_Ambience";
+        public static string KEY_VOLUME_MUSIC = "Volume_Music";
+
+        public static string SETTINGKEY_MUTE_ON_ALT_TAB = "MuteOnAltTab";
         #endregion
 
         #region Saving

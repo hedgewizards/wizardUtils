@@ -6,6 +6,7 @@ using WizardUtils.ManifestPattern;
 namespace WizardUtils.GameSettings
 {
     [CreateAssetMenu(fileName = "GameSettingManifest", menuName = "WizardUtils/GameSetting/Manifest", order = 0)]
+    [Obsolete("We do this through code now")]
     public class GameSettingManifest : ScriptableObject, IDescriptorManifest<GameSettingDescriptor>
     {
         public GameSettingDescriptor[] Descriptors;

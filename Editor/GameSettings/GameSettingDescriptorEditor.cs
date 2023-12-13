@@ -4,10 +4,12 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using WizardUtils.ManifestPattern;
 using System.Linq;
+using System;
 
 namespace WizardUtils.GameSettings
 {
     [CustomEditor(typeof(GameSettingDescriptor))]
+    [Obsolete("we do this through code now")]
     public class GameSettingDescriptorEditor : Editor
     {
         GameSettingDescriptor self;

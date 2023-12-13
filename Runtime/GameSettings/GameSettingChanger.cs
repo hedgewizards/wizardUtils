@@ -9,44 +9,30 @@ namespace WizardUtils
 {
     public class GameSettingChanger : MonoBehaviour
     {
-        [HideInInspector]
-        public GameSettingDescriptor GameSettingDescriptor;
-        [HideInInspector]
-        public string SettingKey;
+        public string SettingKeyName;
         GameSettingFloat setting;
         public UnityEvent<float> OnValueLoaded;
 
-        public bool LoadOnAwake;
-
         private void Start()
         {
-            if (GameSettingDescriptor != null)
-            {
-                setting = GameManager.GameInstance.FindGameSetting(GameSettingDescriptor.Key);
-            }
-            else
-            {
-                setting = GameManager.GameInstance.FindGameSetting(SettingKey);
-            }
+            setting = GameManager.GameInstance.FindGameSetting(SettingKeyName);
             if (setting == null)
             {
-                Debug.LogError($"Could not find GameSetting with Key {SettingKey}", gameObject);
+                Debug.LogError($"Could not find GameSetting with Key {SettingKeyName}", gameObject);
             }
-            if (LoadOnAwake) OnValueLoaded?.Invoke(setting.Value);
+            OnValueLoaded?.Invoke(setting.Value);
         }
 
         public void SetValue(float newValue)
         {
-            if (setting != null)
-            {
-                setting.Value = newValue;
-            }
 #if DEBUG
-            else
+            if (setting == null)
             {
-                Debug.LogWarning("Tried to load a GameSetting before this object was initialized... D:", this);
+                Debug.LogError("GameSettingChanger not set up yet D:", gameObject);
+                return;
             }
 #endif
+            setting.Value = newValue;
         }
     }
 }
