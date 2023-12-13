@@ -14,3 +14,4 @@ namespace WizardUtils.ManifestPattern
         public void Remove(T descriptor);
     }
 }
+ 
