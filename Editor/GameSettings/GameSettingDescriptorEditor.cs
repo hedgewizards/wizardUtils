@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using WizardUtils.ManifestPattern;
+using System.Linq;
 
 namespace WizardUtils.GameSettings
 {
@@ -25,7 +26,7 @@ namespace WizardUtils.GameSettings
             // Draw the GUI unity generates normally
             DrawDefaultInspector();
 
-            dropdown.DrawRegisterButtons(self);
+            dropdown.DrawRegisterButtons(targets.Cast<GameSettingDescriptor>().ToArray());
         }
     }
 }
