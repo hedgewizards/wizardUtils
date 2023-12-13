@@ -16,6 +16,7 @@ namespace WizardUtils
     public abstract class GameManager : MonoBehaviour
     {
         public static GameManager GameInstance;
+        public string PersistentDataPath => Application.persistentDataPath;
 
         [HideInInspector]
         public UnityEvent OnSoftQuit;
