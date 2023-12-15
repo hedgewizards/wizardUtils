@@ -1,6 +1,4 @@
 ﻿#if !DISABLESTEAMWORKS
-/*
-using Pogo;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -101,7 +99,6 @@ namespace Platforms.Steam
             if (callback.m_bActive != 0)
             {
                 // overlay is active
-                PogoGameManager.PogoInstance.Paused = true;
             }
             else
             {
@@ -116,5 +113,4 @@ namespace Platforms.Steam
 
     }
 }
-*/
 #endif
