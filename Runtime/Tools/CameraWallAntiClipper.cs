@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using WizardUtils.Extensions;
 
 class CameraWallAntiClipper : MonoBehaviour
 {
@@ -8,6 +7,8 @@ class CameraWallAntiClipper : MonoBehaviour
     Transform parent;
 
     public float WallBufferDistance = 0.1f;
+
+    public LayerMask CollisionLayers;
 
     private void Awake()
     {
@@ -23,7 +24,7 @@ class CameraWallAntiClipper : MonoBehaviour
         bool didHit = Physics.Raycast(ray: new Ray(start, desired - start),
             maxDistance: maxDistance,
             hitInfo: out RaycastHit hitinfo,
-            layerMask: PhysicsHelper.MaskForLayer(gameObject.layer));
+            layerMask: CollisionLayers);
 
         if (didHit)
         {

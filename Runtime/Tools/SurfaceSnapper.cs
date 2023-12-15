@@ -8,8 +8,8 @@ namespace WizardUtils.Tools
         public Transform Target;
         public float MaxDistance = 1;
 
-        [HideInInspector]
-        public int mask;
+        public LayerMask Mask;
+
 
         Vector3 surfaceForward => transform.rotation * Vector3.down;
 
@@ -21,18 +21,13 @@ namespace WizardUtils.Tools
             }
         }
 
-        private void OnValidate()
-        {
-            mask = PhysicsHelper.MaskForLayer(gameObject.layer);
-        }
-
         bool CheckForSurface(out RaycastHit hitInfo)
         {
             Ray ray = new Ray(transform.position, surfaceForward);
             bool didHit = Physics.Raycast(
                 ray: ray,
                 maxDistance: MaxDistance,
-                layerMask: mask,
+                layerMask: Mask,
                 hitInfo: out hitInfo,
                 queryTriggerInteraction: QueryTriggerInteraction.Ignore);
 

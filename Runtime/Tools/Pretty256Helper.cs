@@ -21,9 +21,9 @@ namespace WizardUtils.Tools
                 {
                     final += Atlas[b];
                 }
-                catch (IndexOutOfRangeException)
+                catch (IndexOutOfRangeException e)
                 {
-                    Debug.LogError($"Failed to index byte {b}");
+                    Debug.LogError($"Failed to index byte {b}\n" + e.ToString());
                     final += '?';
                 }
             }
