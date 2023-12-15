@@ -43,6 +43,20 @@ namespace WizardUtils
         }
 
         /// <summary>
+        /// Scales each component of a Vector3 by another vector3's components
+        /// </summary>
+        /// <param name="vec"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static Vector3 Scale(this Vector3 vec, Vector3 other)
+        {
+            vec.x *= other.x;
+            vec.y *= other.y;
+            vec.z *= other.z;
+            return vec;
+        }
+
+        /// <summary>
         /// Scale each component of a vector3 by respective x/y/z components
         /// </summary>
         /// <param name="vec"></param>
@@ -55,13 +69,6 @@ namespace WizardUtils
             vec.x *= x;
             vec.y *= y;
             vec.z *= z;
-            return vec;
-        }
-        public static Vector3 Scale(this Vector3 vec, Vector3 other)
-        {
-            vec.x *= other.x;
-            vec.y *= other.y;
-            vec.z *= other.z;
             return vec;
 
         }
