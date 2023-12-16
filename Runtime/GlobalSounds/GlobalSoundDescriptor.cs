@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace WizardUtils.GlobalSounds
 {
-    [CreateAssetMenu( fileName = "gsound_", menuName = "Pogo/GlobalSoundDescriptor")]
+    [CreateAssetMenu( fileName = "gsound_", menuName = "WizardUtils/GlobalSounds/GlobalSoundDescriptor")]
     public class GlobalSoundDescriptor : ScriptableObject
     {
         public GameObject Prefab;
