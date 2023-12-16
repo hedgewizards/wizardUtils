@@ -10,13 +10,14 @@ namespace WizardUtils.GlobalSounds
     public class GlobalSoundService
     {
         private readonly GameObject Parent;
-        public GlobalSoundManifest manifest;
+        private readonly GlobalSoundManifest Manifest;
 
         Dictionary<GlobalSoundDescriptor, AudioSource> soundsDict = new Dictionary<GlobalSoundDescriptor, AudioSource>();
 
-        public GlobalSoundService(GameObject parent)
+        public GlobalSoundService(GameObject parent, GlobalSoundManifest manifest)
         {
             Parent = parent;
+            Manifest = manifest;
         }
 
         public void Play(GlobalSoundDescriptor sound)
