@@ -18,6 +18,8 @@ namespace WizardUtils
     {
         public static GameManager GameInstance;
         public IPlatformService PlatformService;
+        [HideInInspector]
+        public GlobalSounds.GlobalSoundService GlobalSoundService;
         public string PersistentDataPath => Application.persistentDataPath;
         [NonSerialized]
         public UnityEvent OnQuitToMenu = new UnityEvent();
@@ -34,7 +36,7 @@ namespace WizardUtils
 
             GameInstance = this;
             PlatformService = new Platforms.Portable.PortablePlatformService();
-
+            GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject);
             GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
             
             DontDestroyOnLoad(gameObject);
