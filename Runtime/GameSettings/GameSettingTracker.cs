@@ -14,7 +14,7 @@ namespace WizardUtils
 
         private void Start()
         {
-            gameSetting = GameManager.GameInstance.FindGameSetting(SettingName);
+            gameSetting = GameManager.Instance.FindGameSetting(SettingName);
             gameSetting.OnChanged += onGameSettingChanged;
         }
 

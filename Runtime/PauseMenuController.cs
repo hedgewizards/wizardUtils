@@ -49,7 +49,7 @@ namespace WizardUtils
         protected virtual void Start()
         {
             currentMenu = null;
-            GameManager.GameInstance.OnPauseStateChanged += onPauseStateChanged;
+            GameManager.Instance.OnPauseStateChanged += onPauseStateChanged;
         }
 
         protected virtual void onPauseStateChanged(object sender, bool nowPaused)
@@ -61,18 +61,18 @@ namespace WizardUtils
 
         public void Pause()
         {
-            GameManager.GameInstance.Paused = true;
+            GameManager.Instance.Paused = true;
         }
 
         public void Resume()
         {
-            GameManager.GameInstance.Paused = false;
+            GameManager.Instance.Paused = false;
         }
 
         public void ReturnToMainMenu()
         {
             Resume();
-            GameManager.GameInstance?.Quit(false);
+            GameManager.Instance?.Quit(false);
         }
 
     }

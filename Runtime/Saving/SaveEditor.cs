@@ -11,7 +11,7 @@ namespace WizardUtils.Saving
 
         private void Start()
         {
-            GameManager.GameInstance?.SubscribeMainSave(Save, CallChangedEvent);
+            GameManager.Instance?.SubscribeMainSave(Save, CallChangedEvent);
             if (LoadOnAwake) CallChangedEvent(new SaveValueChangedEventArgs()
             {
                 OldValue = Save.DefaultValue,

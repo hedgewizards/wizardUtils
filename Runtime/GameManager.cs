@@ -16,7 +16,7 @@ namespace WizardUtils
 {
     public abstract class GameManager : MonoBehaviour
     {
-        public static GameManager GameInstance;
+        public static GameManager Instance;
         public GameManagerConfiguration Configuration;
         public IPlatformService PlatformService;
         [HideInInspector]
@@ -29,13 +29,13 @@ namespace WizardUtils
 
         protected virtual void Awake()
         {
-            if (GameInstance != null)
+            if (Instance != null)
             {
                 Destroy(this);
                 return;
             }
 
-            GameInstance = this;
+            Instance = this;
             PlatformService = new Platforms.Portable.PortablePlatformService();
             GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Configuration.GlobalSoundManifest);
             GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
@@ -57,7 +57,7 @@ namespace WizardUtils
 
         public static bool GameInstanceIsValid()
         {
-            return GameInstance != null;
+            return Instance != null;
         }
 
         #region Pausing
@@ -76,7 +76,7 @@ namespace WizardUtils
             {
                 if (!GameInstanceIsValid()) return;
 
-                if (paused == value || GameInstance.LockPauseState) return;
+                if (paused == value || Instance.LockPauseState) return;
                 paused = value;
                 if (value)
                 {
@@ -86,7 +86,7 @@ namespace WizardUtils
                 {
                     resume();
                 }
-                GameInstance.OnPauseStateChanged?.Invoke(null, value);
+                Instance.OnPauseStateChanged?.Invoke(null, value);
             }
         }
         public EventHandler<bool> OnPauseStateChanged;
@@ -94,7 +94,7 @@ namespace WizardUtils
         private static void pause()
         {
 #if UNITY_EDITOR
-            if (GameInstance.BreakOnPause) Debug.Break();
+            if (Instance.BreakOnPause) Debug.Break();
 #endif
             Time.timeScale = 0;
         }

@@ -11,7 +11,7 @@ namespace WizardUtils.GameSettings
     {
         public void Save()
         {
-            GameManager.GameInstance.SaveSettingsChanges();
+            GameManager.Instance.SaveSettingsChanges();
         }
     }
 }

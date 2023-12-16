@@ -71,8 +71,8 @@ namespace WizardUtils.Saving
 
         public string SerializedValue
         {
-            get => GameManager.GameInstance?.ReadMainSave(this);
-            set => GameManager.GameInstance?.WriteMainSave(this, value);
+            get => GameManager.Instance?.ReadMainSave(this);
+            set => GameManager.Instance?.WriteMainSave(this, value);
         }
     }
 }

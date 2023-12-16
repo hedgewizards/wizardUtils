@@ -7,7 +7,7 @@ namespace WizardUtils.Saving
     {
         public static void SaveData()
         {
-            GameManager.GameInstance?.SaveData();
+            GameManager.Instance?.SaveData();
         }
         public static bool ParseColor(string value, out Color color)
         {
