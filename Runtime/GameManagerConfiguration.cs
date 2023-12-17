@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using WizardUtils.GlobalSounds;
-using WizardUtils.Saving;
 
 namespace WizardUtils
 {
@@ -13,6 +12,5 @@ namespace WizardUtils
     public class GameManagerConfiguration : ScriptableObject
     {
         public GlobalSoundManifest GlobalSoundManifest;
-        public SaveManifest MainSaveManifest;
     }
 }
