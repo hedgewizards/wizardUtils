@@ -23,11 +23,20 @@ namespace WizardUtils.SerializedObjectHelpers
 
         public void ApplyModifiedProperties()
         {
+            Store();
             Target.ApplyModifiedProperties();
 
             foreach(var handler in Handlers)
             {
                 handler.Check();
+            }
+        }
+
+        private void Store()
+        {
+            foreach (var handler in Handlers)
+            {
+                handler.Store();
             }
         }
     }

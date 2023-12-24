@@ -23,7 +23,6 @@ namespace WizardUtils.SerializedObjectHelpers
             OnChangedCallback = onChangedCallback;
             EqualityComparer = equalityComparer ?? EqualityComparer<T>.Default;
             Get = get;
-            Store();
         }
 
         public override void Store()
