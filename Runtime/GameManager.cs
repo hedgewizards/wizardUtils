@@ -1,4 +1,6 @@
 ﻿using Platforms;
+using Platforms.Portable;
+using Platforms.Steam;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ namespace WizardUtils
             }
 
             Instance = this;
-            PlatformService = new Platforms.Portable.PortablePlatformService();
+            PlatformService = BuildPlatformService();
             GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Configuration.GlobalSoundManifest);
             GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
             
@@ -59,6 +61,17 @@ namespace WizardUtils
         {
             return Instance != null;
         }
+
+        #region Platforms
+        protected virtual IPlatformService BuildPlatformService()
+        {
+#if DISABLESTEAMWORKS
+            return new PortablePlatformService();
+#else
+            return new SteamPlatformService();
+#endif
+        }
+        #endregion
 
         #region Pausing
         public virtual bool LockPauseState => false;
