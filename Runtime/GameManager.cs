@@ -189,7 +189,7 @@ namespace WizardUtils
         }
 #endif
 
-        public virtual void LoadControlScene(ControlSceneDescriptor newScene, Action<List<AsyncOperation>> callback = null)
+        public virtual void LoadControlScene(ControlSceneDescriptor newScene, Action callback = null)
         {
 #if UNITY_EDITOR
             if (DontLoadScenesInEditor) return;
@@ -238,7 +238,7 @@ namespace WizardUtils
 
             CurrentControlScene = newScene;
             OnControlSceneChanged?.Invoke(this, new ControlSceneEventArgs(initialScene, newScene));
-            callback?.Invoke(tasks);
+            StartCoroutine(AsyncSceneLoadingHelper.WaitForScenesLoadAsync(tasks, callback));
         }
 
         public void ReloadControlScene()
