@@ -240,7 +240,7 @@ namespace WizardUtils
 
         // Interpolation Stuff
         /// <summary>
-        /// Interpolate from a to b by parametric t with a smooth start and stop
+        /// Lerp from a to b by parametric t with a smooth start and stop
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -273,7 +273,7 @@ namespace WizardUtils
         }
 
         /// <summary>
-        /// Interpolate from a to b by parametric t with a smooth start
+        /// Lerp from a to b by parametric t with a smooth start
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
