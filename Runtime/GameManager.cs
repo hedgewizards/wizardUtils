@@ -238,7 +238,10 @@ namespace WizardUtils
 
             CurrentControlScene = newScene;
             OnControlSceneChanged?.Invoke(this, new ControlSceneEventArgs(initialScene, newScene));
-            StartCoroutine(AsyncSceneLoadingHelper.WaitForScenesLoadAsync(tasks, callback));
+            if (callback != null)
+            {
+                StartCoroutine(AsyncSceneLoadingHelper.WaitForScenesLoadAsync(tasks, callback));
+            }
         }
 
         public void ReloadControlScene()

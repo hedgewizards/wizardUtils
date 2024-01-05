@@ -12,6 +12,8 @@ namespace WizardUtils.SceneManagement
     {
         public static IEnumerator WaitForScenesLoadAsync(IEnumerable<AsyncOperation> sceneLoadOperations, Action callback)
         {
+            if (callback == null) throw new NullReferenceException();
+
             while (true)
             {
                 if (ScenesFinishedLoading(sceneLoadOperations))
