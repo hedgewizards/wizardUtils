@@ -9,6 +9,8 @@ namespace WizardUtils.PhysicsSolvers
 {
     public class CollisionEventData
     {
-        public Vector3 Position;
+        public Vector3 ShapePosition;
+        public Vector3 CollisionDirection;
+        public float CollisionDistance;
     }
 }

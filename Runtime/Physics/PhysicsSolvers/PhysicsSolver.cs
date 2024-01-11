@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
 namespace WizardUtils.PhysicsSolvers
 {
-    public class PhysicsSolver<TShape> where TShape : IPhysicsSolverShape
+    public class PhysicsSolver
     {
-        private TShape Shape;
+        private IPhysicsSolverShape Shape;
         private int LayerMask;
         private Collider[] _OverlapCache;
 
-        public PhysicsSolver(TShape shape, int layerMask, int overlapCacheSize = 16)
+        public PhysicsSolver(IPhysicsSolverShape shape, int layerMask, int overlapCacheSize = 16)
         {
             Shape = shape;
             LayerMask = layerMask;
@@ -39,10 +38,12 @@ namespace WizardUtils.PhysicsSolvers
                 {
                     CollisionEventData eventData = new CollisionEventData()
                     {
-                        Position = position,
+                        ShapePosition = position,
+                        CollisionDirection = direction,
+                        CollisionDistance = distance,
                     };
                     OnCollide.Invoke(eventData);
-                    position = eventData.Position;
+                    position = eventData.ShapePosition;
                 }
             }
 
