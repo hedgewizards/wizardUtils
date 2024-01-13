@@ -9,7 +9,7 @@ namespace WizardUtils.PhysicsSolvers
 {
     public class PhysicsSolver
     {
-        private IPhysicsSolverShape Shape;
+        public IPhysicsSolverShape Shape {get; private set;}
         private int LayerMask;
         private Collider[] _OverlapCache;
 

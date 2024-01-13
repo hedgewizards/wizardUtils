@@ -40,6 +40,21 @@ namespace WizardUtils.PhysicsSolvers.Shapes
                 out distance);
         }
 
+        public bool TestShape(
+            Vector3 worldPosition,
+            Quaternion orientation,
+            int layermask = -1,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        {
+            return Physics.CheckBox(
+                worldPosition + collider.center,
+                collider.size / 2,
+                orientation,
+                layermask,
+                queryTriggerInteraction
+                );
+        }
+
         public Collider[] OverlapShape(
             Vector3 worldPosition,
             Quaternion orientation,
@@ -66,6 +81,26 @@ namespace WizardUtils.PhysicsSolvers.Shapes
                 collider.size / 2,
                 results, 
                 orientation,
+                layermask,
+                queryTriggerInteraction);
+        }
+
+        public int ShapeCastNonAlloc(
+            RaycastHit[] results,
+            Vector3 worldPosition,
+            Vector3 direction,
+            Quaternion orientation,
+            float maxDistance,
+            int layermask = -1,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        {
+            return Physics.BoxCastNonAlloc(
+                worldPosition + collider.center,
+                collider.size / 2,
+                direction,
+                results,
+                orientation,
+                maxDistance,
                 layermask,
                 queryTriggerInteraction);
         }

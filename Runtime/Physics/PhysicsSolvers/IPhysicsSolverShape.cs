@@ -11,6 +11,14 @@ namespace WizardUtils.PhysicsSolvers
     {
         public Collider Collider { get; }
         public bool CanCollide(Collider other);
+        public bool ComputePenetration(
+            Vector3 worldPosition,
+            Quaternion orientation,
+            Collider other,
+            Vector3 otherPosition,
+            Quaternion otherOrientation,
+            out Vector3 direction,
+            out float distance);
 
         public Collider[] OverlapShape(
             Vector3 worldPosition,
@@ -25,13 +33,19 @@ namespace WizardUtils.PhysicsSolvers
             int layermask = ~0,
             QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
 
-        public bool ComputePenetration(
+        public int ShapeCastNonAlloc(
+            RaycastHit[] results,
+            Vector3 worldPosition,
+            Vector3 direction,
+            Quaternion orientation,
+            float maxDistance,
+            int layermask = ~0,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
+
+        public bool TestShape(
             Vector3 worldPosition,
             Quaternion orientation,
-            Collider other,
-            Vector3 otherPosition,
-            Quaternion otherOrientation,
-            out Vector3 direction,
-            out float distance);
+            int layermask = ~0,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
     }
 }
