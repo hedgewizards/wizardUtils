@@ -42,6 +42,16 @@ namespace WizardUtils.PhysicsSolvers
             int layermask = ~0,
             QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
 
+        public bool ShapeCastSingle(
+            out RaycastHit hitInfo,
+            Vector3 worldPosition,
+            Vector3 direction,
+            Quaternion orientation,
+            float maxDistance,
+            float scale = 1f,
+            int layermask = ~0,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
+
         public bool TestShape(
             Vector3 worldPosition,
             Quaternion orientation,

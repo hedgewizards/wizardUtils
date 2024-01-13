@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlasticGui.Gluon.Help.Conditions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -99,6 +100,27 @@ namespace WizardUtils.PhysicsSolvers.Shapes
                 collider.size / 2,
                 direction,
                 results,
+                orientation,
+                maxDistance,
+                layermask,
+                queryTriggerInteraction);
+        }
+
+        public bool ShapeCastSingle(
+            out RaycastHit hitInfo,
+            Vector3 worldPosition,
+            Vector3 direction,
+            Quaternion orientation,
+            float maxDistance,
+            float scale = 1,
+            int layermask = -1,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        {
+            return Physics.BoxCast(
+                worldPosition + collider.center,
+                collider.size / 2 * scale,
+                direction,
+                out hitInfo,
                 orientation,
                 maxDistance,
                 layermask,

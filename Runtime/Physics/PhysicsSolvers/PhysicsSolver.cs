@@ -11,13 +11,17 @@ namespace WizardUtils.PhysicsSolvers
     {
         public IPhysicsSolverShape Shape {get; private set;}
         private int LayerMask;
-        private Collider[] _OverlapCache;
+        private static Collider[] _OverlapCache;
 
-        public PhysicsSolver(IPhysicsSolverShape shape, int layerMask, int overlapCacheSize = 16)
+        static PhysicsSolver()
+        {
+            _OverlapCache = new Collider[64];
+        }
+
+        public PhysicsSolver(IPhysicsSolverShape shape, int layerMask)
         {
             Shape = shape;
             LayerMask = layerMask;
-            _OverlapCache = new Collider[overlapCacheSize];
         }
 
         public Vector3 Move(Vector3 position, Vector3 movement, Action<CollisionEventData> OnCollide)
