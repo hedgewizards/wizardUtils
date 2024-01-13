@@ -93,6 +93,23 @@ namespace WizardUtils
             return Vector3.Dot(vec, normal) * normal;
         }
         /// <summary>
+        /// If above the normal of the plane, remove the normal component. otherwise returns itself
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 ProjectDownToPlane(this Vector3 vec, Vector3 normal)
+        {
+            float normalSize = Vector3.Dot(vec, normal);
+            if (normalSize > 0)
+            {
+                return vec - (normalSize * normal);
+            }
+            else
+            {
+                return vec;
+            }
+        }
+
+        /// <summary>
         /// returns a normalized vector along the plane tangent to upVector
         /// </summary>
         /// <param name="vec"></param>
