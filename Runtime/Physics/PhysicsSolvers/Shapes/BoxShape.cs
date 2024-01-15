@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WizardUtils.Extensions;
 
 namespace WizardUtils.PhysicsSolvers.Shapes
 {
@@ -125,6 +126,11 @@ namespace WizardUtils.PhysicsSolvers.Shapes
                 maxDistance,
                 layermask,
                 queryTriggerInteraction);
+        }
+
+        public void DebugDrawShape(Vector3 worldPosition, Quaternion orientation, float scale, Color color, float duration = 0)
+        {
+            DebugDrawHelper.DrawBox(worldPosition + collider.center, collider.size / 2 * scale, orientation, color, duration);
         }
     }
 }

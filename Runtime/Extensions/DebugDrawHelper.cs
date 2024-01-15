@@ -13,6 +13,45 @@ namespace WizardUtils.Extensions
         private const int CircleDefaultResolution = 16;
         private const int DefaultDrawDuration = 0;
 
+        public static void DrawBox(Vector3 center, Vector3 extents, Quaternion orientation, Color color, float duration = DefaultDrawDuration)
+        {
+            Vector3[,,] corners = new Vector3[2, 2, 2];
+            for (int x = 0; x < 2; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int z = 0; z < 2; z++)
+                    {
+                        corners[x, y, z] = new Vector3()
+                        {
+                            x = center.x + extents.x * (x == 0 ? 1 : -1),
+                            y = center.y + extents.y * (y == 0 ? 1 : -1),
+                            z = center.z + extents.z * (z == 0 ? 1 : -1),
+                        };
+                        corners[x, y, z] = orientation * corners[x, y, z];
+                    }
+                }
+            }
+
+            // bottom rectangle
+            Debug.DrawLine(corners[0, 0, 0], corners[0, 0, 1], color, duration);
+            Debug.DrawLine(corners[0, 0, 0], corners[0, 1, 0], color, duration);
+            Debug.DrawLine(corners[0, 1, 1], corners[0, 0, 1], color, duration);
+            Debug.DrawLine(corners[0, 1, 1], corners[0, 1, 0], color, duration);
+
+            // top rectangle
+            Debug.DrawLine(corners[1, 0, 0], corners[1, 0, 1], color, duration);
+            Debug.DrawLine(corners[1, 0, 0], corners[1, 1, 0], color, duration);
+            Debug.DrawLine(corners[1, 1, 1], corners[1, 0, 1], color, duration);
+            Debug.DrawLine(corners[1, 1, 1], corners[1, 1, 0], color, duration);
+
+            // pillars
+            Debug.DrawLine(corners[0, 0, 0], corners[1, 0, 0], color, duration);
+            Debug.DrawLine(corners[0, 0, 1], corners[1, 0, 1], color, duration);
+            Debug.DrawLine(corners[0, 1, 0], corners[1, 1, 0], color, duration);
+            Debug.DrawLine(corners[0, 1, 1], corners[1, 1, 1], color, duration);
+        }
+
         public static void DrawCapsule(Vector3 center, float height, float radius, Color color, int resolution = CircleDefaultResolution)
         {
 #if UNITY_EDITOR

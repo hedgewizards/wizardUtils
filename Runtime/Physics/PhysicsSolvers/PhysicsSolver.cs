@@ -47,7 +47,7 @@ namespace WizardUtils.PhysicsSolvers
                         CollisionDistance = distance,
                     };
                     OnCollide.Invoke(eventData);
-                    position = eventData.ShapePosition;
+                    position += direction * distance;
                 }
             }
 

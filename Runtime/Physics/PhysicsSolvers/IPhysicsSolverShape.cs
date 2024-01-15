@@ -57,5 +57,12 @@ namespace WizardUtils.PhysicsSolvers
             Quaternion orientation,
             int layermask = ~0,
             QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
+
+        public void DebugDrawShape(
+            Vector3 worldPosition,
+            Quaternion orientation,
+            float scale,
+            Color color,
+            float duration = 0);
     }
 }
