@@ -34,5 +34,15 @@ namespace WizardUtils.Math
             var accelSpeed = Mathf.Min(maxDeltaVelocity, addSpeed);
             return velocity + accelSpeed * direction;
         }
+
+        public static Vector3 MoveVelocityTowards(
+            Vector3 velocity,
+            Vector3 direction,
+            float maxSpeed,
+            float maxDeltaVelocity
+            )
+        {
+            return Vector3.MoveTowards(velocity, direction * maxSpeed, maxDeltaVelocity);
+        }
     }
 }
