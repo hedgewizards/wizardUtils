@@ -14,6 +14,7 @@ namespace WizardUtils.Equipment
         public EquipmentSlot[] EquipmentSlots;
 
         public UnityEvent<EquipmentSlot> OnEquip;
+        public UnityEvent<EquipmentSlot> OnRemove;
 
         private void Awake()
         {
@@ -107,7 +108,7 @@ namespace WizardUtils.Equipment
 
             if (slot.Equipment != null)
             {
-                DeApplySlot(slot);
+                UnEquip(slot);
             }
 
             slot.Equipment = equipment;
@@ -117,6 +118,7 @@ namespace WizardUtils.Equipment
 
         public void UnEquip(EquipmentSlot slot)
         {
+            OnRemove?.Invoke(slot);
             DeApplySlot(slot);
             slot.Equipment = null;
         }
