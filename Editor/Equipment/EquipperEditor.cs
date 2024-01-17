@@ -116,7 +116,7 @@ namespace WizardUtils.Equipment.Inspector
             }
         }
 
-        bool slotsToggle;
+        static bool slotsToggle;
         private void DrawEquipmentSlots()
         {
             slotsToggle = EditorGUILayout.BeginFoldoutHeaderGroup(slotsToggle, "Equipment Slots");
