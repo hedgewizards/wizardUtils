@@ -7,7 +7,7 @@ using WizardUtils.SceneManagement;
 namespace WizardUtils
 {
 
-    [CustomEditor(typeof(GameManager))]
+    [CustomEditor(typeof(GameManager), true)]
     public class GameManagerEditor : Editor
     {
         protected GameManager self;
