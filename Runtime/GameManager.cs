@@ -19,7 +19,7 @@ namespace WizardUtils
     public abstract class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
-        public GameManagerConfiguration Configuration;
+        public ManifestSet Manifests;
         public IPlatformService PlatformService;
         [HideInInspector]
         public GlobalSounds.GlobalSoundService GlobalSoundService;
@@ -39,7 +39,7 @@ namespace WizardUtils
 
             Instance = this;
             PlatformService = BuildPlatformService();
-            GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Configuration.GlobalSoundManifest);
+            GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Manifests.GlobalSound);
             GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
             
             DontDestroyOnLoad(gameObject);
@@ -328,16 +328,16 @@ namespace WizardUtils
 
         private void SetupSaveData()
         {
-            if (Configuration.MainSaveManifest == null) return;
+            if (Manifests.MainSave == null) return;
 
 #if UNITY_EDITOR
             if (EditorOverrideSaveData != null)
             {
-                saveDataTracker = new SaveDataTrackerExplicit(Configuration.MainSaveManifest, EditorOverrideSaveData);
+                saveDataTracker = new SaveDataTrackerExplicit(Manifests.MainSave, EditorOverrideSaveData);
             }
             else
             {
-                saveDataTracker = new SaveDataTrackerFile(Configuration.MainSaveManifest);
+                saveDataTracker = new SaveDataTrackerFile(Manifests.MainSave);
             }
 #else
             saveDataTracker = new SaveDataTrackerFile(MainSaveManifest);
