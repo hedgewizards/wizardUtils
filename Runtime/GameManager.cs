@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
