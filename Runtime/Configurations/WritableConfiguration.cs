@@ -9,6 +9,13 @@ namespace WizardUtils.Configurations
     public class WritableConfiguration : IConfiguration
     {
         public Dictionary<string, string> Data { get; set; }
+        public event EventHandler<ValueChangedEventArgs> OnValueChanged;
+
+        public WritableConfiguration()
+        {
+            Data = new Dictionary<string, string>();
+        }
+
 
         public string this[string key]
         {
@@ -30,8 +37,6 @@ namespace WizardUtils.Configurations
             }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Values => throw new NotImplementedException();
-
-        public event EventHandler<ValueChangedEventArgs> OnValueChanged;
+        public IEnumerable<KeyValuePair<string, string>> Values => Data;
     }
 }
