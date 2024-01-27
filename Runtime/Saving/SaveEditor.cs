@@ -1,48 +1,39 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using WizardUtils.Configurations;
 
 namespace WizardUtils.Saving
 {
     public abstract class SaveEditor : MonoBehaviour
     {
+        private GameManager gameManager;
+
         public SaveValueDescriptor Save;
         public bool LoadOnAwake;
         public bool SaveOnSet;
 
         private void Start()
         {
-            GameManager.Instance?.SubscribeMainSave(Save, CallChangedEvent);
-            if (LoadOnAwake) CallChangedEvent(new SaveValueChangedEventArgs()
-            {
-                OldValue = Save.DefaultValue,
-                NewValue = Save.SerializedValue
-            });
+            gameManager = GameManager.Instance;
+
+            gameManager.Configuration.AddListener(Save.Key, CallChangedEvent);
+            if (LoadOnAwake) Reload();
         }
 
         public void Reload()
         {
-            CallChangedEvent(new SaveValueChangedEventArgs()
-            {
-                OldValue = Save.DefaultValue,
-                NewValue = Save.SerializedValue
-            });
+            CallChangedEvent(this, new ValueChangedEventArgs(Save.Key, Save.DefaultValue, GetString()));
         }
 
-        bool isSaving;
         public void SetString(string value)
         {
-            if (isSaving) return;
-            isSaving = true;
-            var oldValue = Save.SerializedValue;
-            Save.SerializedValue = value;
-            if (SaveOnSet) SaveHelper.SaveData();
-            CallChangedEvent(new SaveValueChangedEventArgs(oldValue, value));
-            isSaving = false;
+            gameManager.Configuration.Write(Save.Key, value);
         }
 
-        public string GetString() => Save.SerializedValue;
+        public string GetString() => gameManager.Configuration.Read(Save.Key, Save.DefaultValue);
 
-        protected abstract void CallChangedEvent(SaveValueChangedEventArgs args);
+        protected abstract void CallChangedEvent(object sender, ValueChangedEventArgs args);
 
     }
 }

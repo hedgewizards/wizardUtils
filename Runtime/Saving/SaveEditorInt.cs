@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using WizardUtils.Configurations;
 
 namespace WizardUtils.Saving
 {
@@ -17,7 +18,7 @@ namespace WizardUtils.Saving
             return Save.IntValue;
         }
 
-        protected override void CallChangedEvent(SaveValueChangedEventArgs args)
+        protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
             if (SaveHelper.ParseInt(args.NewValue, out int newValue))
             {

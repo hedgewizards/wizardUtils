@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using WizardUtils.Configurations;
 
 namespace WizardUtils.Saving
 {
@@ -13,7 +14,7 @@ namespace WizardUtils.Saving
             SetString(SaveHelper.SerializeBool(newValue));
         }
 
-        protected override void CallChangedEvent(SaveValueChangedEventArgs args)
+        protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
             if (args.NewValue == args.OldValue) return;
             if (SaveHelper.ParseBool(args.NewValue))
