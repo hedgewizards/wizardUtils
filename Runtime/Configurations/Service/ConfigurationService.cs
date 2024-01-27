@@ -14,9 +14,10 @@ namespace WizardUtils.Configurations
 
         public Dictionary<string, EventHandler<ValueChangedEventArgs>> ValueChangedDictionary;
 
-        public ConfigurationService(IWritableConfiguration FileConfiguration, IConfiguration OverrideConfiguration = null)
+        public ConfigurationService(IWritableConfiguration fileConfiguration, IConfiguration OverrideConfiguration = null)
         {
             ValueChangedDictionary = new Dictionary<string, EventHandler<ValueChangedEventArgs>>();
+            FileConfiguration = fileConfiguration;
             LiveConfiguration = new WritableConfiguration();
             FullConfiguration = new StackedConfiguration();
             FullConfiguration.AddConfiguration(FileConfiguration);
