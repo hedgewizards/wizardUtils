@@ -33,6 +33,7 @@ namespace WizardUtils.Configurations
         public StackedConfiguration()
         {
             Configurations = new List<ConfigData>();
+            Table = new Dictionary<string, EntryData>();
         }
 
         public void AddConfiguration(IConfiguration configuration)
