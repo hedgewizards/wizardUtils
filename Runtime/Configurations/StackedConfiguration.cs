@@ -13,7 +13,17 @@ namespace WizardUtils.Configurations
     /// </summary>
     public class StackedConfiguration : IConfiguration, IDisposable
     {
-        public string Read(string key) => Table[key].Value;
+        public string Read(string key)
+        {
+            if (Table.TryGetValue(key, out var entryData))
+            {
+                return entryData.Value;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public IEnumerable<KeyValuePair<string, string>> Values => Table.Select(kv => new KeyValuePair<string, string>(kv.Key, kv.Value.Value));
 
