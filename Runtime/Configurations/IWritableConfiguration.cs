@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WizardUtils.Configurations
 {
-    public interface ITwoWayConfiguration : IConfiguration
+    public interface IWritableConfiguration : IConfiguration
     {
         public void Write(string key, string value);
         public void Save();

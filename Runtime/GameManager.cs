@@ -334,7 +334,7 @@ namespace WizardUtils
         const string settingsConfigFileName = "settings";
         private void InitializeConfigurationService()
         {
-            CfgFileConfiguration fileConfig = new CfgFileConfiguration(PlatformService, settingsConfigFileName);
+            IWritableConfiguration fileConfig = new CfgFileConfiguration(PlatformService, settingsConfigFileName);
 #if DEBUG
             Configuration = new ConfigurationService(fileConfig, new ExplicitConfiguration(DebugOverrideConfig));
 #else

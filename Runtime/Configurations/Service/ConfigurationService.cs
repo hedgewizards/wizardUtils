@@ -9,13 +9,14 @@ namespace WizardUtils.Configurations
     public class ConfigurationService : IConfigurationService
     {
         private StackedConfiguration FullConfiguration;
-        private CfgFileConfiguration FileConfiguration;
+        private IWritableConfiguration FileConfiguration;
         private WritableConfiguration LiveConfiguration;
 
         public Dictionary<string, EventHandler<ValueChangedEventArgs>> ValueChangedDictionary;
 
-        public ConfigurationService(ITwoWayConfiguration FileConfiguration, IConfiguration OverrideConfiguration = null)
+        public ConfigurationService(IWritableConfiguration FileConfiguration, IConfiguration OverrideConfiguration = null)
         {
+            ValueChangedDictionary = new Dictionary<string, EventHandler<ValueChangedEventArgs>>();
             LiveConfiguration = new WritableConfiguration();
             FullConfiguration = new StackedConfiguration();
             FullConfiguration.AddConfiguration(FileConfiguration);
@@ -86,7 +87,7 @@ namespace WizardUtils.Configurations
 
         public void Save()
         {
-            throw new NotImplementedException();
+            FileConfiguration.Save();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WizardUtils.Configurations
 {
-    public class WritableConfiguration : ITwoWayConfiguration
+    public class WritableConfiguration : IWritableConfiguration
     {
         public Dictionary<string, string> Data { get; set; }
         public event EventHandler<ValueChangedEventArgs> OnValueChanged;

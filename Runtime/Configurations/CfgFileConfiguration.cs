@@ -9,7 +9,7 @@ using WizardUtils.GameSettings;
 
 namespace WizardUtils.Configurations
 {
-    public class CfgFileConfiguration : ITwoWayConfiguration
+    public class CfgFileConfiguration : IWritableConfiguration
     {
         private IPlatformService PlatformService;
         
