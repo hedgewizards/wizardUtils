@@ -14,6 +14,5 @@ namespace Platforms
         public string PersistentDataPath { get; }
         public void OnEnable();
         public void OnDestroy();
-        public IGameSettingService BuildGameSettingService(IEnumerable<LegacyGameSettingFloat> settings);
     }
 }

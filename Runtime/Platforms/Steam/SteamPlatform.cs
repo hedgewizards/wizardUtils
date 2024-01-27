@@ -52,11 +52,6 @@ namespace Platforms.Steam
             SetupPersistentDataPath();
         }
 
-        public IGameSettingService BuildGameSettingService(IEnumerable<LegacyGameSettingFloat> settings)
-        {
-            return new ConfigFileGameSettingService(this, "settings", settings);
-        }
-
         #region Messages
 
         public void OnEnable()

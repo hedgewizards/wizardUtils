@@ -8,7 +8,7 @@ namespace WizardUtils.Configurations
 {
     public interface IConfiguration
     {
-        public string this[string key] { get; }
+        public string Read(string key);
 
         public event EventHandler<ValueChangedEventArgs> OnValueChanged;
 

@@ -24,10 +24,5 @@ namespace Platforms.Portable
         {
 
         }
-
-        public IGameSettingService BuildGameSettingService(IEnumerable<LegacyGameSettingFloat> settings)
-        {
-            return new ConfigFileGameSettingService(this, "settings", settings);
-        }
     }
 }

@@ -7,7 +7,7 @@ using WizardUtils.GameSettings;
 
 namespace WizardUtils.GameSettings.Legacy
 {
-    [Obsolete]
+    [Obsolete("Use ConfigGameSetting<float> instead!")]
     public class LegacyGameSettingFloat : IGameSetting<float>
     {
         string key;

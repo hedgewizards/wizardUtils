@@ -13,7 +13,7 @@ namespace WizardUtils.Configurations
     /// </summary>
     public class StackedConfiguration : IConfiguration, IDisposable
     {
-        public string this[string key] => Table[key].Value;
+        public string Read(string key) => Table[key].Value;
 
         public IEnumerable<KeyValuePair<string, string>> Values => Table.Select(kv => new KeyValuePair<string, string>(kv.Key, kv.Value.Value));
 
@@ -101,7 +101,7 @@ namespace WizardUtils.Configurations
                     // we are unsetting the value. we should fall back
                     for (int id = sourceId - 1; id >= 0; id--)
                     {
-                        string newValue = Configurations[id].Configuration[e.Key];
+                        string newValue = Configurations[id].Configuration.Read(e.Key);
                         if (!string.IsNullOrEmpty(newValue))
                         {
                             entryData.Value = e.NewValue;

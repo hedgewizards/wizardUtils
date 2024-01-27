@@ -5,10 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WizardUtils.GameSettings;
 
 namespace WizardUtils.Configurations
 {
-    public class CfgFileConfiguration : IConfiguration
+    public class CfgFileConfiguration : ITwoWayConfiguration
     {
         private IPlatformService PlatformService;
         
@@ -17,7 +18,8 @@ namespace WizardUtils.Configurations
 
         private readonly Dictionary<string, string> Data;
 
-        public string this[string key] => Data[key];
+        public string Read(string key) => Data[key];
+        public void Write(string key, string value) => Data[key] = value;
 
         public IEnumerable<KeyValuePair<string, string>> Values => Data;
 
@@ -31,15 +33,35 @@ namespace WizardUtils.Configurations
             Data = new Dictionary<string, string>();
             foreach(var pair in rawData)
             {
-                Data.Add(pair.Item1, pair.Item2);
+                Data.Add(pair.Key, pair.Value);
             }
         }
 
-        private static IEnumerable<Tuple<string,string>> ReadData(string filePath)
+        public void Save()
+        {
+            WriteData(FilePath, Data);
+        }
+
+        private static void WriteData(string filePath, IEnumerable<KeyValuePair<string, string>> data)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                CfgFileSerializationHelper.Serialize(filePath, data);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogWarning($"Settings save ERROR Failed to write to {filePath}: {e}");
+                return;
+            }
+        }
+
+
+        private static IEnumerable<KeyValuePair<string,string>> ReadData(string filePath)
         {
             if (!File.Exists(filePath))
             {
-                return new Tuple<string, string>[0];
+                return new KeyValuePair<string, string>[0];
             }
 
             return CfgFileSerializationHelper.Deserialize(filePath);

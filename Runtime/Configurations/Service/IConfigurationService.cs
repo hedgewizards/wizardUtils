@@ -8,8 +8,13 @@ namespace WizardUtils.Configurations
 {
     public interface IConfigurationService
     {
-        public string GetOption(string key, string defaultValue = null);
+        public string Read(string key, string defaultValue = null);
 
-        public void SetOption(string key, string value);
+        public void Write(string key, string value, bool writeToConfig = false);
+
+        public void Save();
+
+        public void AddListener(string key, EventHandler<ValueChangedEventArgs> listener);
+        public void RemoveListener(string key, EventHandler<ValueChangedEventArgs> listener);
     }
 }

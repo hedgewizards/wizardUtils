@@ -44,10 +44,10 @@ namespace WizardUtils
             Instance = this;
             PlatformService = BuildPlatformService();
             GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Manifests.GlobalSound);
-            GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
             
             DontDestroyOnLoad(gameObject);
-            SetupConfigurationService();
+            InitializeConfigurationService();
+            InitializeGameSettings();
             SetupSaveData();
             
         }
@@ -59,7 +59,7 @@ namespace WizardUtils
 
         protected virtual void OnApplicationQuit()
         {
-            GameSettingService.Save();
+            Configuration.Save();
             OnQuitToDesktop.Invoke();
         }
 
@@ -295,28 +295,32 @@ namespace WizardUtils
         #endregion
 
         #region GameSettings
-        IGameSettingService GameSettingService;
+        private Dictionary<string, GameSettingFloat> GameSettingFloats;
 
-        public void SaveSettingsChanges()
+        private void InitializeGameSettings()
         {
-            GameSettingService.Save();
-        }
-        
-        protected virtual List<LegacyGameSettingFloat> LoadGameSettings()
-        {
-            return new List<LegacyGameSettingFloat>()
+            GameSettingFloats = new Dictionary<string, GameSettingFloat>();
+            foreach(var setting in LoadGameSettingFloats())
             {
-                new LegacyGameSettingFloat(KEY_VOLUME_MASTER, 100),
-                new LegacyGameSettingFloat(KEY_VOLUME_EFFECTS, 80),
-                new LegacyGameSettingFloat(KEY_VOLUME_AMBIENCE, 80),
-                new LegacyGameSettingFloat(KEY_VOLUME_MUSIC, 80),
-                new LegacyGameSettingFloat(SETTINGKEY_MUTE_ON_ALT_TAB, 0),
+                GameSettingFloats[setting.Key] = setting;
+            }
+        }
+
+        protected virtual List<GameSettingFloat> LoadGameSettingFloats()
+        {
+            return new List<GameSettingFloat>()
+            {
+                new GameSettingFloat(Configuration, KEY_VOLUME_MASTER, 100),
+                new GameSettingFloat(Configuration, KEY_VOLUME_EFFECTS, 80),
+                new GameSettingFloat(Configuration, KEY_VOLUME_AMBIENCE, 80),
+                new GameSettingFloat(Configuration, KEY_VOLUME_MUSIC, 80),
+                new GameSettingFloat(Configuration, SETTINGKEY_MUTE_ON_ALT_TAB, 0),
             };
         }
 
-        public LegacyGameSettingFloat FindGameSetting(string key)
+        public GameSettingFloat FindGameSetting(string key)
         {
-            return GameSettingService.GetSetting(key);
+            return GameSettingFloats.GetValueOrDefault(key, null);
         }
 
         public static string KEY_VOLUME_MASTER = "Volume_Master";
@@ -329,17 +333,14 @@ namespace WizardUtils
 
         #region Configuration
         const string settingsConfigFileName = "settings";
-        private void SetupConfigurationService()
+        private void InitializeConfigurationService()
         {
-            IConfiguration baseConfig =
+            CfgFileConfiguration fileConfig = new CfgFileConfiguration(PlatformService, settingsConfigFileName);
 #if DEBUG
-                new StackedConfiguration( new CfgFileConfiguration(PlatformService, settingsConfigFileName), new ExplicitConfiguration(DebugOverrideConfig)
+            Configuration = new ConfigurationService(fileConfig, new ExplicitConfiguration(DebugOverrideConfig));
 #else
-                new CfgFileConfiguration(PlatformService, settingsConfigFileName)
+            Configuration = new ConfigurationService(fileConfig);
 #endif
-                );
-
-            Configuration = new ConfigurationService(baseConfig);
         }
         #endregion
 

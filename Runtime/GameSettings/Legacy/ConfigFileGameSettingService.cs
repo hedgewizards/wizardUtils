@@ -8,6 +8,7 @@ using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
+    [Obsolete]
     public class ConfigFileGameSettingService : IGameSettingService
     {
         Dictionary<string, LegacyGameSettingFloat> GameSettings;

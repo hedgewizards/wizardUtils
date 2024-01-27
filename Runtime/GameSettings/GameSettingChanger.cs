@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using WizardUtils.GameSettings.Legacy;
+using WizardUtils.GameSettings;
 
 namespace WizardUtils
 {
     public class GameSettingChanger : MonoBehaviour
     {
         public string SettingKeyName;
-        LegacyGameSettingFloat setting;
+        GameSettingFloat setting;
         public UnityEvent<float> OnValueLoaded;
 
         private void Start()

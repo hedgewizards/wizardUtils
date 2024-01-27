@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WizardUtils.Configurations
 {
-    public class WritableConfiguration : IConfiguration
+    public class WritableConfiguration : ITwoWayConfiguration
     {
         public Dictionary<string, string> Data { get; set; }
         public event EventHandler<ValueChangedEventArgs> OnValueChanged;
@@ -16,26 +16,25 @@ namespace WizardUtils.Configurations
             Data = new Dictionary<string, string>();
         }
 
-
-        public string this[string key]
+        public string Read(string key)
         {
-            get
+            if (Data.TryGetValue(key, out var value))
             {
-                if (Data.TryGetValue(key, out var value))
-                {
-                    return value;
-                }
-                else
-                {
-                    return null;
-                }
+                return value;
             }
-            set
+            else
             {
-                OnValueChanged?.Invoke(this, new ValueChangedEventArgs(key, this[key], value));
-                Data[key] = value;
+                return null;
             }
         }
+
+        public void Write(string key, string value)
+        {
+            OnValueChanged?.Invoke(this, new ValueChangedEventArgs(key, Read(key), value));
+            Data[key] = value;
+        }
+
+        public void Save() { }
 
         public IEnumerable<KeyValuePair<string, string>> Values => Data;
     }

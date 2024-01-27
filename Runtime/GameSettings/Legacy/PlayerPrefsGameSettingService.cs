@@ -5,6 +5,7 @@ using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
+    [Obsolete]
     public class PlayerPrefsGameSettingService : IGameSettingService
     {
         Dictionary<string, LegacyGameSettingFloat> GameSettings;

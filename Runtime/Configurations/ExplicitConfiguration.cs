@@ -23,7 +23,7 @@ namespace WizardUtils.Configurations
             }
         }
 
-        public string this[string key] => Data.GetValueOrDefault(key);
+        public string Read(string key) => Data.GetValueOrDefault(key);
 
         public IEnumerable<KeyValuePair<string, string>> Values => Data;
 

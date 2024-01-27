@@ -9,23 +9,28 @@ namespace WizardUtils.Configurations
     public class ConfigurationService : IConfigurationService
     {
         private StackedConfiguration FullConfiguration;
-        private WritableConfiguration MainConfiguration;
+        private CfgFileConfiguration FileConfiguration;
+        private WritableConfiguration LiveConfiguration;
 
         public Dictionary<string, EventHandler<ValueChangedEventArgs>> ValueChangedDictionary;
 
-        public ConfigurationService(IConfiguration BaseConfiguration)
+        public ConfigurationService(ITwoWayConfiguration FileConfiguration, IConfiguration OverrideConfiguration = null)
         {
-            MainConfiguration = new WritableConfiguration();
-            FullConfiguration = new StackedConfiguration(
-                BaseConfiguration,
-                MainConfiguration);
+            LiveConfiguration = new WritableConfiguration();
+            FullConfiguration = new StackedConfiguration();
+            FullConfiguration.AddConfiguration(FileConfiguration);
+            if (OverrideConfiguration != null)
+            {
+                FullConfiguration.AddConfiguration(OverrideConfiguration);
+            }
+            FullConfiguration.AddConfiguration(LiveConfiguration);
 
             FullConfiguration.OnValueChanged += FullConfiguration_OnValueChanged;
         }
         
-        public string GetOption(string key, string defaultValue = null)
+        public string Read(string key, string defaultValue = null)
         {
-            string value = FullConfiguration[key];
+            string value = FullConfiguration.Read(key);
             if (string.IsNullOrEmpty(value))
             {
                 return defaultValue;
@@ -36,9 +41,13 @@ namespace WizardUtils.Configurations
             }
         }
 
-        public void SetOption(string key, string value)
+        public void Write(string key, string value, bool persist = false)
         {
-            MainConfiguration[key] = value;
+            LiveConfiguration.Write(key, value);
+            if (persist)
+            {
+                FileConfiguration.Write(key, value);
+            }
         }
 
         public void AddListener(string key, EventHandler<ValueChangedEventArgs> listener)
@@ -73,6 +82,11 @@ namespace WizardUtils.Configurations
             {
                 existingListener?.Invoke(this, e);
             }
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }

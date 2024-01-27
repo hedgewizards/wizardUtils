@@ -11,7 +11,7 @@ namespace WizardUtils
     public class GameSettingTracker : MonoBehaviour
     {
         public GameSettingChangedEvent OnSettingChanged;
-        LegacyGameSettingFloat gameSetting;
+        GameSettingFloat gameSetting;
         public string SettingName;
 
         private void Start()

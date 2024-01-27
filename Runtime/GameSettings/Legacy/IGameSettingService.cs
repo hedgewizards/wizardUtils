@@ -7,6 +7,7 @@ using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
+    [Obsolete]
     public interface IGameSettingService
     {
         public LegacyGameSettingFloat GetSetting(string key);
