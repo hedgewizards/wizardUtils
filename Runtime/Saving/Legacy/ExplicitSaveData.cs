@@ -8,8 +8,8 @@ using WizardUtils.Saving;
 
 namespace WizardUtils.Saving
 {
-    [CreateAssetMenu(fileName = "ExplicitSaveData", menuName = "WizardUtils/Saving/ExplicitSaveData", order = 1)]
-
+    //[CreateAssetMenu(fileName = "ExplicitSaveData", menuName = "WizardUtils/Saving/ExplicitSaveData", order = 1)]
+    [Obsolete]
     public class ExplicitSaveData : ScriptableObject
     {
         public SaveManifest SaveManifest;

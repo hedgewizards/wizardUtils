@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace WizardUtils.Saving
 {
-    [CreateAssetMenu(fileName = "SaveManifest", menuName = "WizardUtils/Saving/SaveManifest", order = 1)]
+    //[CreateAssetMenu(fileName = "SaveManifest", menuName = "WizardUtils/Saving/SaveManifest", order = 1)]
+    [Obsolete]
     public class SaveManifest : ScriptableObject
     {
         public string FileName;

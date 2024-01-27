@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace WizardUtils.Saving
 {
+    [Obsolete]
     public abstract class SaveDataTracker
     {
         public Dictionary<SaveValueDescriptor, SaveValue> LoadedValues;
