@@ -46,7 +46,7 @@ namespace WizardUtils.GameSettings
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-                SettingsSerializationHelper.SerializeSettings(FilePath, GameSettings.Select(x => new Tuple<string, float>(x.Value.Key, x.Value.Value)));
+                GameSettingsSerializationHelper.SerializeSettings(FilePath, GameSettings.Select(x => new Tuple<string, float>(x.Value.Key, x.Value.Value)));
             }
             catch (Exception e)
             {
@@ -98,7 +98,7 @@ namespace WizardUtils.GameSettings
             
             try
             {
-                return SettingsSerializationHelper.DeserializeSettings(FilePath);
+                return GameSettingsSerializationHelper.DeserializeSettings(FilePath);
             }
             catch (Exception e)
             {

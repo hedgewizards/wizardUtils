@@ -22,6 +22,8 @@ namespace WizardUtils
         public static GameManager Instance;
         public ManifestSet Manifests;
         public IPlatformService PlatformService;
+        public IConfigurationService Configuration;
+        public ExplicitConfigurationData DebugOverrideConfig;
         [HideInInspector]
         public GlobalSounds.GlobalSoundService GlobalSoundService;
         public string PersistentDataPath => Application.persistentDataPath;
@@ -44,7 +46,9 @@ namespace WizardUtils
             GameSettingService = PlatformService.BuildGameSettingService(LoadGameSettings());
             
             DontDestroyOnLoad(gameObject);
+            SetupConfigurationService();
             SetupSaveData();
+            
         }
 
         protected virtual void Update()
@@ -320,6 +324,22 @@ namespace WizardUtils
         public static string KEY_VOLUME_MUSIC = "Volume_Music";
 
         public static string SETTINGKEY_MUTE_ON_ALT_TAB = "MuteOnAltTab";
+        #endregion
+
+        #region Configuration
+        const string settingsConfigFileName = "settings";
+        private void SetupConfigurationService()
+        {
+            IConfiguration baseConfig =
+#if DEBUG
+                new StackedConfiguration( new CfgFileConfiguration(PlatformService, settingsConfigFileName), new ExplicitConfiguration(DebugOverrideConfig)
+#else
+                new CfgFileConfiguration(PlatformService, settingsConfigFileName)
+#endif
+                );
+
+            Configuration = new ConfigurationService(baseConfig);
+        }
         #endregion
 
         #region Saving

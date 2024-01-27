@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WizardUtils.GameSettings
 {
-    public static class SettingsSerializationHelper
+    public static class GameSettingsSerializationHelper
     {
         public static void SerializeSettings(string filePath, IEnumerable<Tuple<string, float>> settings)
         {

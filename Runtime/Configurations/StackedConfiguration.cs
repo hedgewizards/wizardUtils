@@ -22,6 +22,14 @@ namespace WizardUtils.Configurations
         private List<ConfigData> Configurations;
         private Dictionary<string, EntryData> Table;
 
+        public StackedConfiguration(params IConfiguration[] configs) : this()
+        {
+            foreach(var config in configs)
+            {
+                AddConfiguration(config);
+            }
+        }
+
         public StackedConfiguration()
         {
             Configurations = new List<ConfigData>();
