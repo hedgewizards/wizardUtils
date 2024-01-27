@@ -5,22 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WizardUtils
+namespace WizardUtils.GameSettings
 {
-    public class GameSettingFloat
+    public class GameSettingFloat : IGameSetting<float>
     {
         string key;
         public string Key => key;
         float defaultValue;
         private float _value;
 
-        public EventHandler<GameSettingChangedEventArgs> OnChanged;
+        public event EventHandler<GameSettingChangedEventArgs<float>> OnChanged;
 
         public GameSettingFloat(string key, float defaultValue)
         {
             this.key = key;
             this.defaultValue = defaultValue;
-            this._value = defaultValue;
+            _value = defaultValue;
         }
 
         public float Value
@@ -30,22 +30,10 @@ namespace WizardUtils
             {
                 if (value != _value)
                 {
-                    OnChanged?.Invoke(this, new GameSettingChangedEventArgs(_value, value));
+                    OnChanged?.Invoke(this, new GameSettingChangedEventArgs<float>(_value, value));
                 }
                 _value = value;
             }
-        }
-    }
-
-    public class GameSettingChangedEventArgs : EventArgs
-    {
-        public float InitialValue;
-        public float FinalValue;
-
-        public GameSettingChangedEventArgs(float initialValue, float finalValue)
-        {
-            InitialValue = initialValue;
-            FinalValue = finalValue;
         }
     }
 }

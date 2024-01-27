@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WizardUtils;
 using WizardUtils.GameSettings;
+using WizardUtils.GameSettings.Legacy;
 
 namespace Platforms
 {
@@ -14,6 +14,6 @@ namespace Platforms
         public string PersistentDataPath { get; }
         public void OnEnable();
         public void OnDestroy();
-        public IGameSettingService BuildGameSettingService(IEnumerable<GameSettingFloat> settings);
+        public IGameSettingService BuildGameSettingService(IEnumerable<LegacyGameSettingFloat> settings);
     }
 }

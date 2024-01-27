@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using WizardUtils.GameSettings;
+using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils
 {
     public class GameSettingTracker : MonoBehaviour
     {
         public GameSettingChangedEvent OnSettingChanged;
-        GameSettingFloat gameSetting;
+        LegacyGameSettingFloat gameSetting;
         public string SettingName;
 
         private void Start()
@@ -18,7 +20,7 @@ namespace WizardUtils
             gameSetting.OnChanged += onGameSettingChanged;
         }
 
-        private void onGameSettingChanged(object sender, GameSettingChangedEventArgs e)
+        private void onGameSettingChanged(object sender, GameSettingChangedEventArgs<float> e)
         {
             OnSettingChanged.Invoke(e.FinalValue);
         }

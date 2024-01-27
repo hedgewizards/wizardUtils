@@ -4,23 +4,24 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
     public class ConfigFileGameSettingService : IGameSettingService
     {
-        Dictionary<string, GameSettingFloat> GameSettings;
+        Dictionary<string, LegacyGameSettingFloat> GameSettings;
         private IPlatformService PlatformService;
         private string FilePath => $"{PlatformService.PersistentDataPath}{Path.DirectorySeparatorChar}{FileName}.cfg";
         private string FileName;
         private bool IsDirty;
         private bool IsLoading;
 
-        public ConfigFileGameSettingService(IPlatformService platformService, string fileName, IEnumerable<GameSettingFloat> settings)
+        public ConfigFileGameSettingService(IPlatformService platformService, string fileName, IEnumerable<LegacyGameSettingFloat> settings)
         {
             PlatformService = platformService;
             FileName = fileName;
-            GameSettings = new Dictionary<string, GameSettingFloat>();
+            GameSettings = new Dictionary<string, LegacyGameSettingFloat>();
             foreach(var setting in settings)
             {
                 RegisterGameSetting(setting);
@@ -28,7 +29,7 @@ namespace WizardUtils.GameSettings
             Load();
         }
 
-        public GameSettingFloat GetSetting(string key)
+        public LegacyGameSettingFloat GetSetting(string key)
         {
             return GameSettings[key];
         }
@@ -54,13 +55,13 @@ namespace WizardUtils.GameSettings
                 return;
             }
         }
-        private void RegisterGameSetting(GameSettingFloat newSetting)
+        private void RegisterGameSetting(LegacyGameSettingFloat newSetting)
         {
             GameSettings.Add(newSetting.Key, newSetting);
             newSetting.OnChanged += (sender, e) => OnGameSettingChanged(newSetting, e);
         }
 
-        private void OnGameSettingChanged(GameSettingFloat setting, GameSettingChangedEventArgs e)
+        private void OnGameSettingChanged(LegacyGameSettingFloat setting, GameSettingChangedEventArgs<float> e)
         {
             // we don't need to do any
             if (IsLoading) return;
@@ -82,7 +83,7 @@ namespace WizardUtils.GameSettings
                 else
                 {
                     // register extra settings so they will get serialized when we re-save the config
-                    RegisterGameSetting(new GameSettingFloat(pair.Item1, pair.Item2));
+                    RegisterGameSetting(new LegacyGameSettingFloat(pair.Item1, pair.Item2));
                 }
             }
             IsLoading = false;

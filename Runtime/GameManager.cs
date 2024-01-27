@@ -12,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
+using WizardUtils.GameSettings.Legacy;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
 
@@ -301,19 +302,19 @@ namespace WizardUtils
             GameSettingService.Save();
         }
         
-        protected virtual List<GameSettingFloat> LoadGameSettings()
+        protected virtual List<LegacyGameSettingFloat> LoadGameSettings()
         {
-            return new List<GameSettingFloat>()
+            return new List<LegacyGameSettingFloat>()
             {
-                new GameSettingFloat(KEY_VOLUME_MASTER, 100),
-                new GameSettingFloat(KEY_VOLUME_EFFECTS, 80),
-                new GameSettingFloat(KEY_VOLUME_AMBIENCE, 80),
-                new GameSettingFloat(KEY_VOLUME_MUSIC, 80),
-                new GameSettingFloat(SETTINGKEY_MUTE_ON_ALT_TAB, 0),
+                new LegacyGameSettingFloat(KEY_VOLUME_MASTER, 100),
+                new LegacyGameSettingFloat(KEY_VOLUME_EFFECTS, 80),
+                new LegacyGameSettingFloat(KEY_VOLUME_AMBIENCE, 80),
+                new LegacyGameSettingFloat(KEY_VOLUME_MUSIC, 80),
+                new LegacyGameSettingFloat(SETTINGKEY_MUTE_ON_ALT_TAB, 0),
             };
         }
 
-        public GameSettingFloat FindGameSetting(string key)
+        public LegacyGameSettingFloat FindGameSetting(string key)
         {
             return GameSettingService.GetSetting(key);
         }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using WizardUtils;
 using WizardUtils.GameSettings;
+using WizardUtils.GameSettings.Legacy;
 
 namespace Platforms.Portable
 {
@@ -25,7 +25,7 @@ namespace Platforms.Portable
 
         }
 
-        public IGameSettingService BuildGameSettingService(IEnumerable<GameSettingFloat> settings)
+        public IGameSettingService BuildGameSettingService(IEnumerable<LegacyGameSettingFloat> settings)
         {
             return new ConfigFileGameSettingService(this, "settings", settings);
         }

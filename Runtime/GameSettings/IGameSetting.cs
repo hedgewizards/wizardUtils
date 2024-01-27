@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
-    public interface IGameSettingService
+    public interface IGameSetting<T>
     {
-        public LegacyGameSettingFloat GetSetting(string key);
-        public void Save();
+        public T Value { get; set; }
+
+        public event EventHandler<GameSettingChangedEventArgs<T>> OnChanged;
     }
 }

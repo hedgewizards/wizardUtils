@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils.GameSettings
 {
     public class PlayerPrefsGameSettingService : IGameSettingService
     {
-        Dictionary<string, GameSettingFloat> GameSettings;
+        Dictionary<string, LegacyGameSettingFloat> GameSettings;
 
-        public PlayerPrefsGameSettingService(IEnumerable<GameSettingFloat> settings)
+        public PlayerPrefsGameSettingService(IEnumerable<LegacyGameSettingFloat> settings)
         {
-            GameSettings = new Dictionary<string, GameSettingFloat>();
-            foreach (GameSettingFloat newSetting in settings)
+            GameSettings = new Dictionary<string, LegacyGameSettingFloat>();
+            foreach (LegacyGameSettingFloat newSetting in settings)
             {
                 GameSettings.Add(newSetting.Key, newSetting);
                 newSetting.OnChanged += (sender, e) => OnGameSettingChanged(newSetting, e);
             }
         }
 
-        public GameSettingFloat GetSetting(string key)
+        public LegacyGameSettingFloat GetSetting(string key)
         {
             return GameSettings[key];
         }
@@ -27,7 +28,7 @@ namespace WizardUtils.GameSettings
         {
         }
 
-        private void OnGameSettingChanged(GameSettingFloat setting, GameSettingChangedEventArgs e)
+        private void OnGameSettingChanged(LegacyGameSettingFloat setting, GameSettingChangedEventArgs<float> e)
         {
             PlayerPrefs.SetFloat(setting.Key, e.FinalValue);
         }
