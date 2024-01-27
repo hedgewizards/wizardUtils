@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using WizardUtils.GameSettings;
-using WizardUtils.GameSettings.Legacy;
 
 namespace Platforms.Portable
 {

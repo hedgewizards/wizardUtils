@@ -12,7 +12,6 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
-using WizardUtils.GameSettings.Legacy;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
 

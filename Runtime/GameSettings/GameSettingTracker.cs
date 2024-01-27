@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using WizardUtils.GameSettings;
-using WizardUtils.GameSettings.Legacy;
 
 namespace WizardUtils
 {
