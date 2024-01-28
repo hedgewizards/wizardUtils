@@ -47,7 +47,6 @@ namespace WizardUtils
             DontDestroyOnLoad(gameObject);
             InitializeConfigurationService();
             InitializeGameSettings();
-            SetupSaveData();
             
         }
 
@@ -344,66 +343,15 @@ namespace WizardUtils
         #endregion
 
         #region Saving
-        public ExplicitSaveData EditorOverrideSaveData;
-        public bool DontSaveInEditor;
-        SaveDataTracker saveDataTracker;
-
-        private void SetupSaveData()
-        {
-            if (Manifests.MainSave == null) return;
-
-#if UNITY_EDITOR
-            if (EditorOverrideSaveData != null)
-            {
-                saveDataTracker = new SaveDataTrackerExplicit(Manifests.MainSave, EditorOverrideSaveData);
-            }
-            else
-            {
-                saveDataTracker = new SaveDataTrackerFile(Manifests.MainSave);
-            }
-#else
-            saveDataTracker = new SaveDataTrackerFile(MainSaveManifest);
-#endif
-            saveDataTracker.Load();
-        }
-
-        public void SubscribeMainSave(SaveValueDescriptor descriptor, UnityAction<SaveValueChangedEventArgs> action)
-        {
-            var value = saveDataTracker.GetSaveValue(descriptor);
-            value.OnValueChanged.AddListener(action);
-        }
-        public void UnsubscribeMainSave(SaveValueDescriptor descriptor, UnityAction<SaveValueChangedEventArgs> action)
-        {
-            var value = saveDataTracker.GetSaveValue(descriptor);
-            value.OnValueChanged.RemoveListener(action);
-        }
 
         public string ReadMainSave(SaveValueDescriptor descriptor)
         {
-#if UNITY_EDITOR
-            if (saveDataTracker == null)
-            {
-                Debug.LogWarning("Tried so load data without a MainSaveManifest", this);
-            }
-#endif
-            return saveDataTracker?.Read(descriptor)?? null;
+            return Configuration.Read(descriptor.Key);
         }
 
         public void WriteMainSave(SaveValueDescriptor descriptor, string stringValue)
         {
-
-#if UNITY_EDITOR
-            if (saveDataTracker == null)
-            {
-                Debug.LogWarning("Tried so save data without a MainSaveManifest", this);
-            }
-#endif
-            saveDataTracker?.Write(descriptor, stringValue);
-        }
-
-        public void SaveData()
-        {
-            saveDataTracker.Save();
+            Configuration.Write(descriptor.Key, stringValue);
         }
 #endregion
     }

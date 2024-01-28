@@ -10,7 +10,7 @@ namespace WizardUtils.Saving
 
         public void SetColor(Color color)
         {
-            SetString(SaveHelper.SerializeColor(color));
+            SetString(ConfigHelper.SerializeColor(color));
         }
 
         public Color GetColor()
@@ -20,7 +20,7 @@ namespace WizardUtils.Saving
 
         protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
-            if (SaveHelper.ParseColor(args.NewValue, out Color newColor))
+            if (ConfigHelper.TryParseColor(args.NewValue, out Color newColor))
             {
                 OnColorChanged?.Invoke(newColor);
             }

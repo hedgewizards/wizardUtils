@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WizardUtils.Configurations;
 
 namespace WizardUtils.Saving
 {
@@ -21,11 +22,11 @@ namespace WizardUtils.Saving
         {
             get
             {
-                return SaveHelper.ParseBool(SerializedValue);
+                return ConfigHelper.TryParseBool(SerializedValue);
             }
             set
             {
-                SerializedValue = SaveHelper.SerializeBool(value);
+                SerializedValue = ConfigHelper.SerializeBool(value);
             }
         }
 
@@ -33,12 +34,12 @@ namespace WizardUtils.Saving
         {
             get
             {
-                if (SaveHelper.ParseColor(SerializedValue, out Color color))
+                if (ConfigHelper.TryParseColor(SerializedValue, out Color color))
                 {
                     return color;
                 }
                 Debug.LogWarning($"Invalid Color \'{SerializedValue}\' @ {Key}");
-                if (SaveHelper.ParseColor(DefaultValue, out color))
+                if (ConfigHelper.TryParseColor(DefaultValue, out color))
                 {
                     return color;
                 }
@@ -47,7 +48,7 @@ namespace WizardUtils.Saving
             }
             set
             {
-                SerializedValue = SaveHelper.SerializeColor(value);
+                SerializedValue = ConfigHelper.SerializeColor(value);
             }
         }
 
@@ -55,12 +56,12 @@ namespace WizardUtils.Saving
         {
             get
             {
-                if (SaveHelper.ParseInt(SerializedValue, out int value))
+                if (ConfigHelper.TryParseInt(SerializedValue, out int value))
                 {
                     return value;
                 }
                 Debug.LogWarning($"Invalid Integer {SerializedValue} @ {Key}");
-                if(SaveHelper.ParseInt(DefaultValue, out value))
+                if(ConfigHelper.TryParseInt(DefaultValue, out value))
                 {
                     return value;
                 }

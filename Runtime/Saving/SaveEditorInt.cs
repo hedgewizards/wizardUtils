@@ -10,7 +10,7 @@ namespace WizardUtils.Saving
 
         public void SetInt(int value)
         {
-            SetString(SaveHelper.SerializeInt(value));
+            SetString(ConfigHelper.SerializeInt(value));
         }
 
         public int GetInt()
@@ -20,7 +20,7 @@ namespace WizardUtils.Saving
 
         protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
-            if (SaveHelper.ParseInt(args.NewValue, out int newValue))
+            if (ConfigHelper.TryParseInt(args.NewValue, out int newValue))
             {
                 OnIntChanged?.Invoke(newValue);
             }

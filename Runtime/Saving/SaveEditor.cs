@@ -13,10 +13,13 @@ namespace WizardUtils.Saving
         public bool LoadOnAwake;
         public bool SaveOnSet;
 
-        private void Start()
+        private void Awake()
         {
             gameManager = GameManager.Instance;
+        }
 
+        private void Start()
+        {
             gameManager.Configuration.AddListener(Save.Key, CallChangedEvent);
             if (LoadOnAwake) Reload();
         }

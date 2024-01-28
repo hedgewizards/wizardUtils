@@ -11,13 +11,13 @@ namespace WizardUtils.Saving
 
         public void SetBool(bool newValue)
         {
-            SetString(SaveHelper.SerializeBool(newValue));
+            SetString(ConfigHelper.SerializeBool(newValue));
         }
 
         protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
             if (args.NewValue == args.OldValue) return;
-            if (SaveHelper.ParseBool(args.NewValue))
+            if (ConfigHelper.TryParseBool(args.NewValue))
             {
                 OnSetTrue?.Invoke();
             }

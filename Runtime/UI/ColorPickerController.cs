@@ -10,7 +10,8 @@ namespace WizardUtils.UI
     public class ColorPickerController : MonoBehaviour
     {
         [SerializeField]
-        Color CurrentColor = Color.white;
+        private Color currentColor = Color.white;
+        public Color CurrentColor => currentColor;
         float CurrentHue => CurrentHSV.x;
         float CurrentSaturation => CurrentHSV.y;
         float CurrentValue => CurrentHSV.z;
@@ -53,7 +54,7 @@ namespace WizardUtils.UI
         {
             CurrentHSV = new Vector3(CurrentHue, newSaturation, CurrentValue);
             UpdateStoredRGB();
-            OnColorChanged?.Invoke(CurrentColor);
+            OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();
         }
 
@@ -72,7 +73,7 @@ namespace WizardUtils.UI
         {
             if (isSaving) return;
             isSaving = true;
-            CurrentColor = color;
+            currentColor = color;
             UpdateStoredHSV();
             OnColorChanged?.Invoke(color);
             UpdateVisuals();
@@ -81,18 +82,18 @@ namespace WizardUtils.UI
 
         private void UpdateStoredHSV()
         {
-            Color.RGBToHSV(CurrentColor, out float H, out float S, out float V);
+            Color.RGBToHSV(currentColor, out float H, out float S, out float V);
             CurrentHSV = new Vector3(H, S, V);
         }
 
         private void UpdateStoredRGB()
         {
-            CurrentColor = Color.HSVToRGB(CurrentHue, CurrentSaturation, CurrentValue);
+            currentColor = Color.HSVToRGB(CurrentHue, CurrentSaturation, CurrentValue);
         }
 
         private void OnValidate()
         {
-            OnColorChanged?.Invoke(CurrentColor);
+            OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();
         }
 
@@ -152,7 +153,7 @@ namespace WizardUtils.UI
             float V = Mathf.InverseLerp(BottomPadding, 1 - TopPadding, parametric.y);
             CurrentHSV = new Vector3(H, CurrentSaturation, V);
             UpdateStoredRGB();
-            OnColorChanged?.Invoke(CurrentColor);
+            OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();
         }
     }

@@ -1,15 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace WizardUtils.Saving
+namespace WizardUtils.Configurations
 {
-    public static class SaveHelper
+    public static class ConfigHelper
     {
-        public static void SaveData()
-        {
-            GameManager.Instance?.SaveData();
-        }
-        public static bool ParseColor(string value, out Color color)
+        public static bool TryParseColor(string value, out Color color)
         {
             if (ColorUtility.TryParseHtmlString(value, out color))
             {
@@ -23,7 +19,7 @@ namespace WizardUtils.Saving
             return "#" + ColorUtility.ToHtmlStringRGB(color);
         }
 
-        public static bool ParseBool(string value)
+        public static bool TryParseBool(string value)
         {
             return value == "1";
         }
@@ -33,7 +29,7 @@ namespace WizardUtils.Saving
             return value ? "1" : "0";
         }
 
-        public static bool ParseInt(string value, out int result)
+        public static bool TryParseInt(string value, out int result)
         {
             if (int.TryParse(value, out result))
             {
