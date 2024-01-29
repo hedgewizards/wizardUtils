@@ -23,7 +23,7 @@ namespace WizardUtils.UI
         public Image SatDot;
         public Image HueValField;
         public Image SatField;
-        public Slider SatSlider;
+        public UnityEngine.UI.Slider SatSlider;
         ToggleableUIElement pickerMenu;
 
         [Range(0,1)]
