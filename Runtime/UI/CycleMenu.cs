@@ -23,11 +23,17 @@ namespace WizardUtils.UI
 
         private void Awake()
         {
-            MenuItems = new SortedList<int, string>();
+            if (MenuItems == null) Initialize();
             NextButton.onClick.AddListener(NextItem);
             PreviousButton.onClick.AddListener(PreviousItem);
+        }
+
+        public void Initialize()
+        {
+            MenuItems = new SortedList<int, string>();
             IsDirty = true;
         }
+
         public void AddMenuItem(int id, string displayText)
         {
             if (MenuItems.TryGetValue(id, out string existingDisplaytext))
