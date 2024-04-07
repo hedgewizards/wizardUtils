@@ -1,6 +1,5 @@
 ﻿using Platforms;
 using Platforms.Portable;
-using Platforms.Steam;
 using System;
 using System.Collections;
 using System.Collections.Generic;
