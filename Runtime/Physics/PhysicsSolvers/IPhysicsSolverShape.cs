@@ -52,6 +52,14 @@ namespace WizardUtils.PhysicsSolvers
             int layermask = ~0,
             QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal);
 
+        /// <summary>
+        /// Whether or not this shape overlaps with any other colliders (true if theres overlap)
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <param name="orientation"></param>
+        /// <param name="layermask"></param>
+        /// <param name="queryTriggerInteraction"></param>
+        /// <returns></returns>
         public bool TestShape(
             Vector3 worldPosition,
             Quaternion orientation,

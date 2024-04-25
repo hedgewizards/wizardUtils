@@ -53,5 +53,16 @@ namespace WizardUtils.PhysicsSolvers
 
             return position;
         }
+
+        public bool TestNoSelfOverlap(Vector3 position)
+        {
+            int overlapCount = Shape.OverlapShapeNonAlloc(_OverlapCache, position, Quaternion.identity, LayerMask);
+            if (overlapCount > 1)
+            {
+                return true;
+            }
+
+            return _OverlapCache[0] != Shape.Collider;
+        }
     }
 }
