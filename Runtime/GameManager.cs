@@ -71,7 +71,7 @@ namespace WizardUtils
 #if DISABLESTEAMWORKS
             return new PortablePlatformService();
 #else
-            return new SteamPlatformService();
+            return new Platforms.Steam.SteamPlatformService();
 #endif
         }
         #endregion
