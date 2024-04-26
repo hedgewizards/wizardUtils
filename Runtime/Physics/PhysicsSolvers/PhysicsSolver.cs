@@ -54,6 +54,24 @@ namespace WizardUtils.PhysicsSolvers
             return position;
         }
 
+        public bool Raycast(
+            out RaycastHit hitInfo,
+            Vector3 position,
+            Vector3 direction,
+            float maxDistance,
+            int layermask = -1,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        {
+            return Physics.Raycast(
+                position,
+                direction,
+                out hitInfo,
+                maxDistance,
+                layermask,
+                queryTriggerInteraction
+                );
+        }
+
         public bool TestNoSelfOverlap(Vector3 position)
         {
             int overlapCount = Shape.OverlapShapeNonAlloc(_OverlapCache, position, Quaternion.identity, LayerMask);
