@@ -44,5 +44,14 @@ namespace WizardUtils.Math
         {
             return Vector3.MoveTowards(velocity, direction * maxSpeed, maxDeltaVelocity);
         }
+
+        public static Vector3 MoveVelocityTowards(
+            Vector3 velocity,
+            Vector3 targetVelocity,
+            float maxDeltaVelocity
+            )
+        {
+            return Vector3.MoveTowards(velocity, targetVelocity, maxDeltaVelocity);
+        }
     }
 }
