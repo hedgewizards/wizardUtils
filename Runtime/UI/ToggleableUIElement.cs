@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using WizardUtils.UI.Pages;
 
 namespace WizardUtils.UI
 {

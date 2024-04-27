@@ -12,5 +12,6 @@ namespace WizardUtils.UI.Pages
         public float DisappearDurationSeconds { get; }
         public void Appear(bool instant = false);
         public void Disappear(bool instant = false);
+        public void SetParent(NavigationStack newStack);
     }
 }

@@ -47,12 +47,18 @@ namespace WizardUtils.UI.Pages
             if (PageStack.TryPeek(out IPage topPage))
             {
                 topPage.Disappear();
-                yield return new WaitForSecondsRealtime(topPage.DisappearDurationSeconds);
+                if (topPage.DisappearDurationSeconds > 0)
+                {
+                    yield return new WaitForSecondsRealtime(topPage.DisappearDurationSeconds);
+                }
             }
 
             PageStack.Push(newPage);
             newPage.Appear();
-            yield return new WaitForSecondsRealtime(newPage.AppearDurationSeconds);
+            if (newPage.AppearDurationSeconds > 0)
+            {
+                yield return new WaitForSecondsRealtime(newPage.AppearDurationSeconds);
+            }
         }
     }
 }
