@@ -20,7 +20,7 @@ namespace WizardUtils.UI.Pages
 
         public override float DisappearDurationSeconds => FadeTimeSeconds;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             CanvasGroup = GetComponent<CanvasGroup>();
         }
