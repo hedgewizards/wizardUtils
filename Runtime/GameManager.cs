@@ -1,5 +1,4 @@
-﻿using Platforms;
-using Platforms.Portable;
+﻿using Platforms.Portable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
+using WizardUtils.Platforms;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
 

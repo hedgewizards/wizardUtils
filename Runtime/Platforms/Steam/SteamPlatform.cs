@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using WizardUtils.GameSettings;
 
-namespace Platforms.Steam
+namespace WizardUtils.Platforms.Steam
 {
     public class SteamPlatformService : IPlatformService
     {
@@ -34,7 +34,7 @@ namespace Platforms.Steam
                     return;
                 }
             }
-            catch (System.DllNotFoundException e)
+            catch (DllNotFoundException e)
             {
                 Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. \n" + e);
 
@@ -96,11 +96,11 @@ namespace Platforms.Steam
             }
             else
             {
-                
+
             }
         }
 
-        private static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText)
+        private static void SteamAPIDebugTextHook(int nSeverity, StringBuilder pchDebugText)
         {
             Debug.LogWarning(pchDebugText);
         }

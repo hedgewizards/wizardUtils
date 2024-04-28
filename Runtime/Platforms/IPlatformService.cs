@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WizardUtils.GameSettings;
 
-namespace Platforms
+namespace WizardUtils.Platforms
 {
     public interface IPlatformService
     {

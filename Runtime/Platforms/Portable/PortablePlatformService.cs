@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using WizardUtils.GameSettings;
 
-namespace Platforms.Portable
+namespace WizardUtils.Platforms.Portable
 {
     public class PortablePlatformService : IPlatformService
     {
