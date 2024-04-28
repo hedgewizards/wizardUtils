@@ -21,6 +21,12 @@ namespace WizardUtils.UI.Pages
             PageSource = new PageSource(PageManifest, transform);
         }
 
+        public bool IsTopPage(IPage page)
+        {
+            if (PageStack.Count == 0) return false;
+            return page == PageStack.Peek();
+        }
+
         public void Push(string pageKey, bool instant = false)
         {
             IPage page = PageSource.Get(pageKey);

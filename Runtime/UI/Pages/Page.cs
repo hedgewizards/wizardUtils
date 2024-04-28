@@ -12,6 +12,11 @@ namespace WizardUtils.UI.Pages
     {
         public NavigationStack NavigationStack { get; private set; }
 
+        public void NavigateBack()
+        {
+            if (NavigationStack.IsTopPage(this)) NavigationStack.Pop();
+        }
+
         public abstract float AppearDurationSeconds { get; }
         public abstract float DisappearDurationSeconds { get; }
 
