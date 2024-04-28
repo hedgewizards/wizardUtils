@@ -13,7 +13,7 @@ namespace WizardUtils.Tools
 
         public static string Generate(int length, char[] Atlas = null)
         {
-            if (Atlas == null) Atlas = ReadableAtlas;
+            Atlas ??= ReadableAtlas;
 
             string final = "";
 
@@ -33,6 +33,19 @@ namespace WizardUtils.Tools
             }
 
             return final;
+        }
+
+        /// <summary>
+        /// Does this look like a Pretty32 string for the supplied <paramref name="Atlas"/> (or by default <see cref="ReadableAtlas"/>)?
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <param name="Atlas"></param>
+        /// <returns>True if every character in <paramref name="slug"/> is in the supplied Atlas</returns>
+        public static bool Match(string slug, char[] Atlas = null)
+        {
+            Atlas ??= ReadableAtlas;
+
+            return slug.All(c => ReadableAtlas.Contains(c));
         }
 
         /// <summary>
