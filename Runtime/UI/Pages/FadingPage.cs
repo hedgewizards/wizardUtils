@@ -32,10 +32,12 @@ namespace WizardUtils.UI.Pages
             {
                 gameObject.SetActive(true);
                 CanvasGroup.alpha = 1;
+                CanvasGroup.interactable = true;
                 return;
             }
 
             float startFade = CanvasGroup.alpha;
+            CanvasGroup.interactable = false;
             FadeCoroutine = CoroutineHelpers.StartParametricCoroutine(this, FadeTimeSeconds, (t) => ParametricFade(startFade, 1, t),
                 useUnscaledTime: true);
         }
@@ -62,6 +64,7 @@ namespace WizardUtils.UI.Pages
             if (t == 1)
             {
                 gameObject.SetActive(endFade != 0);
+                CanvasGroup.interactable = endFade != 0;
             }
         }
     }
