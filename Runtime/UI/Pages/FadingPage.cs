@@ -36,6 +36,7 @@ namespace WizardUtils.UI.Pages
             }
 
             float startFade = CanvasGroup.alpha;
+            CanvasGroup.interactable = false;
             FadeCoroutine = CoroutineHelpers.StartParametricCoroutine(this, FadeTimeSeconds, (t) => ParametricFade(startFade, 1, t),
                 useUnscaledTime: true);
         }
@@ -52,6 +53,7 @@ namespace WizardUtils.UI.Pages
             }
 
             float startFade = CanvasGroup.alpha;
+            CanvasGroup.interactable = false;
             FadeCoroutine = CoroutineHelpers.StartParametricCoroutine(this, FadeTimeSeconds, (t) => ParametricFade(startFade, 0, t),
                 useUnscaledTime: true);
         }
@@ -61,6 +63,7 @@ namespace WizardUtils.UI.Pages
             CanvasGroup.alpha = Mathf.Lerp(startFade, endFade, t);
             if (t == 1)
             {
+                CanvasGroup.interactable = true;
                 gameObject.SetActive(endFade != 0);
             }
         }
