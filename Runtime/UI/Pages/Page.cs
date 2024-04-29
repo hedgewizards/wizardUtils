@@ -11,27 +11,27 @@ namespace WizardUtils.UI.Pages
 {
     public abstract class Page : MonoBehaviour, IPage
     {
-        public event EventHandler OnNavigateBack;
+        public event EventHandler<NavigateBackEventArgs> OnNavigateBack;
         public event EventHandler<NavigateToEventArgs> OnNavigateTo;
 
-        public void NavigateBack()
+        public void NavigateBack(bool instant = false)
         {
-            OnNavigateBack?.Invoke(this, EventArgs.Empty);
+            OnNavigateBack?.Invoke(this, new NavigateBackEventArgs(instant));
         }
 
-        public void NavigateTo(PageDescriptor descriptor)
+        public void NavigateTo(PageDescriptor descriptor, bool instant = false)
         {
-            NavigateTo(descriptor.Key);
+            NavigateTo(descriptor.Key, instant);
         }
 
-        public void NavigateTo(string key)
+        public void NavigateTo(string key, bool instant = false)
         {
-            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(key));
+            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(key, instant));
         }
 
-        public void NavigateTo(IPage page)
+        public void NavigateTo(IPage page, bool instant = false)
         {
-            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(page));
+            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(page, instant));
         }
 
         public abstract float AppearDurationSeconds { get; }

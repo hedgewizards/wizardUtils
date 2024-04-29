@@ -8,7 +8,7 @@ namespace WizardUtils.UI.Pages
 {
     public interface IPage
     {
-        public event EventHandler OnNavigateBack;
+        public event EventHandler<NavigateBackEventArgs> OnNavigateBack;
         public event EventHandler<NavigateToEventArgs> OnNavigateTo;
 
         public float AppearDurationSeconds { get; }

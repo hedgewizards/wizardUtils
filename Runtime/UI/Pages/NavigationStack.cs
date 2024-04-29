@@ -21,12 +21,6 @@ namespace WizardUtils.UI.Pages
             PageSource = new PageSource(PageManifest, transform);
         }
 
-        public bool IsTopPage(IPage page)
-        {
-            if (PageStack.Count == 0) return false;
-            return page == PageStack.Peek();
-        }
-
         public void Push(string pageKey, bool instant = false)
         {
             IPage page = PageSource.Get(pageKey);
@@ -100,12 +94,19 @@ namespace WizardUtils.UI.Pages
 
         private void CurrentPage_OnNavigateTo(object sender, NavigateToEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.PageKey != null)
+            {
+                Push(e.PageKey, e.Instant);
+            }
+            else
+            {
+                Push(e.Page, e.Instant);
+            }
         }
 
-        private void CurrentPage_OnNavigateBack(object sender, EventArgs e)
+        private void CurrentPage_OnNavigateBack(object sender, NavigateBackEventArgs e)
         {
-            throw new NotImplementedException();
+            Pop(e.Instant);
         }
 
         private IEnumerator PopAsync()
