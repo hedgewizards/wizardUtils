@@ -17,7 +17,7 @@ namespace WizardUtils.UI.Pages
         private IPage CurrentPage;
         public PageManifest PageManifest;
         private PageSource PageSource;
-        private Coroutine CurrentOpenAction;
+        private Coroutine CurrentAction;
 
         public void Awake()
         {
@@ -33,15 +33,14 @@ namespace WizardUtils.UI.Pages
         }
         public void Open(IPage page, bool instant = false)
         {
-
-            if (CurrentOpenAction != null)
+            if (CurrentAction != null)
             {
-                throw new InvalidOperationException($"Tried to push page '{page}' to stack while already animating. this isn't supported yet.");
+                throw new InvalidOperationException($"Tried to open page '{page}' while already animating. this isn't supported yet.");
             }
 
             if (!instant)
             {
-                CurrentOpenAction = StartCoroutine(OpenAsync(page));
+                CurrentAction = StartCoroutine(OpenAsync(page));
                 return;
             }
 
@@ -52,6 +51,37 @@ namespace WizardUtils.UI.Pages
             }
             page.Appear(true);
             SubscribePage(page);
+        }
+
+        public void Close(bool instant = false)
+        {
+            if (CurrentPage == null) return;
+
+            if (CurrentAction != null)
+            {
+                throw new InvalidOperationException($"Tried to close page '{CurrentPage}' while already animating. this isn't supported yet.");
+            }
+
+            if (!instant)
+            {
+                CurrentAction = StartCoroutine(CloseAsync());
+                return;
+            }
+
+            CurrentPage.Disappear(true);
+            UnsubscribePage(CurrentPage);
+            CurrentPage = null;
+        }
+
+        private IEnumerator CloseAsync()
+        {
+            UnsubscribePage(CurrentPage);
+            CurrentPage.Disappear();
+            if (CurrentPage.DisappearDurationSeconds > 0)
+            {
+                yield return new WaitForSecondsRealtime(CurrentPage.DisappearDurationSeconds);
+            }
+            CurrentPage = null;
         }
 
         private IEnumerator OpenAsync(IPage newPage)
@@ -73,6 +103,8 @@ namespace WizardUtils.UI.Pages
             {
                 yield return new WaitForSecondsRealtime(newPage.AppearDurationSeconds);
             }
+
+            CurrentAction = null;
         }
 
 

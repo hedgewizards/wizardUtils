@@ -9,6 +9,8 @@ namespace WizardUtils.LoadingScreens
 {
     public class LoadingScreen : MonoBehaviour
     {
+        public bool IsShowing => gameObject.activeSelf;
+
         public virtual void Show()
         {
             gameObject.SetActive(true);
