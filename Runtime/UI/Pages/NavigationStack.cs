@@ -8,6 +8,10 @@ using UnityEngine;
 
 namespace WizardUtils.UI.Pages
 {
+    /// <summary>
+    /// A hierarchy of pages working as a stack. listen to when pages want to navigate back and forward<br/>
+    /// Don't need a stack? try a <see cref="PageViewer"/>
+    /// </summary>
     public class NavigationStack : MonoBehaviour
     {
         public PageManifest PageManifest;
@@ -19,12 +23,6 @@ namespace WizardUtils.UI.Pages
         {
             PageStack = new Stack<IPage>();
             PageSource = new PageSource(PageManifest, transform);
-        }
-
-        public bool IsTopPage(IPage page)
-        {
-            if (PageStack.Count == 0) return false;
-            return page == PageStack.Peek();
         }
 
         public void Push(string pageKey, bool instant = false)
@@ -52,8 +50,10 @@ namespace WizardUtils.UI.Pages
             if (PageStack.TryPeek(out IPage topPage))
             {
                 topPage.Disappear(true);
+                UnsubscribePage(topPage);
             }
-            page.Disappear(true);
+            page.Appear(true);
+            SubscribePage(page);
         }
 
         public void Pop(bool instant = false)
@@ -75,11 +75,42 @@ namespace WizardUtils.UI.Pages
             }
 
             popPage.Disappear(true);
+            UnsubscribePage(popPage);
 
             if (PageStack.TryPeek(out IPage newTopPage))
             {
                 newTopPage.Appear(true);
+                SubscribePage(newTopPage);
             }
+        }
+
+        private void SubscribePage(IPage page)
+        {
+            page.OnNavigateBack += CurrentPage_OnNavigateBack;
+            page.OnNavigateTo += CurrentPage_OnNavigateTo;
+        }
+
+        private void UnsubscribePage(IPage page)
+        {
+            page.OnNavigateBack -= CurrentPage_OnNavigateBack;
+            page.OnNavigateTo -= CurrentPage_OnNavigateTo;
+        }
+
+        private void CurrentPage_OnNavigateTo(object sender, NavigateToEventArgs e)
+        {
+            if (e.PageKey != null)
+            {
+                Push(e.PageKey, e.Instant);
+            }
+            else
+            {
+                Push(e.Page, e.Instant);
+            }
+        }
+
+        private void CurrentPage_OnNavigateBack(object sender, NavigateBackEventArgs e)
+        {
+            Pop(e.Instant);
         }
 
         private IEnumerator PopAsync()
@@ -89,6 +120,7 @@ namespace WizardUtils.UI.Pages
                 throw new InvalidOperationException("Tried to pop with no remaining pages");
             }
 
+            UnsubscribePage(popPage);
             popPage.Disappear();
             if (popPage.DisappearDurationSeconds > 0)
             {
@@ -97,6 +129,7 @@ namespace WizardUtils.UI.Pages
 
             if (PageStack.TryPeek(out IPage newTopPage))
             {
+                SubscribePage(newTopPage);
                 newTopPage.Appear(true);
                 if (newTopPage.AppearDurationSeconds > 0)
                 {
@@ -109,6 +142,7 @@ namespace WizardUtils.UI.Pages
         {
             if (PageStack.TryPeek(out IPage topPage))
             {
+                UnsubscribePage(topPage);
                 topPage.Disappear();
                 if (topPage.DisappearDurationSeconds > 0)
                 {
@@ -116,6 +150,7 @@ namespace WizardUtils.UI.Pages
                 }
             }
 
+            SubscribePage(newPage);
             PageStack.Push(newPage);
             newPage.Appear();
             if (newPage.AppearDurationSeconds > 0)

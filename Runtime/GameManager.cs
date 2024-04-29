@@ -9,6 +9,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
+using WizardUtils.LoadingScreens;
 using WizardUtils.Platforms;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
@@ -73,6 +74,11 @@ namespace WizardUtils
             return new Platforms.Steam.SteamPlatformService();
 #endif
         }
+        #endregion
+
+        #region Loading
+        public LoadingScreen LoadingScreen;
+
         #endregion
 
         #region Pausing
