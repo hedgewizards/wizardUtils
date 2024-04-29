@@ -28,7 +28,7 @@ namespace WizardUtils.UI.Pages
         public void Push(string pageKey, bool instant = false)
         {
             IPage page = PageSource.Get(pageKey);
-            page.Disappear();
+            page.Disappear(true);
             Push(page, instant);
         }
 
