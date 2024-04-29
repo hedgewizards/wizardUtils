@@ -13,6 +13,11 @@ namespace WizardUtils.UI.Pages
     {
         public PageDescriptor[] Items;
 
+        void Reset()
+        {
+            Items ??= new PageDescriptor[0];
+        }
+
         public void Add(PageDescriptor descriptor)
         {
             ArrayHelper.InsertAndResize(ref Items, descriptor);
