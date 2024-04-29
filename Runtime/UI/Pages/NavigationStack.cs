@@ -52,8 +52,9 @@ namespace WizardUtils.UI.Pages
                 topPage.Disappear(true);
                 UnsubscribePage(topPage);
             }
-            page.Appear(true);
             SubscribePage(page);
+            PageStack.Push(page);
+            page.Appear(true);
         }
 
         public void Pop(bool instant = false)
