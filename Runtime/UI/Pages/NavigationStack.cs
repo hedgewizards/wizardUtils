@@ -132,7 +132,7 @@ namespace WizardUtils.UI.Pages
             if (PageStack.TryPeek(out IPage newTopPage))
             {
                 SubscribePage(newTopPage);
-                newTopPage.Appear(true);
+                newTopPage.Appear();
                 if (newTopPage.AppearDurationSeconds > 0)
                 {
                     yield return new WaitForSecondsRealtime(newTopPage.AppearDurationSeconds);
