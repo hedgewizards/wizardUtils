@@ -9,7 +9,8 @@ using UnityEngine;
 namespace WizardUtils.UI.Pages
 {
     /// <summary>
-    /// A hierarchy of pages working as a stack. listen to when pages want to navigate back and forward
+    /// A hierarchy of pages working as a stack. listen to when pages want to navigate back and forward<br/>
+    /// Don't need a stack? try a <see cref="PageViewer"/>
     /// </summary>
     public class NavigationStack : MonoBehaviour
     {
