@@ -14,7 +14,8 @@ namespace WizardUtils.UI.Pages
         public event EventHandler<NavigateBackEventArgs> OnNavigateBack;
         public event EventHandler<NavigateToEventArgs> OnNavigateTo;
 
-        public void NavigateBack(bool instant = false)
+        public void NavigateBack() => NavigateBack(false);
+        public void NavigateBack(bool instant)
         {
             OnNavigateBack?.Invoke(this, new NavigateBackEventArgs(instant));
         }
