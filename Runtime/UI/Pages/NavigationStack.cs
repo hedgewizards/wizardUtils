@@ -61,6 +61,7 @@ namespace WizardUtils.UI.Pages
         {
             if (CurrentStackAction != null)
             {
+                CurrentStackAction = null;
                 throw new InvalidOperationException($"Tried to pop from stack while already animating. this isn't supported yet.");
             }
 
@@ -137,6 +138,8 @@ namespace WizardUtils.UI.Pages
                     yield return new WaitForSecondsRealtime(newTopPage.AppearDurationSeconds);
                 }
             }
+
+            CurrentStackAction = null;
         }
 
         private IEnumerator PushAsync(IPage newPage)
@@ -158,6 +161,8 @@ namespace WizardUtils.UI.Pages
             {
                 yield return new WaitForSecondsRealtime(newPage.AppearDurationSeconds);
             }
+
+            CurrentStackAction = null;
         }
     }
 }

@@ -27,17 +27,20 @@ namespace WizardUtils.UI.Pages
 
         public override void Appear(bool instant)
         {
+            if (CanvasGroup == null) CanvasGroup = GetComponent<CanvasGroup>();
             if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
             if (instant)
             {
                 gameObject.SetActive(true);
                 CanvasGroup.alpha = 1;
                 CanvasGroup.interactable = true;
+                CanvasGroup.blocksRaycasts = true;
                 return;
             }
 
             float startFade = CanvasGroup.alpha;
             gameObject.SetActive(true);
+            CanvasGroup.blocksRaycasts = false;
             CanvasGroup.interactable = false;
             FadeCoroutine = CoroutineHelpers.StartParametricCoroutine(this, FadeTimeSeconds, (t) => ParametricFade(startFade, 1, t),
                 useUnscaledTime: true);
@@ -57,6 +60,7 @@ namespace WizardUtils.UI.Pages
             float startFade = CanvasGroup.alpha;
             gameObject.SetActive(true);
             CanvasGroup.interactable = false;
+            CanvasGroup.blocksRaycasts = false;
             FadeCoroutine = CoroutineHelpers.StartParametricCoroutine(this, FadeTimeSeconds, (t) => ParametricFade(startFade, 0, t),
                 useUnscaledTime: true);
         }
@@ -67,8 +71,8 @@ namespace WizardUtils.UI.Pages
             if (t == 1)
             {
                 CanvasGroup.interactable = true;
+                CanvasGroup.blocksRaycasts = true;
                 gameObject.SetActive(endFade != 0);
-                CanvasGroup.interactable = endFade != 0;
             }
         }
     }
