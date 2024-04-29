@@ -5,16 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace WizardUtils.UI.Pages
 {
     public abstract class Page : MonoBehaviour, IPage
     {
-        public NavigationStack NavigationStack { get; private set; }
+        public event EventHandler OnNavigateBack;
+        public event EventHandler<NavigateToEventArgs> OnNavigateTo;
 
         public void NavigateBack()
         {
-            if (NavigationStack.IsTopPage(this)) NavigationStack.Pop();
+            OnNavigateBack?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void NavigateTo(PageDescriptor descriptor)
+        {
+            NavigateTo(descriptor.Key);
+        }
+
+        public void NavigateTo(string key)
+        {
+            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(key));
+        }
+
+        public void NavigateTo(IPage page)
+        {
+            OnNavigateTo?.Invoke(this, new NavigateToEventArgs(page));
         }
 
         public abstract float AppearDurationSeconds { get; }
@@ -29,9 +46,5 @@ namespace WizardUtils.UI.Pages
         float IPage.DisappearDurationSeconds => DisappearDurationSeconds;
         #endregion
 
-        void IPage.SetParent(NavigationStack newStack)
-        {
-            NavigationStack = newStack;
-        }
     }
 }
