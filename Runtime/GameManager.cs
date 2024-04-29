@@ -43,7 +43,6 @@ namespace WizardUtils
             PlatformService = BuildPlatformService();
             GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Manifests.GlobalSound);
             
-            DontDestroyOnLoad(gameObject);
             InitializeConfigurationService();
             InitializeGameSettings();
             
