@@ -14,7 +14,7 @@ namespace WizardUtils.UI.Pages
     /// </summary>
     public class PageViewer : MonoBehaviour
     {
-        private IPage CurrentPage;
+        public IPage CurrentPage { get; private set; }
         public PageManifest PageManifest;
         private PageSource PageSource;
         private Coroutine CurrentAction;
@@ -33,6 +33,8 @@ namespace WizardUtils.UI.Pages
         }
         public void Open(IPage page, bool instant = false)
         {
+            if (page == CurrentPage) return;
+
             if (CurrentAction != null)
             {
                 throw new InvalidOperationException($"Tried to open page '{page}' while already animating. this isn't supported yet.");
@@ -86,18 +88,20 @@ namespace WizardUtils.UI.Pages
 
         private IEnumerator OpenAsync(IPage newPage)
         {
-            if (CurrentPage != null)
+            IPage oldPage = CurrentPage;
+            CurrentPage = newPage;
+
+            if (oldPage != null)
             {
-                UnsubscribePage(CurrentPage);
-                CurrentPage.Disappear();
-                if (CurrentPage.DisappearDurationSeconds > 0)
+                UnsubscribePage(oldPage);
+                oldPage.Disappear();
+                if (oldPage.DisappearDurationSeconds > 0)
                 {
-                    yield return new WaitForSecondsRealtime(CurrentPage.DisappearDurationSeconds);
+                    yield return new WaitForSecondsRealtime(oldPage.DisappearDurationSeconds);
                 }
             }
 
             SubscribePage(newPage);
-            CurrentPage = newPage;
             newPage.Appear();
             if (newPage.AppearDurationSeconds > 0)
             {

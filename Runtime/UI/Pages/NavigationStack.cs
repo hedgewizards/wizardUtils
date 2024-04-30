@@ -144,7 +144,10 @@ namespace WizardUtils.UI.Pages
 
         private IEnumerator PushAsync(IPage newPage)
         {
-            if (PageStack.TryPeek(out IPage topPage))
+            bool hasOldPage = PageStack.TryPeek(out IPage topPage);
+            PageStack.Push(newPage);
+
+            if (hasOldPage)
             {
                 UnsubscribePage(topPage);
                 topPage.Disappear();
@@ -155,7 +158,6 @@ namespace WizardUtils.UI.Pages
             }
 
             SubscribePage(newPage);
-            PageStack.Push(newPage);
             newPage.Appear();
             if (newPage.AppearDurationSeconds > 0)
             {
