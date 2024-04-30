@@ -14,6 +14,7 @@ namespace WizardUtils.UI.Pages
     /// </summary>
     public class PageViewer : MonoBehaviour
     {
+        private IPage LastPage;
         public IPage CurrentPage { get; private set; }
         public PageManifest PageManifest;
         private PageSource PageSource;
@@ -35,10 +36,7 @@ namespace WizardUtils.UI.Pages
         {
             if (page == CurrentPage) return;
 
-            if (CurrentAction != null)
-            {
-                throw new InvalidOperationException($"Tried to open page '{page}' while already animating. this isn't supported yet.");
-            }
+            StopCurrentAction();
 
             if (!instant)
             {
@@ -55,14 +53,22 @@ namespace WizardUtils.UI.Pages
             SubscribePage(page);
         }
 
+        private void StopCurrentAction()
+        {
+            if (CurrentAction == null) return;
+            StopCoroutine(CurrentAction);
+            CurrentAction = null;
+            if (LastPage != null)
+            {
+                LastPage.Disappear(true);
+            }
+        }
+
         public void Close(bool instant = false)
         {
             if (CurrentPage == null) return;
 
-            if (CurrentAction != null)
-            {
-                throw new InvalidOperationException($"Tried to close page '{CurrentPage}' while already animating. this isn't supported yet.");
-            }
+            StopCurrentAction();
 
             if (!instant)
             {
@@ -77,27 +83,28 @@ namespace WizardUtils.UI.Pages
 
         private IEnumerator CloseAsync()
         {
-            UnsubscribePage(CurrentPage);
-            CurrentPage.Disappear();
-            if (CurrentPage.DisappearDurationSeconds > 0)
-            {
-                yield return new WaitForSecondsRealtime(CurrentPage.DisappearDurationSeconds);
-            }
+            LastPage = CurrentPage;
             CurrentPage = null;
+            UnsubscribePage(LastPage);
+            LastPage.Disappear();
+            if (LastPage.DisappearDurationSeconds > 0)
+            {
+                yield return new WaitForSecondsRealtime(LastPage.DisappearDurationSeconds);
+            }
         }
 
         private IEnumerator OpenAsync(IPage newPage)
         {
-            IPage oldPage = CurrentPage;
+            LastPage = CurrentPage;
             CurrentPage = newPage;
 
-            if (oldPage != null)
+            if (LastPage != null)
             {
-                UnsubscribePage(oldPage);
-                oldPage.Disappear();
-                if (oldPage.DisappearDurationSeconds > 0)
+                UnsubscribePage(LastPage);
+                LastPage.Disappear();
+                if (LastPage.DisappearDurationSeconds > 0)
                 {
-                    yield return new WaitForSecondsRealtime(oldPage.DisappearDurationSeconds);
+                    yield return new WaitForSecondsRealtime(LastPage.DisappearDurationSeconds);
                 }
             }
 
