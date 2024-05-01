@@ -78,7 +78,7 @@ namespace WizardUtils
         #endregion
 
         #region Loading
-        public DialogScreen LoadingScreen;
+        public DialogScreen DialogScreen;
 
         #endregion
 
@@ -275,7 +275,7 @@ namespace WizardUtils
             CurrentSceneLoadingData = sceneLoadingData;
             if (CurrentSceneLoadingData.Options.DoDefaultLoadingScreenBehavior)
             {
-                LoadingScreen.ShowLoading();
+                DialogScreen.ShowLoading();
             }
 
             (List<int> scenesToLoad, List<int> scenesToUnload) = GetSceneDifference(sceneLoadingData.TargetSceneBuildIds, CurrentSceneLoaders);
@@ -327,7 +327,7 @@ namespace WizardUtils
             lastSceneLoadingData.Callback?.Invoke();
             if (lastSceneLoadingData.Options.DoDefaultLoadingScreenBehavior)
             {
-                LoadingScreen.Hide();
+                DialogScreen.Hide();
             }
         }
 
