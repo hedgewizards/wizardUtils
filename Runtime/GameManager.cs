@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
+using WizardUtils.Coroutines;
 using WizardUtils.GameSettings;
 using WizardUtils.LoadingScreens;
 using WizardUtils.Platforms;
@@ -42,7 +43,8 @@ namespace WizardUtils
             Instance = this;
             PlatformService = BuildPlatformService();
             GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Manifests.GlobalSound);
-            
+            CurrentSceneLoaders = new List<SceneLoader>();
+
             InitializeConfigurationService();
             InitializeGameSettings();
             
@@ -135,6 +137,8 @@ namespace WizardUtils
 
         [HideInInspector]
         public ControlSceneDescriptor CurrentControlScene;
+        private SceneLoadingData CurrentSceneLoadingData;
+        private List<SceneLoader> CurrentSceneLoaders;
 
 #if UNITY_EDITOR
         public void UnloadControlSceneInEditor()
@@ -196,59 +200,14 @@ namespace WizardUtils
         }
 #endif
 
-        public virtual void LoadControlScene(ControlSceneDescriptor newScene, Action callback = null)
+        public virtual void LoadControlSceneAsync(ControlSceneDescriptor newScene, ControlSceneLoadOptions options = null, Action callback = null)
         {
-#if UNITY_EDITOR
-            if (DontLoadScenesInEditor) return;
-#endif
-            var initialScene = CurrentControlScene;
-            List<AsyncOperation> tasks = new List<AsyncOperation>();
-
-            bool newSceneAlreadyLoaded = false;
-            List<Scene> scenesToUnload = new List<Scene>();
-            for (int n = 0; n < SceneManager.sceneCount; n++)
+            InternalLoadScenesAsync(new SceneLoadingData()
             {
-                Scene scene = SceneManager.GetSceneAt(n);
-                if (!ControlScene_IgnoreScenes.Contains(scene.buildIndex))
-                {
-                    if (scene.buildIndex == newScene.BuildIndex)
-                    {
-                        newSceneAlreadyLoaded = true;
-                    }
-                    else
-                    {
-                        scenesToUnload.Add(scene);
-                    }
-                }
-            }
-
-            // load the control scene
-            if (!newSceneAlreadyLoaded)
-            {
-                tasks.Add(SceneManager.LoadSceneAsync(newScene.BuildIndex, LoadSceneMode.Additive));
-                CurrentControlScene = newScene;
-            }
-
-            // unload all non-ignored scenes
-            foreach (Scene scene in scenesToUnload)
-            {
-                AsyncOperation task = SceneManager.UnloadSceneAsync(scene);
-                if (task != null)
-                {
-                    tasks.Add(task);
-                }
-                else
-                {
-                    Debug.LogWarning($"error unloading scene {scene.name}");
-                }
-            }
-
-            CurrentControlScene = newScene;
-            OnControlSceneChanged?.Invoke(this, new ControlSceneEventArgs(initialScene, newScene));
-            if (callback != null)
-            {
-                StartCoroutine(AsyncSceneLoadingHelper.WaitForScenesLoadAsync(tasks, callback));
-            }
+                TargetControlScene = newScene,
+                Options = options ?? new ControlSceneLoadOptions(),
+                Callback = callback
+            });
         }
 
         public void ReloadControlScene()
@@ -293,6 +252,173 @@ namespace WizardUtils
                 OnQuitToMenu?.Invoke();
             }
         }
+
+        private void InternalLoadScenesAsync(SceneLoadingData sceneLoadingData)
+        {
+            if (DontLoadScenesInEditor) return;
+            var initialScene = CurrentControlScene;
+
+            if (CurrentSceneLoadingData != null)
+            {
+                Debug.LogWarning($"Overriding old ControlScene Loading Data {CurrentSceneLoadingData} with {sceneLoadingData}. pray to god nothing explodes!!!");
+                if (CurrentSceneLoadingData.DelayedFinishLoadCoroutine != null)
+                {
+                    StopCoroutine(CurrentSceneLoadingData.DelayedFinishLoadCoroutine);
+                }
+            }
+            CurrentSceneLoadingData = sceneLoadingData;
+            if (CurrentSceneLoadingData.Options.DoDefaultLoadingScreenBehavior)
+            {
+                LoadingScreen.Show();
+            }
+
+            (List<int> scenesToLoad, List<int> scenesToUnload) = GetSceneDifference(sceneLoadingData.TargetSceneBuildIds, CurrentSceneLoaders);
+
+            foreach (var sceneIndex in scenesToLoad)
+            {
+                var loader = CurrentSceneLoaders.Find(l => l.SceneIndex == sceneIndex);
+                if (loader == null)
+                {
+                    loader = new SceneLoader(this, sceneIndex, false);
+                    loader.OnReadyToActivate.AddListener(RecalculateFinishedLoadingControlScene);
+                    loader.OnIdle.AddListener(RecalculateFinishedLoadingControlScene);
+                }
+                loader.MarkNeeded();
+            }
+
+            foreach (var sceneIndex in scenesToUnload)
+            {
+                var loader = CurrentSceneLoaders.Find(l => l.SceneIndex == sceneIndex);
+
+                if (loader == null)
+                {
+                    loader = new SceneLoader(this, sceneIndex, true);
+                    CurrentSceneLoaders.Add(loader);
+                    loader.OnReadyToActivate.AddListener(RecalculateFinishedLoadingControlScene);
+                    loader.OnIdle.AddListener(RecalculateFinishedLoadingControlScene);
+                }
+                loader.MarkNotNeeded(true);
+            }
+
+            if (scenesToLoad.Count == 0
+                && scenesToUnload.Count == 0)
+            {
+                CurrentSceneLoadingData.DelayedFinishLoadCoroutine = this.StartDelayCoroutineUnscaled(CurrentSceneLoadingData.Options.MinimumLoadDurationSeconds, FinishLoadingControlScene);
+            }
+        }
+
+        private void FinishLoadingControlScene()
+        {
+            SceneLoadingData lastSceneLoadingData = CurrentSceneLoadingData;
+            CurrentSceneLoadingData = null;
+
+            CurrentControlScene = lastSceneLoadingData.TargetControlScene;
+            if (lastSceneLoadingData.DelayedFinishLoadCoroutine != null)
+            {
+                StopCoroutine(lastSceneLoadingData.DelayedFinishLoadCoroutine);
+            }
+            OnControlSceneChanged?.Invoke(this, new ControlSceneEventArgs(lastSceneLoadingData.InitialScene, lastSceneLoadingData.TargetControlScene));
+            lastSceneLoadingData.Callback?.Invoke();
+            if (lastSceneLoadingData.Options.DoDefaultLoadingScreenBehavior)
+            {
+                LoadingScreen.Hide();
+            }
+        }
+
+        private void RecalculateFinishedLoadingControlScene()
+        {
+            if (CurrentSceneLoadingData == null) return;
+
+            for (int i = CurrentSceneLoaders.Count - 1; i >= 0; i--)
+            {
+                SceneLoader loader = CurrentSceneLoaders[i];
+                if (loader.IsIdle)
+                {
+                    loader.OnReadyToActivate.RemoveAllListeners();
+                    loader.OnIdle.RemoveAllListeners();
+                    CurrentSceneLoaders.RemoveAt(i);
+                }
+            }
+
+            if (AllLoadingLevelsFinished())
+            {
+                float remainingTime = CurrentSceneLoadingData.Options.MinimumLoadDurationSeconds - (Time.unscaledTime - CurrentSceneLoadingData.StartTime);
+                if (remainingTime > 0)
+                {
+                    CurrentSceneLoadingData.DelayedFinishLoadCoroutine = this.StartDelayCoroutineUnscaled(remainingTime, FinishLoadingControlScene);
+                }
+                else
+                {
+                    FinishLoadingControlScene();
+                }
+            }
+        }
+
+        private bool AllLoadingLevelsFinished()
+        {
+            foreach (var sceneLoader in CurrentSceneLoaders)
+            {
+                if (sceneLoader.CurrentLoadState == SceneLoader.LoadStates.Loading
+                    || sceneLoader.CurrentLoadState == SceneLoader.LoadStates.Unloading)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private (List<int> scenesToLoad, List<int> scenesToUnload) GetSceneDifference(
+            IEnumerable<int> targetScenes,
+            IEnumerable<SceneLoader> loaders = null)
+        {
+            List<int> scenesToLoad = new List<int>(targetScenes);
+            List<int> scenesToUnload = new List<int>();
+
+            // for each currently loaded sceneIndex
+            for (int n = 0; n < SceneManager.sceneCount; n++)
+            {
+                int sceneIndex = SceneManager.GetSceneAt(n).buildIndex;
+
+                // just ignore the GameScene, Main Menu, and Credits scenes
+                if (ControlScene_IgnoreScenes.Contains(sceneIndex)) continue;
+
+                int? matchingToLoadScene = null;
+                foreach (int sceneToLoad in scenesToLoad)
+                {
+                    if (sceneToLoad == sceneIndex)
+                    {
+                        matchingToLoadScene = sceneToLoad;
+                    }
+                }
+
+                // if we want to have it loaded
+                if (matchingToLoadScene != null)
+                {
+                    SceneLoader existingLoader = loaders.FirstOrDefault(l => l.SceneIndex == matchingToLoadScene.Value);
+
+                    // if this level is marked as not needed
+                    if (existingLoader != null && !existingLoader.CurrentlyNeeded)
+                    {
+                        // keep it in our scenesToLoad list, so we know to mark it needed
+                    }
+                    else
+                    {
+                        // SceneIndex already exists, so we don't need to load it
+                        scenesToLoad.Remove(matchingToLoadScene.Value);
+                    }
+                }
+                else
+                {
+                    // SceneIndex no longer exists. so we need to get rid of it
+                    scenesToUnload.Add(sceneIndex);
+                }
+            }
+
+            return (scenesToLoad, scenesToUnload);
+        }
+
+
         #endregion
 
         #region GameSettings
