@@ -204,9 +204,15 @@ namespace WizardUtils
         {
             InternalLoadScenesAsync(new SceneLoadingData()
             {
+                InitialScene = CurrentControlScene,
                 TargetControlScene = newScene,
                 Options = options ?? new ControlSceneLoadOptions(),
-                Callback = callback
+                Callback = callback,
+                StartTime = Time.unscaledTime,
+                TargetSceneBuildIds = new int[]
+                {
+                    newScene.BuildIndex
+                }
             });
         }
 
