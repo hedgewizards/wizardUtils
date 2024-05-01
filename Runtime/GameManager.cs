@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.Coroutines;
 using WizardUtils.GameSettings;
-using WizardUtils.LoadingScreens;
+using WizardUtils.Dialogs;
 using WizardUtils.Platforms;
 using WizardUtils.Saving;
 using WizardUtils.SceneManagement;
@@ -78,7 +78,7 @@ namespace WizardUtils
         #endregion
 
         #region Loading
-        public LoadingScreen LoadingScreen;
+        public DialogScreen LoadingScreen;
 
         #endregion
 
@@ -275,7 +275,7 @@ namespace WizardUtils
             CurrentSceneLoadingData = sceneLoadingData;
             if (CurrentSceneLoadingData.Options.DoDefaultLoadingScreenBehavior)
             {
-                LoadingScreen.Show();
+                LoadingScreen.ShowLoading();
             }
 
             (List<int> scenesToLoad, List<int> scenesToUnload) = GetSceneDifference(sceneLoadingData.TargetSceneBuildIds, CurrentSceneLoaders);

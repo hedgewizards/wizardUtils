@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WizardUtils.LoadingScreens
+namespace WizardUtils.Dialogs
 {
-    public class LoadingScreen : MonoBehaviour
+    public class DialogScreen : MonoBehaviour
     {
         public bool IsShowing => gameObject.activeSelf;
 
-        public virtual void Show()
+        public virtual void ShowLoading()
         {
             gameObject.SetActive(true);
         }

@@ -13,7 +13,7 @@ namespace WizardUtils.SceneManagement
         /// </summary>
         public float MinimumLoadDurationSeconds = 0;
         /// <summary>
-        /// If true, show loading screen with <see cref="LoadingScreens.LoadingScreen.Show"/> and <see cref="LoadingScreens.LoadingScreen.Hide"/><br/>
+        /// If true, show loading screen with <see cref="Dialogs.DialogScreen.ShowLoading"/> and <see cref="Dialogs.DialogScreen.Hide"/><br/>
         /// If false, the caller should handle showing and hiding themself
         /// </summary>
         public bool DoDefaultLoadingScreenBehavior = true;

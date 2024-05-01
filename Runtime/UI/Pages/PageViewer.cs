@@ -9,7 +9,7 @@ using UnityEngine;
 namespace WizardUtils.UI.Pages
 {
     /// <summary>
-    /// Show a single page. No backwards navigation.<br/>
+    /// ShowLoading a single page. No backwards navigation.<br/>
     /// need backwards navigation? try a <see cref="NavigationStack"/>
     /// </summary>
     public class PageViewer : MonoBehaviour
