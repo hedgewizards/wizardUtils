@@ -16,7 +16,7 @@ namespace WizardUtils.UI.Styling
 
         }
 
-        public void Apply(Style style, T target)
+        public void Apply(T target, Style style)
         {
             foreach (var entry in style.Entries)
             {
