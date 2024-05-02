@@ -35,7 +35,7 @@ namespace WizardUtils.Coroutines
 
         /// <summary>
         /// Call <paramref name="callback"/> every <paramref name="intervalSeconds"/> with increasing values from 0->1 over <paramref name="durationSeconds"/><br/>
-        /// This will always begin with a callback(0), and end with a callback(1)
+        /// This will always begin with a Callback(0), and end with a Callback(1)
         /// </summary>
         /// <param name="self"></param>
         /// <param name="durationSeconds"></param>

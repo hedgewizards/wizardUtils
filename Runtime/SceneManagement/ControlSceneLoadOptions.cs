@@ -9,7 +9,7 @@ namespace WizardUtils.SceneManagement
     public class ControlSceneLoadOptions
     {
         /// <summary>
-        /// If loading finishes early, keep the loading screen open and delay the callback until at least this many seconds pass
+        /// If loading finishes early, keep the loading screen open and delay the Callback until at least this many seconds pass
         /// </summary>
         public float MinimumLoadDurationSeconds = 0;
         /// <summary>
