@@ -15,7 +15,7 @@ namespace WizardUtils.Platforms.Steam
     {
         private bool initialized;
         public bool Initialized => initialized;
-        public static AppId_t AppId => new(2413620u);
+        public virtual AppId_t AppId => new(480u);
         private SteamAPIWarningMessageHook_t SteamAPIWarningMessageHook;
         private Callback<GameOverlayActivated_t> m_OnGameOverlayActivated;
 
