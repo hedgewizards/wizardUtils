@@ -63,7 +63,7 @@ namespace WizardUtils.Platforms.Steam
             while (initialized)
             {
                 SteamAPI.RunCallbacks();
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.05f);
             }
         }
 
