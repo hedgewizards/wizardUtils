@@ -1,6 +1,7 @@
 ﻿#if !DISABLESTEAMWORKS
 using Steamworks;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,13 +19,15 @@ namespace WizardUtils.Platforms.Steam
         public virtual AppId_t AppId => new(480u);
         private SteamAPIWarningMessageHook_t SteamAPIWarningMessageHook;
         private Callback<GameOverlayActivated_t> m_OnGameOverlayActivated;
+        private GameManager GameManager;
 
         public string PersistentDataPath { get; private set; }
 
         public string PlatformURLName => "steam";
 
-        public SteamPlatformService()
+        public SteamPlatformService(GameManager gameManager)
         {
+            GameManager = gameManager;
             try
             {
                 if (SteamAPI.RestartAppIfNecessary(AppId))
@@ -46,9 +49,22 @@ namespace WizardUtils.Platforms.Steam
             if (!initialized)
             {
                 Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.");
+                
+                Application.Quit();
+                return;
             }
 
             SetupPersistentDataPath();
+            GameManager.StartCoroutine(SpawnRunCallbacksCoroutine());
+        }
+
+        private IEnumerator SpawnRunCallbacksCoroutine()
+        {
+            while (initialized)
+            {
+                SteamAPI.RunCallbacks();
+                yield return null;
+            }
         }
 
         #region Messages
