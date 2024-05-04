@@ -19,7 +19,7 @@ namespace WizardUtils.Platforms.Steam
         public virtual AppId_t AppId => new(480u); // make sure this matches steam_appid.txt in the root folder.
         private SteamAPIWarningMessageHook_t SteamAPIWarningMessageHook;
         private Callback<GameOverlayActivated_t> m_OnGameOverlayActivated;
-        private GameManager GameManager;
+        protected GameManager GameManager;
 
         public string PersistentDataPath { get; private set; }
 
