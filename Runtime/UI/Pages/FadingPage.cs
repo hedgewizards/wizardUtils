@@ -29,7 +29,7 @@ namespace WizardUtils.UI.Pages
         {
             if (CanvasGroup == null) CanvasGroup = GetComponent<CanvasGroup>();
             if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
-            if (instant)
+            if (instant || AppearDurationSeconds == 0)
             {
                 gameObject.SetActive(true);
                 CanvasGroup.alpha = 1;
@@ -48,7 +48,7 @@ namespace WizardUtils.UI.Pages
         public override void Disappear(bool instant)
         {
             if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
-            if (instant)
+            if (instant || DisappearDurationSeconds == 0)
             {
                 gameObject.SetActive(false);
                 CanvasGroup.alpha = 0;
