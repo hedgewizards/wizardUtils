@@ -57,6 +57,40 @@ namespace WizardUtils.UI.Pages
             page.Appear(true);
         }
 
+
+        public void Replace(string pageKey, bool instant = false)
+        {
+            IPage page = PageSource.Get(pageKey);
+            page.Disappear(true);
+            Replace(page, instant);
+        }
+
+        public void Replace(PageDescriptor pageDescriptor, bool instant = false) => Replace(pageDescriptor.Key, instant);
+        public void Replace(IPage page, bool instant = false)
+        {
+            if (CurrentStackAction != null)
+            {
+                throw new InvalidOperationException($"Tried to push page '{page}' to stack while already animating. this isn't supported yet.");
+            }
+
+            if (!instant)
+            {
+                CurrentStackAction = StartCoroutine(ReplaceAsync(page));
+                return;
+            }
+
+            if (PageStack.TryPeek(out IPage topPage))
+            {
+                topPage.Disappear(true);
+                UnsubscribePage(topPage);
+            }
+
+            PageStack.Clear();
+            SubscribePage(page);
+            PageStack.Push(page);
+            page.Appear(true);
+        }
+
         public void Pop(bool instant = false)
         {
             if (CurrentStackAction != null)
@@ -166,5 +200,32 @@ namespace WizardUtils.UI.Pages
 
             CurrentStackAction = null;
         }
+
+        private IEnumerator ReplaceAsync(IPage newPage)
+        {
+            bool hasOldPage = PageStack.TryPeek(out IPage topPage);
+            PageStack.Clear();
+            PageStack.Push(newPage);
+
+            if (hasOldPage)
+            {
+                UnsubscribePage(topPage);
+                topPage.Disappear();
+                if (topPage.DisappearDurationSeconds > 0)
+                {
+                    yield return new WaitForSecondsRealtime(topPage.DisappearDurationSeconds);
+                }
+            }
+
+            SubscribePage(newPage);
+            newPage.Appear();
+            if (newPage.AppearDurationSeconds > 0)
+            {
+                yield return new WaitForSecondsRealtime(newPage.AppearDurationSeconds);
+            }
+
+            CurrentStackAction = null;
+        }
+
     }
 }
