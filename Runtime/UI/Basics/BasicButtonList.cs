@@ -12,6 +12,7 @@ namespace WizardUtils.UI
     /// <summary>
     /// Simple utility to spawn prefab buttons into a layout. if you want to extend this, try <see cref="ElementList{T}"/>
     /// </summary>
+    [System.Serializable]
     public class BasicButtonList
     {
         [SerializeField]
