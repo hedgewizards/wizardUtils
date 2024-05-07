@@ -7,7 +7,7 @@ namespace WizardUtils.UI
     /// Abuse First-Class functions to create a layout full of similar UI elements
     /// </summary>
     /// <typeparam name="T">customization data for elements</typeparam>
-    public class ElementList<T>
+    public class ElementGroup<T>
     {
         private GameObject Prefab;
         private Transform Root;
@@ -19,7 +19,7 @@ namespace WizardUtils.UI
         /// <param name="prefab">new elements are instantiated as clones of this</param>
         /// <param name="root">new elements are created as children of this transform</param>
         /// <param name="createdCallback">Consume <typeparamref name="T"/> to customize the new <see cref="GameObject"/></param>
-        public ElementList(GameObject prefab, Transform root, Action<T, GameObject> createdCallback)
+        public ElementGroup(GameObject prefab, Transform root, Action<T, GameObject> createdCallback)
         {
             Prefab = prefab;
             Root = root;

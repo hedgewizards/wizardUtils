@@ -10,17 +10,17 @@ using WizardUtils.UI.Basics;
 namespace WizardUtils.UI
 {
     /// <summary>
-    /// Simple utility to spawn prefab buttons into a layout. if you want to extend this, try <see cref="ElementList{T}"/>
+    /// Simple utility to spawn prefab buttons into a layout. if you want to extend this, try <see cref="ElementGroup{T}"/>
     /// </summary>
     [System.Serializable]
-    public class BasicButtonList
+    public class BasicButtonGroup
     {
         [SerializeField]
         private GameObject Prefab;
         [SerializeField]
         private Transform Root;
 
-        public BasicButtonList(GameObject prefab, Transform root)
+        public BasicButtonGroup(GameObject prefab, Transform root)
         {
             Prefab = prefab;
             Root = root;
