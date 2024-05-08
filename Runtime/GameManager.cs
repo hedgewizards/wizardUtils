@@ -70,7 +70,7 @@ namespace WizardUtils
         protected virtual IPlatformService BuildPlatformService()
         {
 #if DISABLESTEAMWORKS
-            return new PortablePlatformService();
+            return new Platforms.Portable.PortablePlatformService();
 #else
             return new Platforms.Steam.SteamPlatformService(this);
 #endif
