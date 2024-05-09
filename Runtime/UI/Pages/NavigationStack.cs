@@ -73,6 +73,9 @@ namespace WizardUtils.UI.Pages
                 throw new InvalidOperationException($"Tried to push page '{page}' to stack while already animating. this isn't supported yet.");
             }
 
+            // don't replace itself
+            if (PageStack.TryPeek(out IPage existingPage) && existingPage == page) return;
+
             if (!instant)
             {
                 CurrentStackAction = StartCoroutine(ReplaceAsync(page));
