@@ -63,6 +63,8 @@ namespace WizardUtils.UI.Pages
         public void Replace(string pageKey, bool instant = false)
         {
             IPage page = PageSource.Get(pageKey);
+            // don't replace itself
+            if (PageStack.TryPeek(out IPage existingPage) && existingPage == page) return;
             page.Disappear(true);
             Replace(page, instant);
         }

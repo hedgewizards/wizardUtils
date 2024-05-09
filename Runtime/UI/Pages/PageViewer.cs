@@ -29,13 +29,19 @@ namespace WizardUtils.UI.Pages
         public void Open(string pageKey, bool instant = false)
         {
             IPage page = PageSource.Get(pageKey);
+            if (page == CurrentPage) return;
             page.Disappear();
-            Open(page, instant);
+            InternalOpen(page, instant);
         }
+
         public void Open(IPage page, bool instant = false)
         {
             if (page == CurrentPage) return;
+            InternalOpen(page, instant);
+        }
 
+        private void InternalOpen(IPage page, bool instant = false)
+        {
             StopCurrentAction();
 
             if (!instant)
