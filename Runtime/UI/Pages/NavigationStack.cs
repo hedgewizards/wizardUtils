@@ -66,19 +66,26 @@ namespace WizardUtils.UI.Pages
             // don't replace itself
             if (PageStack.TryPeek(out IPage existingPage) && existingPage == page) return;
             page.Disappear(true);
-            Replace(page, instant);
+            InternalReplace(page, instant);
         }
 
         public void Replace(PageDescriptor pageDescriptor, bool instant = false) => Replace(pageDescriptor.Key, instant);
+
         public void Replace(IPage page, bool instant = false)
+        {
+            // don't replace itself
+            if (PageStack.TryPeek(out IPage existingPage) && existingPage == page) return;
+
+            InternalReplace(page, instant);
+        }
+
+        private void InternalReplace(IPage page, bool instant = false)
         {
             if (CurrentStackAction != null)
             {
                 throw new InvalidOperationException($"Tried to push page '{page}' to stack while already animating. this isn't supported yet.");
             }
 
-            // don't replace itself
-            if (PageStack.TryPeek(out IPage existingPage) && existingPage == page) return;
 
             if (!instant)
             {
