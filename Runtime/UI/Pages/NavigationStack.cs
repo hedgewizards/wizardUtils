@@ -19,6 +19,8 @@ namespace WizardUtils.UI.Pages
         private PageSource PageSource;
         private Coroutine CurrentStackAction;
 
+        public event EventHandler OnStackEmptied;
+
         public void Awake()
         {
             PageStack = new Stack<IPage>();
@@ -121,6 +123,10 @@ namespace WizardUtils.UI.Pages
                 newTopPage.Appear(true);
                 SubscribePage(newTopPage);
             }
+            else
+            {
+                OnStackEmptied?.Invoke(this, null);
+            }
         }
 
         private void SubscribePage(IPage page)
@@ -174,6 +180,10 @@ namespace WizardUtils.UI.Pages
                 {
                     yield return new WaitForSecondsRealtime(newTopPage.AppearDurationSeconds);
                 }
+            }
+            else
+            {
+                OnStackEmptied?.Invoke(this, null);
             }
 
             CurrentStackAction = null;
