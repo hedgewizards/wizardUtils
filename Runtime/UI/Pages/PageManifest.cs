@@ -8,7 +8,7 @@ using WizardUtils.ManifestPattern;
 
 namespace WizardUtils.UI.Pages
 {
-    [CreateAssetMenu(fileName = "PageManifest", menuName = "WizardUtils/UI/PageManifest")]
+    [CreateAssetMenu(fileName = "PageManifest", menuName = "WizardUtils/UI/PageManifest", order = -100)]
     public class PageManifest : ScriptableObject, IDescriptorManifest<PageDescriptor>
     {
         public PageDescriptor[] Items;

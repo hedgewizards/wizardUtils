@@ -8,7 +8,7 @@ using WizardUtils.ManifestPattern;
 
 namespace WizardUtils.GlobalSounds
 {
-    [CreateAssetMenu(fileName = "GlobalSoundManifest", menuName = "WizardUtils/GlobalSounds/GlobalSoundManifest")]
+    [CreateAssetMenu(fileName = "GlobalSoundManifest", menuName = "WizardUtils/GlobalSounds/GlobalSoundManifest", order = -100)]
     public class GlobalSoundManifest : ScriptableObject, IDescriptorManifest<GlobalSoundDescriptor>
     {
         public GlobalSoundDescriptor[] Descriptors;
