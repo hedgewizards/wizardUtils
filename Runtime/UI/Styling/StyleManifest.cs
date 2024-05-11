@@ -8,7 +8,7 @@ using WizardUtils.ManifestPattern;
 
 namespace WizardUtils.UI.Styling
 {
-    [CreateAssetMenu(fileName = "StyleManifest", menuName = "WizardUtils/UI/StyleManifest", order = -100)]
+    [CreateAssetMenu(fileName = "StyleManifest", menuName = "WizardUtils/UI/StyleManifest", order = 100)]
     public class StyleManifest : ScriptableObject, IDescriptorManifest<StyleDescriptor>
     {
         public StyleDescriptor[] Items;
