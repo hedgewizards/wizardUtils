@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LabelledSlider : MonoBehaviour
@@ -11,6 +12,11 @@ public class LabelledSlider : MonoBehaviour
 
     public Slider Slider;
 
+    public float MinValue { get; private set; }
+    public float MaxValue { get; private set; }
+    public float StepSize { get; private set; }
+
+    public UnityEvent<float> OnValueChanged;
 
     private void OnValidate()
     {
@@ -19,13 +25,51 @@ public class LabelledSlider : MonoBehaviour
 
     private void Awake()
     {
-        fixLabels();
         Slider.onValueChanged.AddListener(onDisplayValueChanged);
     }
 
-    private void onDisplayValueChanged(float displayValue)
+
+    private float CalculateRealValue(float rawSliderValue)
     {
-        DisplayLabel.text = displayValue.ToString(LabelDisplayFormat);
+        if (!Slider.wholeNumbers) return rawSliderValue;
+
+        float t = (float)rawSliderValue / (float)Slider.maxValue;
+        return MinValue + t * (MaxValue - MinValue);
+    }
+
+    private void onDisplayValueChanged(float rawSliderValue)
+    {
+        float realValue = CalculateRealValue(rawSliderValue);
+
+        OnValueChanged?.Invoke(realValue);
+        DisplayLabel.text = realValue.ToString(LabelDisplayFormat);
+    }
+
+    public void SetShowMinMaxLabels(bool showMinMaxLabels)
+    {
+        MinLabel.gameObject.SetActive(showMinMaxLabels);
+        MaxLabel.gameObject.SetActive(showMinMaxLabels);
+    }
+
+    public void Initialize(float min, float max, float value, float stepSize = 0)
+    {
+        MinLabel.text = min.ToString(LabelDisplayFormat);
+
+        MaxLabel.text = max.ToString(LabelDisplayFormat);
+
+        StepSize = stepSize;
+        if (StepSize <= 0)
+        {
+            Slider.wholeNumbers = false;
+            Slider.minValue = value;
+            Slider.maxValue = value;
+        }
+        else
+        {
+            Slider.wholeNumbers = true;
+            Slider.minValue = 0;
+            Slider.maxValue = (MaxValue - MinValue) / StepSize;
+        }
     }
 
     private void fixLabels()
