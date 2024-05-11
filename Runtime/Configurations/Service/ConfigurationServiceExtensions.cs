@@ -1,4 +1,4 @@
-﻿using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+﻿using System.Globalization;
 using UnityEngine;
 
 namespace WizardUtils.Configurations
@@ -20,6 +20,20 @@ namespace WizardUtils.Configurations
             if (ConfigHelper.TryParseColor(config.Read(key), out var color))
             {
                 return color;
+            }
+            return defaultValue;
+        }
+
+        public static void WriteFloat(this IConfigurationService config, string key, float value, string format = "F", bool writeToConfig = false)
+        {
+            config.Write(key, value.ToString(format, CultureInfo.InvariantCulture), writeToConfig);
+        }
+
+        public static float ReadFloat(this IConfigurationService config, string key, float defaultValue)
+        {
+            if (float.TryParse(config.Read(key), NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
             }
             return defaultValue;
         }
