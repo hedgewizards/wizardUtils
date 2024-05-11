@@ -28,23 +28,6 @@ public class LabelledSlider : MonoBehaviour
         Slider.onValueChanged.AddListener(onDisplayValueChanged);
     }
 
-
-    private float CalculateRealValue(float rawSliderValue)
-    {
-        if (!Slider.wholeNumbers) return rawSliderValue;
-
-        float t = (float)rawSliderValue / (float)Slider.maxValue;
-        return MinValue + t * (MaxValue - MinValue);
-    }
-
-    private void onDisplayValueChanged(float rawSliderValue)
-    {
-        float realValue = CalculateRealValue(rawSliderValue);
-
-        OnValueChanged?.Invoke(realValue);
-        DisplayLabel.text = realValue.ToString(LabelDisplayFormat);
-    }
-
     public void SetShowMinMaxLabels(bool showMinMaxLabels)
     {
         MinLabel.gameObject.SetActive(showMinMaxLabels);
@@ -61,8 +44,8 @@ public class LabelledSlider : MonoBehaviour
         if (StepSize <= 0)
         {
             Slider.wholeNumbers = false;
-            Slider.minValue = value;
-            Slider.maxValue = value;
+            Slider.minValue = min;
+            Slider.maxValue = max;
         }
         else
         {
@@ -70,6 +53,35 @@ public class LabelledSlider : MonoBehaviour
             Slider.minValue = 0;
             Slider.maxValue = (MaxValue - MinValue) / StepSize;
         }
+        Slider.value = CalculateRawValue(value);
+    }
+
+    public void SetValue(float value)
+    {
+        Slider.value = CalculateRawValue(value);
+    }
+
+    private float CalculateRealValue(float rawSliderValue)
+    {
+        if (!Slider.wholeNumbers) return rawSliderValue;
+
+        float t = (float)rawSliderValue / (float)Slider.maxValue;
+        return MinValue + t * (MaxValue - MinValue);
+    }
+
+    private float CalculateRawValue(float realSliderValue)
+    {
+        if (!Slider.wholeNumbers) return realSliderValue;
+
+        return (int)((realSliderValue - MinValue) / StepSize);
+    }
+
+    private void onDisplayValueChanged(float rawSliderValue)
+    {
+        float realValue = CalculateRealValue(rawSliderValue);
+
+        OnValueChanged?.Invoke(realValue);
+        DisplayLabel.text = realValue.ToString(LabelDisplayFormat);
     }
 
     private void fixLabels()
