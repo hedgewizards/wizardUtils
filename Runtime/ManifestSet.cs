@@ -9,7 +9,7 @@ using WizardUtils.Saving;
 
 namespace WizardUtils
 {
-    [CreateAssetMenu( fileName = "ManifestSet", menuName = "WizardUtils/ManifestSet", order = 0)]
+    [CreateAssetMenu( fileName = "ManifestSet", menuName = "WizardUtils/ManifestSet", order = -100)]
     public class ManifestSet : ScriptableObject
     {
         public GlobalSoundManifest GlobalSound;
