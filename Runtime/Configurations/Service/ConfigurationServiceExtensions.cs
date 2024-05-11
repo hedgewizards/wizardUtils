@@ -51,5 +51,18 @@ namespace WizardUtils.Configurations
             }
             return defaultValue;
         }
+
+        public static void WriteBool(this IConfigurationService config, string key, bool value, bool writeToConfig = false)
+        {
+            config.Write(key, value ? "1" : "0");
+        }
+
+        public static bool ReadBool(this IConfigurationService config, string key, bool defaultValue)
+        {
+            string value = config.Read(key);
+            if (value == "1") return true;
+            if (value == "0") return false;
+            return defaultValue;
+        }
     }
 }
