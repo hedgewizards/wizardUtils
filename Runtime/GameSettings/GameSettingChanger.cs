@@ -18,7 +18,8 @@ namespace WizardUtils
             setting = GameManager.Instance.FindGameSetting(SettingKeyName);
             if (setting == null)
             {
-                Debug.LogError($"Could not find GameSetting with Key {SettingKeyName}", gameObject);
+                Debug.LogError($"Could not find GameSetting with Key '{SettingKeyName}'", gameObject);
+                return;
             }
             OnValueLoaded?.Invoke(setting.Value);
         }
