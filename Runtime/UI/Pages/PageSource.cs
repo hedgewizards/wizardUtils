@@ -20,6 +20,12 @@ namespace WizardUtils.UI.Pages
             Parent = parent;
         }
 
+        public IPage SpawnNew(PageDescriptor descriptor)
+        {
+            GameObject newObj = UnityEngine.Object.Instantiate(descriptor.Prefab, Parent.transform);
+            return newObj.GetComponent<IPage>();
+        }
+
         public IPage Get(string key)
         {
             // grab an existing page if it exists
@@ -33,11 +39,10 @@ namespace WizardUtils.UI.Pages
                 throw new KeyNotFoundException($"Missing page with key {key} in manifest {Manifest}");
             }
 
-            GameObject newObj = UnityEngine.Object.Instantiate(descriptor.Prefab, Parent.transform);
             PageData data = new PageData()
             {
                 Descriptor = descriptor,
-                Page = newObj.GetComponent<IPage>()
+                Page = SpawnNew(descriptor)
             };
 #if DEBUG
             if (data.Page == null) throw new MissingComponentException($"Page {descriptor}'s prefab missing a toplevel IPage component");
