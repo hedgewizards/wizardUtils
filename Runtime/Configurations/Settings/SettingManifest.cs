@@ -5,7 +5,7 @@ using WizardUtils;
 using WizardUtils.ManifestPattern;
 using WizardUtils.UI.Pages;
 
-namespace WizardUtils.Configurations.MenuSettings
+namespace WizardUtils.Configurations.Settings
 {
     [CreateAssetMenu(fileName = "SettingsManifest", menuName = "Horde/Settings/PageManifest", order = 100)]
     public class SettingManifest : ScriptableObject, IDescriptorManifest<SettingDescriptor>

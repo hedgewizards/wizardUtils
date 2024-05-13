@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace WizardUtils.Configurations.MenuSettings
+namespace WizardUtils.Configurations.Settings
 {
 
     [CreateAssetMenu(fileName = "setting_", menuName = "Horde/Settings/Bool")]

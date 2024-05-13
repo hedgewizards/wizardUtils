@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using WizardUtils.ManifestPattern;
 
-namespace WizardUtils.Configurations.MenuSettings
+namespace WizardUtils.Configurations.Settings
 {
     [CustomEditor(typeof(RangeFloatSetting))]
     [CanEditMultipleObjects]

@@ -14,7 +14,7 @@ namespace WizardUtils
     public class ManifestSet : ScriptableObject
     {
         public GlobalSoundManifest GlobalSound;
-        public WizardUtils.Configurations.MenuSettings.SettingManifest IndexedSettings;
+        public WizardUtils.Configurations.Settings.SettingManifest IndexedSettings;
         public SaveManifest MainSave;
     }
 }
