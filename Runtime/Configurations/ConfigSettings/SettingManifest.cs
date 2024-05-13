@@ -7,7 +7,7 @@ using WizardUtils.UI.Pages;
 
 namespace WizardUtils.Configurations.ConfigSettings
 {
-    [CreateAssetMenu(fileName = "SettingsManifest", menuName = "Horde/Settings/PageManifest", order = 100)]
+    [CreateAssetMenu(fileName = "SettingsManifest", menuName = "Horde/Settings/SettingsManifest", order = 100)]
     public class SettingManifest : ScriptableObject, IDescriptorManifest<SettingDescriptor>
     {
         public SettingDescriptor[] Items;
@@ -35,7 +35,7 @@ namespace WizardUtils.Configurations.ConfigSettings
         {
             foreach(var item in Items)
             {
-                if (item.Key == key)
+                if (string.Equals(item.Key, key, StringComparison.InvariantCultureIgnoreCase))
                 {
                     result = item;
                     return true;
