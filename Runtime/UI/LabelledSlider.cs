@@ -29,12 +29,15 @@ public class LabelledSlider : MonoBehaviour
 
     public void Initialize(float min, float max, float value, float stepSize = 0)
     {
+        MinValue = min;
+        MaxValue = max;
         StepSize = stepSize;
+
         if (StepSize <= 0)
         {
             Slider.wholeNumbers = false;
-            Slider.minValue = min;
-            Slider.maxValue = max;
+            Slider.minValue = MinValue;
+            Slider.maxValue = MaxValue;
         }
         else
         {
