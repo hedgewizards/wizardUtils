@@ -4,13 +4,13 @@
     public struct AudioChannelSettingData
     {
         public string MixerParamName;
-        public string GameSettingKey;
+        public string SettingKey;
         public float DefaultValue;
 
-        public AudioChannelSettingData(string mixerParamName, string gameSettingKey, float defaultValue)
+        public AudioChannelSettingData(string mixerParamName, string settingWatcherKey, float defaultValue)
         {
             MixerParamName = mixerParamName;
-            GameSettingKey = gameSettingKey;
+            SettingKey = settingWatcherKey;
             DefaultValue = defaultValue;
         }
     }

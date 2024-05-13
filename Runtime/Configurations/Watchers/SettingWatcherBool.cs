@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using WizardUtils.Configurations;
 using WizardUtils.Configurations.MenuSettings;
-using WizardUtils.GameSettings;
+using WizardUtils.SettingWatchers;
 
-namespace WizardUtils.GameSettings
+namespace WizardUtils.Configuration.SettingWatchers
 {
-    public class GameSettingBool : ConfigGameSetting<bool>
+    public class SettingWatcherBool : SettingWatcher<bool>
     {
-        public GameSettingBool(IConfigurationService configurationService, BoolSetting setting)
+        public SettingWatcherBool(IConfigurationService configurationService, BoolSetting setting)
             : base(configurationService, setting.Key, setting.DefaultValue)
         {
         }
 
-        public GameSettingBool(IConfigurationService configurationService, string key, bool defaultValue) : base(configurationService, key, defaultValue)
+        public SettingWatcherBool(IConfigurationService configurationService, string key, bool defaultValue) : base(configurationService, key, defaultValue)
         {
         }
 

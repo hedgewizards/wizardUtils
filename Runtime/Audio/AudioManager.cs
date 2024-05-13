@@ -3,8 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using WizardUtils.Audio;
+using WizardUtils.Configuration.SettingWatchers;
 using WizardUtils.Configurations;
-using WizardUtils.GameSettings;
+using WizardUtils.SettingWatchers;
 
 namespace WizardUtils
 {
@@ -30,7 +31,7 @@ namespace WizardUtils
         };
 
         private AudioChannelController[] Controllers;
-        private GameSettingBool TabMuteSetting;
+        private SettingWatcherBool TabMuteSetting;
 
         private void Start()
         {
@@ -41,17 +42,17 @@ namespace WizardUtils
             Controllers = new AudioChannelController[allChannels.Length];
             for (int n = 0; n < allChannels.Length; n++)
             {
-                var setting = new GameSettingFloat(gameManager.Configuration, allChannels[n].GameSettingKey, allChannels[n].DefaultValue);
+                var setting = new SettingWatcherFloat(gameManager.Configuration, allChannels[n].SettingKey, allChannels[n].DefaultValue);
                 Controllers[n] = new AudioChannelController(mixer, setting, allChannels[n].MixerParamName);
             }
 
-            TabMuteSetting = new GameSettingBool(gameManager.Configuration, "tabmute", false);
+            TabMuteSetting = new SettingWatcherBool(gameManager.Configuration, "tabmute", false);
             TabMuteSetting.OnChanged += AltTabMuteSetting_OnChanged;
             shouldMuteOnLoseFocus = TabMuteSetting.Value;
             audioManagerSetUp = true;
         }
 
-        private void AltTabMuteSetting_OnChanged(object sender, GameSettingChangedEventArgs<bool> e)
+        private void AltTabMuteSetting_OnChanged(object sender, SettingChangedEventArgs<bool> e)
         {
             shouldMuteOnLoseFocus = e.FinalValue;
             RecalculateShouldMute();

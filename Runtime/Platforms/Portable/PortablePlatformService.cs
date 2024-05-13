@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using WizardUtils.GameSettings;
+using WizardUtils.SettingWatchers;
 
 namespace WizardUtils.Platforms.Portable
 {

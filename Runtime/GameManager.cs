@@ -9,7 +9,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using WizardUtils.Configurations;
 using WizardUtils.Coroutines;
-using WizardUtils.GameSettings;
+using WizardUtils.SettingWatchers;
 using WizardUtils.Dialogs;
 using WizardUtils.Platforms;
 using WizardUtils.Saving;

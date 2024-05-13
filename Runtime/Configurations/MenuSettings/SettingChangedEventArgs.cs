@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WizardUtils.GameSettings
+namespace WizardUtils.Configuration.SettingWatchers
 {
-    public class GameSettingChangedEventArgs<T>
+    public class SettingChangedEventArgs<T>
     {
         public T InitialValue;
         public T FinalValue;
 
-        public GameSettingChangedEventArgs(T initialValue, T finalValue)
+        public SettingChangedEventArgs(T initialValue, T finalValue)
         {
             InitialValue = initialValue;
             FinalValue = finalValue;

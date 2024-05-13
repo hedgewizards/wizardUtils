@@ -1,5 +1,6 @@
 ﻿using UnityEngine.Audio;
-using WizardUtils.GameSettings;
+using WizardUtils.Configuration.SettingWatchers;
+using WizardUtils.SettingWatchers;
 
 namespace WizardUtils.Audio
 {
@@ -7,7 +8,7 @@ namespace WizardUtils.Audio
     {
         AudioMixer mixer;
         string channelVolumeParamName;
-        GameSettingFloat gameSetting;
+        SettingWatcherFloat settingWatcher;
 
         private bool muted;
         private float volume;
@@ -32,26 +33,26 @@ namespace WizardUtils.Audio
             }
         }
 
-        public AudioChannelController(AudioMixer mixer, GameSettingFloat gameSetting, string channelVolumeParamName)
+        public AudioChannelController(AudioMixer mixer, SettingWatcherFloat settingWatcher, string channelVolumeParamName)
         {
             this.mixer = mixer;
-            this.gameSetting = gameSetting;
+            this.settingWatcher = settingWatcher;
             this.channelVolumeParamName = channelVolumeParamName;
 
-            gameSetting.OnChanged += GameSetting_OnChanged;
-            Volume = gameSetting.Value;
+            settingWatcher.OnChanged += SettingWatcher_OnChanged;
+            Volume = settingWatcher.Value;
 
             UpdateMixer();
         }
 
-        private void GameSetting_OnChanged(object sender, GameSettingChangedEventArgs<float> e)
+        private void SettingWatcher_OnChanged(object sender, SettingChangedEventArgs<float> e)
         {
             Volume = e.FinalValue;
         }
 
         private void UpdateMixer()
         {
-            float rawVolume = Muted ? 0.001f : gameSetting.Value;
+            float rawVolume = Muted ? 0.001f : settingWatcher.Value;
             mixer.SetFloat(channelVolumeParamName, AudioUtils.LinearAudioLevelToLog(rawVolume));
 
         }

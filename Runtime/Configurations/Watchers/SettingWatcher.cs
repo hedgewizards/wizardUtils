@@ -1,23 +1,23 @@
-﻿using Codice.Client.BaseCommands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WizardUtils.Configuration.SettingWatchers;
 using WizardUtils.Configurations;
 
-namespace WizardUtils.GameSettings
+namespace WizardUtils.SettingWatchers
 {
-    public abstract class ConfigGameSetting<T>
+    public abstract class SettingWatcher<T>
     {
         private IConfigurationService ConfigurationService;
         public readonly string Key;
         private T DefaultValue;
 
-        public event EventHandler<GameSettingChangedEventArgs<T>> OnChanged;
+        public event EventHandler<SettingChangedEventArgs<T>> OnChanged;
 
-        protected ConfigGameSetting(IConfigurationService configurationService, string key, T defaultValue)
+        protected SettingWatcher(IConfigurationService configurationService, string key, T defaultValue)
         {
             ConfigurationService = configurationService;
             Key = key;
@@ -37,7 +37,7 @@ namespace WizardUtils.GameSettings
             }
             if (!oldValue.Equals(newValue))
             {
-                OnChanged.Invoke(sender, new GameSettingChangedEventArgs<T>(oldValue, newValue));
+                OnChanged.Invoke(sender, new SettingChangedEventArgs<T>(oldValue, newValue));
             }
         }
 
