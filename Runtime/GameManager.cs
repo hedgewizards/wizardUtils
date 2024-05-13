@@ -470,7 +470,14 @@ namespace WizardUtils
         {
             IWritableConfiguration fileConfig = new CfgFileConfiguration(PlatformService, settingsConfigFileName);
 #if DEBUG
-            Configuration = new ConfigurationService(fileConfig, new ExplicitConfiguration(DebugOverrideConfig));
+            if (DebugOverrideConfig != null)
+            {
+                Configuration = new ConfigurationService(fileConfig, new ExplicitConfiguration(DebugOverrideConfig));
+            }
+            else
+            {
+                Configuration = new ConfigurationService(fileConfig);
+            }
 #else
             Configuration = new ConfigurationService(fileConfig);
 #endif
