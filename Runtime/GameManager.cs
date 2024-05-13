@@ -456,12 +456,12 @@ namespace WizardUtils
             return GameSettingFloats.GetValueOrDefault(key, null);
         }
 
-        public static string KEY_VOLUME_MASTER = "Volume_Master";
-        public static string KEY_VOLUME_EFFECTS = "Volume_Effects";
-        public static string KEY_VOLUME_AMBIENCE = "Volume_Ambience";
-        public static string KEY_VOLUME_MUSIC = "Volume_Music";
+        public static string KEY_VOLUME_MASTER = "volume_master";
+        public static string KEY_VOLUME_EFFECTS = "volume_effects";
+        public static string KEY_VOLUME_AMBIENCE = "volume_ambience";
+        public static string KEY_VOLUME_MUSIC = "volume_music";
 
-        public static string SETTINGKEY_MUTE_ON_ALT_TAB = "MuteOnAltTab";
+        public static string SETTINGKEY_MUTE_ON_ALT_TAB = "tabmute";
         #endregion
 
         #region Configuration
