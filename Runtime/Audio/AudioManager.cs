@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using WizardUtils.Audio;
+using WizardUtils.Configurations;
 using WizardUtils.GameSettings;
 
 namespace WizardUtils
@@ -9,39 +11,50 @@ namespace WizardUtils
     [RequireComponent(typeof(GameManager))]
     public class AudioManager : MonoBehaviour
     {
+        GameManager gameManager;
         private bool shouldMuteOnLoseFocus;
         private bool applicationHasFocus;
         private bool audioManagerSetUp = false;
 
+        private const float DEFAULT_VOLUME_MASTER = 100;
+        private const float DEFAULT_VOLUME_CATEGORY = 80;
+
         public AudioMixer mixer;
-        public AudioChannelSettingPair[] AdditionalChannels;
-        private static AudioChannelSettingPair[] BaseChannels => new AudioChannelSettingPair[]
+        public AudioChannelSettingData[] AdditionalChannels;
+        private static AudioChannelSettingData[] BaseChannels => new AudioChannelSettingData[]
         {
-            new AudioChannelSettingPair("MasterVolume", GameManager.KEY_VOLUME_MASTER),
-            new AudioChannelSettingPair("EffectVolume", GameManager.KEY_VOLUME_EFFECTS),
-            new AudioChannelSettingPair("AmbienceVolume", GameManager.KEY_VOLUME_AMBIENCE),
-            new AudioChannelSettingPair("MusicVolume", GameManager.KEY_VOLUME_MUSIC)
+            new AudioChannelSettingData("MasterVolume", GameManager.KEY_VOLUME_MASTER, DEFAULT_VOLUME_MASTER),
+            new AudioChannelSettingData("EffectVolume", GameManager.KEY_VOLUME_EFFECTS, DEFAULT_VOLUME_CATEGORY),
+            new AudioChannelSettingData("AmbienceVolume", GameManager.KEY_VOLUME_AMBIENCE, DEFAULT_VOLUME_CATEGORY),
+            new AudioChannelSettingData("MusicVolume", GameManager.KEY_VOLUME_MUSIC, DEFAULT_VOLUME_CATEGORY)
         };
 
         private AudioChannelController[] Controllers;
+        private GameSettingBool TabMuteSetting;
 
         private void Start()
         {
-            GameManager instance = GetComponent<GameManager>();
+            gameManager = GetComponent<GameManager>();
             Controllers = new AudioChannelController[BaseChannels.Length];
 
             var allChannels = GenerateAllChannels();
             Controllers = new AudioChannelController[allChannels.Length];
             for (int n = 0; n < allChannels.Length; n++)
             {
-                var setting = instance.FindGameSetting(allChannels[n].GameSettingKey);
+                var setting = new GameSettingFloat(gameManager.Configuration, allChannels[n].GameSettingKey, allChannels[n].DefaultValue);
                 Controllers[n] = new AudioChannelController(mixer, setting, allChannels[n].MixerParamName);
             }
 
-            GameSettingFloat altTabMuteSetting = GameManager.GameInstance.FindGameSetting(GameManager.SETTINGKEY_MUTE_ON_ALT_TAB);
-            altTabMuteSetting.OnChanged += AltTabMuteSetting_OnChanged;
-            shouldMuteOnLoseFocus = altTabMuteSetting.Value == 1;
+            TabMuteSetting = new GameSettingBool(gameManager.Configuration, GameManager.SETTINGKEY_MUTE_ON_ALT_TAB, false);
+            TabMuteSetting.OnChanged += AltTabMuteSetting_OnChanged;
+            shouldMuteOnLoseFocus = TabMuteSetting.Value;
             audioManagerSetUp = true;
+        }
+
+        private void AltTabMuteSetting_OnChanged(object sender, GameSettingChangedEventArgs<bool> e)
+        {
+            shouldMuteOnLoseFocus = e.FinalValue;
+            RecalculateShouldMute();
         }
 
         private void OnApplicationFocus(bool focus)
@@ -51,11 +64,8 @@ namespace WizardUtils
             RecalculateShouldMute();
         }
 
-
-        private void AltTabMuteSetting_OnChanged(object sender, GameSettingChangedEventArgs e)
+        private void AltTabMuteSetting_OnChanged(object sender, ValueChangedEventArgs e)
         {
-            shouldMuteOnLoseFocus = e.FinalValue == 1;
-            RecalculateShouldMute();
         }
 
         private void RecalculateShouldMute()
@@ -68,6 +78,6 @@ namespace WizardUtils
             Controllers[0].Muted = muted;
         }
 
-        private AudioChannelSettingPair[] GenerateAllChannels() => BaseChannels.Concat(AdditionalChannels).ToArray();
+        private AudioChannelSettingData[] GenerateAllChannels() => BaseChannels.Concat(AdditionalChannels).ToArray();
     }
 }

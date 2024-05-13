@@ -22,7 +22,7 @@ namespace WizardUtils.Saving
         {
             get
             {
-                return ConfigHelper.TryParseBool(SerializedValue);
+                return ConfigHelper.ParseBool(SerializedValue, false);
             }
             set
             {

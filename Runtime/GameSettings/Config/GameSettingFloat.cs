@@ -14,6 +14,8 @@ namespace WizardUtils.GameSettings
         {
         }
 
-        public override bool TryParse(string key, out float value) => float.TryParse(key, out value);
+        public override string Serialize(float value) => ConfigHelper.SerializeFloat(value);
+
+        public override bool TryParse(string value, out float result) => ConfigHelper.TryParseFloat(value, out result);
     }
 }

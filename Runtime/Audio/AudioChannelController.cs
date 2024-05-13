@@ -1,4 +1,5 @@
 ﻿using UnityEngine.Audio;
+using WizardUtils.GameSettings;
 
 namespace WizardUtils.Audio
 {
@@ -43,7 +44,7 @@ namespace WizardUtils.Audio
             UpdateMixer();
         }
 
-        private void GameSetting_OnChanged(object sender, GameSettingChangedEventArgs e)
+        private void GameSetting_OnChanged(object sender, GameSettingChangedEventArgs<float> e)
         {
             Volume = e.FinalValue;
         }

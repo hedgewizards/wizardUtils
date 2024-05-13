@@ -17,7 +17,7 @@ namespace WizardUtils.Saving
         protected override void CallChangedEvent(object sender, ValueChangedEventArgs args)
         {
             if (args.NewValue == args.OldValue) return;
-            if (ConfigHelper.TryParseBool(args.NewValue))
+            if (ConfigHelper.ParseBool(args.NewValue, false))
             {
                 OnSetTrue?.Invoke();
             }

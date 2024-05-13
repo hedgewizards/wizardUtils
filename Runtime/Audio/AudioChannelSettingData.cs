@@ -1,15 +1,17 @@
 ﻿namespace WizardUtils.Audio
 {
     [System.Serializable]
-    public struct AudioChannelSettingPair
+    public struct AudioChannelSettingData
     {
         public string MixerParamName;
         public string GameSettingKey;
+        public float DefaultValue;
 
-        public AudioChannelSettingPair(string mixerParamName, string gameSettingKey)
+        public AudioChannelSettingData(string mixerParamName, string gameSettingKey, float defaultValue)
         {
             MixerParamName = mixerParamName;
             GameSettingKey = gameSettingKey;
+            DefaultValue = defaultValue;
         }
     }
 }

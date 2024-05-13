@@ -63,6 +63,7 @@ namespace WizardUtils.GameSettings
             }
         }
 
-        public abstract bool TryParse(string key, out T value);
+        public abstract string Serialize(T value);
+        public abstract bool TryParse(string value, out T result);
     }
 }
