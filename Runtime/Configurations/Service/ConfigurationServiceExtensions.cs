@@ -17,11 +17,7 @@ namespace WizardUtils.Configurations
 
         public static Color ReadColor(this IConfigurationService config, string key, Color defaultValue)
         {
-            if (ConfigHelper.TryParseColor(config.Read(key), out var color))
-            {
-                return color;
-            }
-            return defaultValue;
+            return ConfigHelper.ParseColor(config.Read(key), defaultValue);
         }
 
         public static void WriteFloat(this IConfigurationService config, string key, float value, string format = "F", bool writeToConfig = false)
@@ -31,11 +27,7 @@ namespace WizardUtils.Configurations
 
         public static float ReadFloat(this IConfigurationService config, string key, float defaultValue)
         {
-            if (ConfigHelper.TryParseFloat(config.Read(key), out var result))
-            {
-                return result;
-            }
-            return defaultValue;
+            return ConfigHelper.ParseFloat(config.Read(key), defaultValue);
         }
 
         public static void WriteInt(this IConfigurationService config, string key, int value, bool writeToConfig = false)
@@ -45,11 +37,7 @@ namespace WizardUtils.Configurations
 
         public static int ReadInt(this IConfigurationService config, string key, int defaultValue)
         {
-            if (ConfigHelper.TryParseInt(config.Read(key), out var value))
-            {
-                return value;
-            }
-            return defaultValue;
+            return ConfigHelper.ParseInt(config.Read(key), defaultValue);
         }
 
         public static void WriteBool(this IConfigurationService config, string key, bool value, bool writeToConfig = false)
@@ -59,11 +47,7 @@ namespace WizardUtils.Configurations
 
         public static bool ReadBool(this IConfigurationService config, string key, bool defaultValue)
         {
-            if (ConfigHelper.TryParseBool(config.Read(key), out var value))
-            {
-                return value;
-            }
-            return defaultValue;
+            return ConfigHelper.ParseBool(config.Read(key), defaultValue);
         }
     }
 }
