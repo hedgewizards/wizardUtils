@@ -7,6 +7,15 @@ namespace WizardUtils.Configurations
 {
     public static class ConfigHelper
     {
+        public static Color ParseColor(string value, Color fallback)
+        {
+            if (TryParseColor(value, out Color result))
+            {
+                return result;
+            }
+            return fallback;
+        }
+
         public static bool TryParseColor(string value, out Color color)
         {
             if (ColorUtility.TryParseHtmlString(value, out color))
@@ -21,6 +30,14 @@ namespace WizardUtils.Configurations
             return "#" + ColorUtility.ToHtmlStringRGB(color);
         }
 
+        public static bool ParseBool(string value, bool fallback)
+        {
+            if (TryParseBool(value, out bool result))
+            {
+                return result;
+            }
+            return fallback;
+        }
         public static bool TryParseBool(string value, out bool result)
         {
             if (value == "1")
@@ -42,6 +59,14 @@ namespace WizardUtils.Configurations
             return value ? "1" : "0";
         }
 
+        public static int ParseInt(string value, int fallback)
+        {
+            if (TryParseInt(value, out int result))
+            {
+                return result;
+            }
+            return fallback;
+        }
         public static bool TryParseInt(string value, out int result)
         {
             if (int.TryParse(value, out result))
@@ -56,6 +81,14 @@ namespace WizardUtils.Configurations
             return value.ToString();
         }
 
+        public static float ParseFloat(string value, float fallback)
+        {
+            if (TryParseFloat(value, out float result))
+            {
+                return result;
+            }
+            return fallback;
+        }
         public static bool TryParseFloat(string value, out float result)
         {
             if (float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
