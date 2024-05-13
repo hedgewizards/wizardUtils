@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WizardUtils.Configurations.MenuSettings;
 
 namespace WizardUtils.Configurations
 {
@@ -11,11 +12,16 @@ namespace WizardUtils.Configurations
         private StackedConfiguration FullConfiguration;
         private IWritableConfiguration FileConfiguration;
         private WritableConfiguration LiveConfiguration;
+        private SettingManifest IndexedSettings;
 
         public Dictionary<string, EventHandler<ValueChangedEventArgs>> ValueChangedDictionary;
 
-        public ConfigurationService(IWritableConfiguration fileConfiguration, IConfiguration OverrideConfiguration = null)
+        public ConfigurationService(
+            SettingManifest indexedSettings,
+            IWritableConfiguration fileConfiguration,
+            IConfiguration OverrideConfiguration = null)
         {
+            IndexedSettings = indexedSettings;
             ValueChangedDictionary = new Dictionary<string, EventHandler<ValueChangedEventArgs>>();
             FileConfiguration = fileConfiguration;
             LiveConfiguration = new WritableConfiguration();
@@ -89,6 +95,11 @@ namespace WizardUtils.Configurations
         public void Save()
         {
             FileConfiguration.Save();
+        }
+
+        public bool TryFindSetting(string key, out SettingDescriptor setting)
+        {
+            return IndexedSettings.TryFindByKey(key, out setting);
         }
     }
 }

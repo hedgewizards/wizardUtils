@@ -15,7 +15,7 @@ namespace WizardUtils
 
         private void Start()
         {
-            setting = GameManager.Instance.FindGameSetting(SettingKeyName);
+            setting = new GameSettingFloat(GameManager.Instance.Configuration, SettingKeyName, 0);
             if (setting == null)
             {
                 Debug.LogError($"Could not find GameSetting with Key '{SettingKeyName}'", gameObject);

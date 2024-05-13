@@ -46,8 +46,6 @@ namespace WizardUtils
             CurrentSceneLoaders = new List<SceneLoader>();
 
             InitializeConfigurationService();
-            InitializeGameSettings();
-            
         }
 
         protected virtual void Update()
@@ -424,44 +422,6 @@ namespace WizardUtils
             return (scenesToLoad, scenesToUnload);
         }
 
-
-        #endregion
-
-        #region GameSettings
-        private Dictionary<string, GameSettingFloat> GameSettingFloats;
-
-        private void InitializeGameSettings()
-        {
-            GameSettingFloats = new Dictionary<string, GameSettingFloat>();
-            foreach(var setting in LoadGameSettingFloats())
-            {
-                GameSettingFloats[setting.Key] = setting;
-            }
-        }
-
-        protected virtual List<GameSettingFloat> LoadGameSettingFloats()
-        {
-            return new List<GameSettingFloat>()
-            {
-                new GameSettingFloat(Configuration, KEY_VOLUME_MASTER, 100),
-                new GameSettingFloat(Configuration, KEY_VOLUME_EFFECTS, 80),
-                new GameSettingFloat(Configuration, KEY_VOLUME_AMBIENCE, 80),
-                new GameSettingFloat(Configuration, KEY_VOLUME_MUSIC, 80),
-                new GameSettingFloat(Configuration, SETTINGKEY_MUTE_ON_ALT_TAB, 0),
-            };
-        }
-
-        public GameSettingFloat FindGameSetting(string key)
-        {
-            return GameSettingFloats.GetValueOrDefault(key, null);
-        }
-
-        public static string KEY_VOLUME_MASTER = "volume_master";
-        public static string KEY_VOLUME_EFFECTS = "volume_effects";
-        public static string KEY_VOLUME_AMBIENCE = "volume_ambience";
-        public static string KEY_VOLUME_MUSIC = "volume_music";
-
-        public static string SETTINGKEY_MUTE_ON_ALT_TAB = "tabmute";
         #endregion
 
         #region Configuration
@@ -469,18 +429,14 @@ namespace WizardUtils
         private void InitializeConfigurationService()
         {
             IWritableConfiguration fileConfig = new CfgFileConfiguration(PlatformService, settingsConfigFileName);
+            IConfiguration overrideConfiguration = null;
 #if DEBUG
             if (DebugOverrideConfig != null)
             {
-                Configuration = new ConfigurationService(fileConfig, new ExplicitConfiguration(DebugOverrideConfig));
+                overrideConfiguration = new ExplicitConfiguration(DebugOverrideConfig);
             }
-            else
-            {
-                Configuration = new ConfigurationService(fileConfig);
-            }
-#else
-            Configuration = new ConfigurationService(fileConfig);
 #endif
+            Configuration = new ConfigurationService(Manifests.IndexedSettings, fileConfig, overrideConfiguration);
         }
         #endregion
 

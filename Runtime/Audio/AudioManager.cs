@@ -23,10 +23,10 @@ namespace WizardUtils
         public AudioChannelSettingData[] AdditionalChannels;
         private static AudioChannelSettingData[] BaseChannels => new AudioChannelSettingData[]
         {
-            new AudioChannelSettingData("MasterVolume", GameManager.KEY_VOLUME_MASTER, DEFAULT_VOLUME_MASTER),
-            new AudioChannelSettingData("EffectVolume", GameManager.KEY_VOLUME_EFFECTS, DEFAULT_VOLUME_CATEGORY),
-            new AudioChannelSettingData("AmbienceVolume", GameManager.KEY_VOLUME_AMBIENCE, DEFAULT_VOLUME_CATEGORY),
-            new AudioChannelSettingData("MusicVolume", GameManager.KEY_VOLUME_MUSIC, DEFAULT_VOLUME_CATEGORY)
+            new AudioChannelSettingData("MasterVolume", "volume_master", DEFAULT_VOLUME_MASTER),
+            new AudioChannelSettingData("EffectVolume", "volume_effects", DEFAULT_VOLUME_CATEGORY),
+            new AudioChannelSettingData("AmbienceVolume", "volume_ambience", DEFAULT_VOLUME_CATEGORY),
+            new AudioChannelSettingData("MusicVolume", "volume_music", DEFAULT_VOLUME_CATEGORY)
         };
 
         private AudioChannelController[] Controllers;
@@ -45,7 +45,7 @@ namespace WizardUtils
                 Controllers[n] = new AudioChannelController(mixer, setting, allChannels[n].MixerParamName);
             }
 
-            TabMuteSetting = new GameSettingBool(gameManager.Configuration, GameManager.SETTINGKEY_MUTE_ON_ALT_TAB, false);
+            TabMuteSetting = new GameSettingBool(gameManager.Configuration, "tabmute", false);
             TabMuteSetting.OnChanged += AltTabMuteSetting_OnChanged;
             shouldMuteOnLoseFocus = TabMuteSetting.Value;
             audioManagerSetUp = true;

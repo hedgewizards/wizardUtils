@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WizardUtils.Configurations.MenuSettings;
 
 namespace WizardUtils.Configurations
 {
@@ -16,5 +17,26 @@ namespace WizardUtils.Configurations
 
         public void AddListener(string key, EventHandler<ValueChangedEventArgs> listener);
         public void RemoveListener(string key, EventHandler<ValueChangedEventArgs> listener);
+        public bool TryFindSetting(string key, out SettingDescriptor setting);
+        public SettingDescriptor FindSetting(string key)
+        {
+            if (!TryFindSetting(key, out var setting))
+            {
+                throw new KeyNotFoundException($"Couldn't find IndexedSetting with key '{key}'");
+            }
+
+            return setting;
+        }
+        public T FindSetting<T>(string key) where T : SettingDescriptor
+        {
+            SettingDescriptor setting = FindSetting(key);
+
+            if (setting is not T castedSetting)
+            {
+                throw new InvalidCastException($"Setting for key '{key}' of unexpected type '{setting.GetType()}' (expected {typeof(T)})");
+            }
+
+            return castedSetting;
+        }
     }
 }
