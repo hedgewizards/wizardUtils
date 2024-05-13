@@ -53,18 +53,18 @@ public class LabelledSlider : MonoBehaviour
     public void SetValue(float value)
     {
         float rawValue = CalculateRawValue(value);
-        if (rawValue < 0)
+        if (rawValue < Slider.minValue)
         {
             // so if the value is out of range we should still display the set value
             DontNotifyOnUpdate = true;
-            Slider.value = 0;
+            Slider.value = Slider.minValue;
             DisplayLabel.text = value.ToString(LabelDisplayFormat);
             DontNotifyOnUpdate = false;
         }
-        else if (rawValue > 1)
+        else if (rawValue > Slider.maxValue)
         {
             DontNotifyOnUpdate = true;
-            Slider.value = 1;
+            Slider.value = Slider.maxValue;
             DisplayLabel.text = value.ToString(LabelDisplayFormat);
             DontNotifyOnUpdate = false;
         }
