@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Globalization;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
 namespace WizardUtils.Configurations
@@ -19,9 +21,20 @@ namespace WizardUtils.Configurations
             return "#" + ColorUtility.ToHtmlStringRGB(color);
         }
 
-        public static bool TryParseBool(string value)
+        public static bool TryParseBool(string value, out bool result)
         {
-            return value == "1";
+            if (value == "1")
+            {
+                result = true;
+                return true;
+            }
+            else if (value == "0")
+            {
+                result = false;
+                return true;
+            }
+            result = default;
+            return false;
         }
 
         public static string SerializeBool(bool value)
@@ -41,6 +54,20 @@ namespace WizardUtils.Configurations
         public static string SerializeInt(int value)
         {
             return value.ToString();
+        }
+
+        public static bool TryParseFloat(string value, out float result)
+        {
+            if (float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static string SerializeFloat(float value, string format = "F")
+        {
+            return value.ToString(format, CultureInfo.InvariantCulture);
         }
     }
 }

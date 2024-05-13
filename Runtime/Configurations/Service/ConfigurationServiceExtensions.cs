@@ -26,12 +26,12 @@ namespace WizardUtils.Configurations
 
         public static void WriteFloat(this IConfigurationService config, string key, float value, string format = "F", bool writeToConfig = false)
         {
-            config.Write(key, value.ToString(format, CultureInfo.InvariantCulture), writeToConfig);
+            config.Write(key, ConfigHelper.SerializeFloat(value, format), writeToConfig);
         }
 
         public static float ReadFloat(this IConfigurationService config, string key, float defaultValue)
         {
-            if (float.TryParse(config.Read(key), NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+            if (ConfigHelper.TryParseFloat(config.Read(key), out var result))
             {
                 return result;
             }
@@ -54,14 +54,15 @@ namespace WizardUtils.Configurations
 
         public static void WriteBool(this IConfigurationService config, string key, bool value, bool writeToConfig = false)
         {
-            config.Write(key, value ? "1" : "0");
+            config.Write(key, ConfigHelper.SerializeBool(value));
         }
 
         public static bool ReadBool(this IConfigurationService config, string key, bool defaultValue)
         {
-            string value = config.Read(key);
-            if (value == "1") return true;
-            if (value == "0") return false;
+            if (ConfigHelper.TryParseBool(config.Read(key), out var value))
+            {
+                return value;
+            }
             return defaultValue;
         }
     }
