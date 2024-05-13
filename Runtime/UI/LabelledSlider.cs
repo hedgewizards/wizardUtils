@@ -17,6 +17,8 @@ public class LabelledSlider : MonoBehaviour
 
     public UnityEvent<float> OnValueChanged;
 
+    private bool DontNotifyOnUpdate;
+
     private void OnValidate()
     {
         fixLabels();
@@ -45,12 +47,31 @@ public class LabelledSlider : MonoBehaviour
             Slider.minValue = 0;
             Slider.maxValue = (MaxValue - MinValue) / StepSize;
         }
-        Slider.value = CalculateRawValue(value);
+        SetValue(value);
     }
 
     public void SetValue(float value)
     {
-        Slider.value = CalculateRawValue(value);
+        float rawValue = CalculateRawValue(value);
+        if (rawValue < 0)
+        {
+            // so if the value is out of range we should still display the set value
+            DontNotifyOnUpdate = true;
+            Slider.value = 0;
+            DisplayLabel.text = value.ToString(LabelDisplayFormat);
+            DontNotifyOnUpdate = false;
+        }
+        else if (rawValue > 1)
+        {
+            DontNotifyOnUpdate = true;
+            Slider.value = 1;
+            DisplayLabel.text = value.ToString(LabelDisplayFormat);
+            DontNotifyOnUpdate = false;
+        }
+        else
+        {
+            Slider.value = rawValue;
+        }
     }
 
     private float CalculateRealValue(float rawSliderValue)
@@ -70,6 +91,7 @@ public class LabelledSlider : MonoBehaviour
 
     private void onDisplayValueChanged(float rawSliderValue)
     {
+        if (DontNotifyOnUpdate) return;
         float realValue = CalculateRealValue(rawSliderValue);
 
         OnValueChanged?.Invoke(realValue);
