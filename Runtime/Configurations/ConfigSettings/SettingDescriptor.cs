@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace WizardUtils.Configurations.Settings
+namespace WizardUtils.Configurations.ConfigSettings
 {
     public abstract class SettingDescriptor : ScriptableObject
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace WizardUtils.Configurations.Settings
+namespace WizardUtils.Configurations.ConfigSettings
 {
 
     [CreateAssetMenu(fileName = "setting_", menuName = "Horde/Settings/RangeFloat")]

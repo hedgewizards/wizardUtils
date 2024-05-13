@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WizardUtils.Configurations;
-using WizardUtils.Configurations.Settings;
+using WizardUtils.Configurations.ConfigSettings;
 using WizardUtils.SettingWatchers;
 
 namespace WizardUtils.SettingWatchers
