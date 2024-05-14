@@ -6,6 +6,7 @@ namespace WizardUtils.Configurations.ConfigSettings
     {
         public string Key;
         public string DisplayName;
+        public bool NoWriteToConfig;
 
         public virtual bool Validate(out string failReason)
         {
