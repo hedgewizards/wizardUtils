@@ -49,13 +49,13 @@ namespace WizardUtils.Tools
         }
 
         /// <summary>
-        /// All digits, and all letters except I, O, V, and U
+        /// All digits, and all letters except I, O, 1, and 0
         /// </summary>
         public static char[] ReadableAtlas => new char[]
         {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', // 0-7
             'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', // 8-15
-            'S', 'T', 'W', 'X', 'Y', 'Z', '0', '1', // 16-23
+            'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', // 16-23
             '2', '3', '4', '5', '6', '7', '8', '9' // 24-31
         };
     }
