@@ -15,6 +15,5 @@ namespace WizardUtils
     {
         public GlobalSoundManifest GlobalSound;
         public WizardUtils.Configurations.ConfigSettings.SettingManifest IndexedSettings;
-        public SaveManifest MainSave;
     }
 }
