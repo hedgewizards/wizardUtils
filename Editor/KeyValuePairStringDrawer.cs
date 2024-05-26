@@ -6,6 +6,7 @@ using WizardUtils.Configurations;
 
 namespace WizardUtils
 {
+    [CustomPropertyDrawer(typeof(KeyValuePairString))]
     public class KeyValuePairStringDrawer : EasyPropertyDrawer
     {
         protected override float lineCount => 1;
