@@ -12,11 +12,11 @@ namespace WizardUtils.Math
         /// start at 0, and end at 1 as t approaches infinity
         /// </summary>
         /// <param name="t"></param>
-        /// <param name="sharpness"></param>
+        /// <param name="dullness"></param>
         /// <returns></returns>
-        public static float ApproachOutCurve(float t, float sharpness = 1f)
+        public static float ApproachOutCurve(float t, float dullness = 1f)
         {
-            return t / (t + sharpness);
+            return t / (t + dullness);
         }
     }
 }
