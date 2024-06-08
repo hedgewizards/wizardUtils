@@ -37,9 +37,6 @@ namespace WizardUtils.SceneManagement
         public UnityEvent OnReadyToActivate;
         public bool IsIdle => CurrentLoadState == LoadStates.Loaded || CurrentLoadState == LoadStates.NotLoaded;
 
-        public SceneLoader(MonoBehaviour coroutineHost, string sceneName, bool currentlyLoaded)
-            : this(coroutineHost, SceneHelper.FindSceneBuildIndex(sceneName), currentlyLoaded) { }
-
         public SceneLoader(MonoBehaviour coroutineHost, int sceneIndex, bool currentlyLoaded)
         {
             AllowSceneActivation = true;
