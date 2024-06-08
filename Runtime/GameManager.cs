@@ -387,19 +387,10 @@ namespace WizardUtils
                 // just ignore the GameScene, Main Menu, and Credits scenes
                 if (ControlScene_IgnoreScenes.Contains(sceneIndex)) continue;
 
-                int? matchingToLoadScene = null;
-                foreach (int sceneToLoad in scenesToLoad)
-                {
-                    if (sceneToLoad == sceneIndex)
-                    {
-                        matchingToLoadScene = sceneToLoad;
-                    }
-                }
-
                 // if we want to have it loaded
-                if (matchingToLoadScene != null)
+                if (scenesToLoad.Contains(sceneIndex))
                 {
-                    SceneLoader existingLoader = loaders.FirstOrDefault(l => l.SceneIndex == matchingToLoadScene.Value);
+                    SceneLoader existingLoader = loaders.FirstOrDefault(l => l.SceneIndex == sceneIndex);
 
                     // if this level is marked as not needed
                     if (existingLoader != null && !existingLoader.CurrentlyNeeded)
@@ -409,7 +400,7 @@ namespace WizardUtils
                     else
                     {
                         // SceneIndex already exists, so we don't need to load it
-                        scenesToLoad.Remove(matchingToLoadScene.Value);
+                        scenesToLoad.Remove(sceneIndex);
                     }
                 }
                 else
