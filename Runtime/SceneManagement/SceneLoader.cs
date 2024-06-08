@@ -22,7 +22,7 @@ namespace WizardUtils.SceneManagement
         const float UnloadDelaySeconds = 5f;
         #endregion
 
-        private GameManager Parent;
+        private MonoBehaviour CoroutineHost;
         public readonly int SceneIndex;
 
         public float TaskProgress { get; private set; }
@@ -37,7 +37,7 @@ namespace WizardUtils.SceneManagement
         public UnityEvent OnReadyToActivate;
         public bool IsIdle => CurrentLoadState == LoadStates.Loaded || CurrentLoadState == LoadStates.NotLoaded;
 
-        public SceneLoader(GameManager parent, int sceneIndex, bool currentlyLoaded)
+        public SceneLoader(MonoBehaviour coroutineHost, int sceneIndex, bool currentlyLoaded)
         {
             AllowSceneActivation = true;
             if (sceneIndex < 0)
@@ -45,7 +45,7 @@ namespace WizardUtils.SceneManagement
                 throw new ArgumentException($"Tried to create a SceneLoader for invalid scene {sceneIndex}");
             }
 
-            Parent = parent;
+            CoroutineHost = coroutineHost;
             SceneIndex = sceneIndex;
             CurrentLoadState = currentlyLoaded ? LoadStates.Loaded : LoadStates.NotLoaded;
             OnIdle = new UnityEvent();
@@ -63,7 +63,7 @@ namespace WizardUtils.SceneManagement
                 && CanCancelActiveCoroutine
                 && ActiveCoroutine != null)
             {
-                Parent.StopCoroutine(ActiveCoroutine);
+                CoroutineHost.StopCoroutine(ActiveCoroutine);
                 TaskProgress = 1;
                 CurrentLoadState = LoadStates.Loaded;
             }
@@ -87,7 +87,7 @@ namespace WizardUtils.SceneManagement
             if (CurrentLoadState != LoadStates.NotLoaded) throw new InvalidOperationException($"Tried to load LevelScene while in bad state {CurrentLoadState}");
 
             CurrentLoadState = LoadStates.Loading;
-            ActiveCoroutine = Parent.StartCoroutine(LoadAsync());
+            ActiveCoroutine = CoroutineHost.StartCoroutine(LoadAsync());
         }
 
         private void Unload(bool instant = false)
@@ -95,7 +95,7 @@ namespace WizardUtils.SceneManagement
             if (CurrentLoadState != LoadStates.Loaded) throw new InvalidOperationException($"Tried to load LevelScene while in bad state {CurrentLoadState}");
 
             CurrentLoadState = LoadStates.Unloading;
-            ActiveCoroutine = Parent.StartCoroutine(UnloadAsync(instant ? 0 : UnloadDelaySeconds));
+            ActiveCoroutine = CoroutineHost.StartCoroutine(UnloadAsync(instant ? 0 : UnloadDelaySeconds));
         }
 
         private void FinishLoading()
