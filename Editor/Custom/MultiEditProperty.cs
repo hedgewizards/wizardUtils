@@ -27,7 +27,7 @@ namespace WizardUtils.Custom
             TValue firstValue = Get(Targets[0]);
             for (int n = 1; n < Targets.Length; n++)
             {
-                if (!Equals(Targets[1], firstValue))
+                if (!Equals(Get(Targets[1]), firstValue))
                 {
                     return true;
                 }
