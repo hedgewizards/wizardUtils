@@ -20,22 +20,24 @@ namespace WizardUtils.SceneManagement
         /// wait this many seconds before unloading when marked not needed
         /// </summary>
         public float UnloadDelaySeconds = 0f;
+        public bool AllowSceneActivation;
         #endregion
 
+        #region Components
         private MonoBehaviour CoroutineHost;
         public readonly int SceneIndex;
+        #endregion
 
+        #region Variables
+        public LoadStates CurrentLoadState;
         public float TaskProgress { get; private set; }
+        public bool CurrentlyNeeded { get; private set; }
         private Coroutine ActiveCoroutine;
         private bool CanCancelActiveCoroutine;
-        public bool AllowSceneActivation;
-
-        public LoadStates CurrentLoadState;
-        public bool CurrentlyNeeded { get; private set; }
 
         public UnityEvent OnIdle;
         public UnityEvent OnReadyToActivate;
-        public bool IsIdle => CurrentLoadState == LoadStates.Loaded || CurrentLoadState == LoadStates.NotLoaded;
+        #endregion
 
         public SceneLoader(MonoBehaviour coroutineHost, int sceneIndex, bool currentlyLoaded)
         {
@@ -80,7 +82,8 @@ namespace WizardUtils.SceneManagement
         }
 
 
-        #region Internal State Management
+        #region State Management
+        public bool IsIdle => CurrentLoadState == LoadStates.Loaded || CurrentLoadState == LoadStates.NotLoaded;
 
         private void Load()
         {
