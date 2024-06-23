@@ -24,7 +24,14 @@ namespace WizardUtils.PhysicsSolvers
             LayerMask = layerMask;
         }
 
-        public Vector3 Move(Vector3 position, Vector3 movement, Action<CollisionEventData> OnCollide)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="movement"></param>
+        /// <param name="OnCollide">A function for the consumer to implement, if FALSE, ignore the collision!</param>
+        /// <returns></returns>
+        public Vector3 Move(Vector3 position, Vector3 movement, Func<CollisionEventData, bool> OnCollide)
         {
             position += movement;
 
@@ -46,8 +53,11 @@ namespace WizardUtils.PhysicsSolvers
                         CollisionDirection = direction,
                         CollisionDistance = distance,
                     };
-                    OnCollide.Invoke(eventData);
-                    position += direction * distance;
+                    bool result = OnCollide.Invoke(eventData);
+                    if (result)
+                    {
+                        position += direction * distance;
+                    }
                 }
             }
 
