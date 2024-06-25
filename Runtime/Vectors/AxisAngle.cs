@@ -63,5 +63,12 @@ namespace WizardUtils.Vectors
         public static AxisAngle operator* (float left, AxisAngle right) => Scale(right, left);
         public static AxisAngle operator* (AxisAngle left, float right) => Scale(left, right);
         #endregion
+
+        #region ToString
+        public override string ToString()
+        {
+            return $"{Axis} @ {Angle}";
+        }
+        #endregion
     }
 }
