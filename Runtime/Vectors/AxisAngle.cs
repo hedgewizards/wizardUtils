@@ -43,15 +43,9 @@ namespace WizardUtils.Vectors
         #endregion
 
         #region Rotate Operations
-        public static Quaternion Rotate(Quaternion q, AxisAngle axisAngle)
-        {
-            return q * axisAngle.ToQuaternion();
-        }
-
-        public static Quaternion operator*(Quaternion left, AxisAngle right)
-        {
-            return Rotate(left, right);
-        }
+        public static Quaternion operator *(Quaternion left, AxisAngle right) => left * right.ToQuaternion();
+        public static Quaternion operator *(AxisAngle left, Quaternion right) => right * left.ToQuaternion();
+        public static Quaternion operator *(AxisAngle left, AxisAngle right) => left.ToQuaternion() * right.ToQuaternion();
         #endregion
 
         #region Scale Operations
