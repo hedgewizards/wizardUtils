@@ -49,6 +49,7 @@ namespace WizardUtils.PhysicsSolvers
                 {
                     CollisionEventData eventData = new CollisionEventData()
                     {
+                        Other = other,
                         ShapePosition = position,
                         CollisionDirection = direction,
                         CollisionDistance = distance,
