@@ -11,7 +11,7 @@ namespace WizardUtils.Prefabs
 {
     public static class PrefabHelper
     {
-        public static bool GameObjectIsPrefab(GameObject instance, GameObject prefab)
+        public static bool IsInstanceOfPrefab(GameObject instance, GameObject prefab)
         {
             if (instance == prefab) return true;
 
