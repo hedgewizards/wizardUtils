@@ -313,6 +313,12 @@ namespace WizardUtils
 
         private void FinishLoadingControlScene()
         {
+            if (CurrentSceneLoadingData == null)
+            {
+                Debug.LogWarning("FinishLoadingControlScene was called with no CurrentSceneLoadingData. Ignoring.");
+                return;
+            }
+
             SceneLoadingData lastSceneLoadingData = CurrentSceneLoadingData;
             CurrentSceneLoadingData = null;
 
@@ -349,10 +355,12 @@ namespace WizardUtils
                 float remainingTime = CurrentSceneLoadingData.Options.MinimumLoadDurationSeconds - (Time.unscaledTime - CurrentSceneLoadingData.StartTime);
                 if (remainingTime > 0)
                 {
+                    Debug.Log($"Waiting {remainingTime} seconds before finishing loading control scene...");
                     CurrentSceneLoadingData.DelayedFinishLoadCoroutine = this.StartDelayCoroutineUnscaled(remainingTime, FinishLoadingControlScene);
                 }
                 else
                 {
+                    Debug.Log("Finished loading control scene");
                     FinishLoadingControlScene();
                 }
             }
