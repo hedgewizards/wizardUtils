@@ -30,7 +30,8 @@ namespace WizardUtils.Prefabs
             var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
 
             // Check if the gameObject is the prefab open in the prefab editor
-            if (prefabStage.mode == PrefabStage.Mode.InIsolation
+            if (prefabStage != null
+                && prefabStage.mode == PrefabStage.Mode.InIsolation
                 && prefabStage.assetPath == AssetDatabase.GetAssetPath(prefab)
                 && prefabStage.prefabContentsRoot == instance)
             {
