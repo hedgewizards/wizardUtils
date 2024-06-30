@@ -16,10 +16,15 @@ namespace WizardUtils.Math
 
         public static bool Approximately(this Quaternion a, Quaternion b)
         {
-            return Mathf.Approximately(a.w, b.w)
-                && Mathf.Approximately(a.x, b.x)
-                && Mathf.Approximately(a.y, b.y)
-                && Mathf.Approximately(a.z, b.z);
+            return CompressedFloatApproximately(a.w, b.w)
+                && CompressedFloatApproximately(a.x, b.x)
+                && CompressedFloatApproximately(a.y, b.y)
+                && CompressedFloatApproximately(a.z, b.z);
+        }
+
+        private static bool CompressedFloatApproximately(float a, float b)
+        {
+            return Mathf.Abs(a - b) < 1 / (float)short.MaxValue;
         }
     }
 }
