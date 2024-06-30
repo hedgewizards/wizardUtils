@@ -10,6 +10,16 @@ namespace WizardUtils.Coroutines
 {
     public static class CoroutineHelpers
     {
+        public static Coroutine StartDelayCoroutine(this MonoBehaviour self, float delaySeconds, Action callback)
+        {
+            return self.StartCoroutine(WaitForSeconds(delaySeconds, callback));
+        }
+        private static IEnumerator WaitForSeconds(float seconds, Action callback)
+        {
+            yield return new WaitForSeconds(seconds);
+
+            callback();
+        }
         public static Coroutine StartDelayCoroutineUnscaled(this MonoBehaviour self, float delaySeconds, Action callback)
         {
             return self.StartCoroutine(WaitForSecondsUnscaled(delaySeconds, callback));
