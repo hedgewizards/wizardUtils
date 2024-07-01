@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace WizardUtils.Vectors
 {
+    [System.Serializable]
     public struct AxisAngle
     {
         public Vector3 Axis;
@@ -23,6 +24,7 @@ namespace WizardUtils.Vectors
             quaternion.ToAngleAxis(out Angle, out Axis);
         }
 
+        public Vector3 ToScaledVector() => Axis * Angle;
         public Quaternion ToQuaternion() => Quaternion.AngleAxis(Angle, Axis);
 
         #region AxisAngle Math
@@ -35,11 +37,14 @@ namespace WizardUtils.Vectors
         #endregion
 
         #region Interpolation
-        public static AxisAngle Slerp(AxisAngle a, AxisAngle b, float t)
+        public static AxisAngle Lerp(AxisAngle a, AxisAngle b, float t)
         {
-            Quaternion rawResult = Quaternion.Slerp(a.ToQuaternion(), b.ToQuaternion(), t);
-            return new AxisAngle(rawResult);
+            Vector3 rawResult = a.ToScaledVector() * t + b.ToScaledVector() * (1 - t);
+            float length = rawResult.magnitude;
+            if (length == 0) return AxisAngle.Zero;
+            return new AxisAngle(rawResult / length, length);
         }
+
         #endregion
 
         #region Rotate Operations
