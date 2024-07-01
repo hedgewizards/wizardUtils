@@ -51,7 +51,12 @@ namespace WizardUtils.Vectors
         #region Interpolation
         public static AxisAngle Lerp(AxisAngle a, AxisAngle b, float t)
         {
-            Vector3 rawResult = a.ToScaledVector() * t + b.ToScaledVector() * (1 - t);
+            Vector3 rawResult = Vector3.Lerp(a.ToScaledVector(), b.ToScaledVector(), t);
+            return new AxisAngle(rawResult);
+        }
+        public static AxisAngle Slerp(AxisAngle a, AxisAngle b, float t)
+        {
+            Vector3 rawResult = Vector3.Slerp(a.ToScaledVector(), b.ToScaledVector(), t);
             return new AxisAngle(rawResult);
         }
 
