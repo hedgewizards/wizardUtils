@@ -24,13 +24,25 @@ namespace WizardUtils.Vectors
             quaternion.ToAngleAxis(out Angle, out Axis);
         }
 
+        public AxisAngle(Vector3 rawVector)
+        {
+            Angle = rawVector.magnitude;
+            if (Angle == 0)
+            {
+                Axis = Vector3.forward;
+                return;
+            }
+            Axis = rawVector / Angle;
+        }
+
         public Vector3 ToScaledVector() => Axis * Angle;
         public Quaternion ToQuaternion() => Quaternion.AngleAxis(Angle, Axis);
 
         #region AxisAngle Math
         public static AxisAngle Add(AxisAngle a, AxisAngle b)
         {
-            return new AxisAngle(a.ToQuaternion() * b.ToQuaternion());
+            Vector3 rawResult = a.ToScaledVector() + b.ToScaledVector();
+            return new AxisAngle(rawResult);
         }
 
         public static AxisAngle Zero => new AxisAngle(Vector3.forward, 0);
@@ -40,9 +52,7 @@ namespace WizardUtils.Vectors
         public static AxisAngle Lerp(AxisAngle a, AxisAngle b, float t)
         {
             Vector3 rawResult = a.ToScaledVector() * t + b.ToScaledVector() * (1 - t);
-            float length = rawResult.magnitude;
-            if (length == 0) return AxisAngle.Zero;
-            return new AxisAngle(rawResult / length, length);
+            return new AxisAngle(rawResult);
         }
 
         #endregion
