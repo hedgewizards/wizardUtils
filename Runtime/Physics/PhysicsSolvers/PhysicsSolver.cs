@@ -29,10 +29,14 @@ namespace WizardUtils.PhysicsSolvers
         /// </summary>
         /// <param name="position"></param>
         /// <param name="movement"></param>
-        /// <param name="OnCollide">A function for the consumer to implement, if FALSE, ignore the collision!</param>
+        /// <param name="OnCollide">A function for the consumer to implement, if FALSE, the consumer handles changing position (including ignoring the collision)</param>
         /// <returns></returns>
         public Vector3 Move(Vector3 position, Vector3 movement, Func<CollisionEventData, bool> OnCollide)
         {
+            CollisionEventData eventData = new CollisionEventData()
+            {
+                Position = position,
+            };
             position += movement;
 
             int overlapCount = Shape.OverlapShapeNonAlloc(_OverlapCache, position, Quaternion.identity, LayerMask);
@@ -47,14 +51,13 @@ namespace WizardUtils.PhysicsSolvers
 
                 if (Shape.ComputePenetration(position, Quaternion.identity, other, other.transform.position, other.transform.rotation, out Vector3 direction, out float distance))
                 {
-                    CollisionEventData eventData = new CollisionEventData()
-                    {
-                        Other = other,
-                        ShapePosition = position,
-                        CollisionDirection = direction,
-                        CollisionDistance = distance,
-                    };
+                    eventData.Other = other;
+                    eventData.Position = position;
+                    eventData.CollisionDirection = direction;
+                    eventData.CollisionDistance = distance;
+
                     bool result = OnCollide.Invoke(eventData);
+                    position = eventData.Position;
                     if (result)
                     {
                         position += direction * distance;
