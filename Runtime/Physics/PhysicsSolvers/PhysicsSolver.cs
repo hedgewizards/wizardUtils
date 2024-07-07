@@ -86,7 +86,12 @@ namespace WizardUtils.PhysicsSolvers
                 );
         }
 
-        public bool TestNoSelfOverlap(Vector3 position)
+        /// <summary>
+        /// Returns true if it isn't overlapping anything at target position. Ignores its own collider
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool OverlapAny(Vector3 position)
         {
             int overlapCount = Shape.OverlapShapeNonAlloc(_OverlapCache, position, Quaternion.identity, LayerMask);
             if (overlapCount > 1)
