@@ -24,11 +24,11 @@ namespace WizardUtils.Extensions
                     {
                         corners[x, y, z] = new Vector3()
                         {
-                            x = center.x + extents.x * (x == 0 ? 1 : -1),
-                            y = center.y + extents.y * (y == 0 ? 1 : -1),
-                            z = center.z + extents.z * (z == 0 ? 1 : -1),
+                            x = extents.x * (x == 0 ? 1 : -1),
+                            y = extents.y * (y == 0 ? 1 : -1),
+                            z = extents.z * (z == 0 ? 1 : -1),
                         };
-                        corners[x, y, z] = orientation * corners[x, y, z];
+                        corners[x, y, z] = center + orientation * corners[x, y, z];
                     }
                 }
             }
