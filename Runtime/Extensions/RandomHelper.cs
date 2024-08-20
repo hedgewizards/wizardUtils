@@ -1,7 +1,18 @@
-﻿namespace WizardUtils
+﻿using System.Collections.Generic;
+
+namespace WizardUtils
 {
     public static class RandomHelper
     {
+        public static T FromCollection<T>(IList<T> source)
+        {
+            return FromCollection<T>(new System.Random(), source);
+        }
+
+        public static T FromCollection<T>(this System.Random random, IList<T> source)
+        {
+            return source[random.Next(source.Count)];
+        }
 
         public static int[] ChooseNFromK(int n, int k)
         {
