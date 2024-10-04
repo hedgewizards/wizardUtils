@@ -10,7 +10,7 @@ namespace WizardUtils.BakingTools
 {
     public static class BakeModeMenuScripts
     {
-        [MenuItem("Pogo/Baking/Enter Bake Mode")]
+        [MenuItem("Scripts/WizardUtils Baking/Enter Bake Mode")]
         public static void EnterBakeMode()
         {
             using (new UndoScope("Enter Bake Mode"))
@@ -25,7 +25,7 @@ namespace WizardUtils.BakingTools
             }
         }
 
-        [MenuItem("Pogo/Baking/Exit Bake Mode")]
+        [MenuItem("Scripts/WizardUtils Baking/Exit Bake Mode")]
         public static void ExitBakeMode()
         {
             using (new UndoScope("Exit Bake Mode"))
