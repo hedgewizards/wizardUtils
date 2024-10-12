@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace WizardUtils.SerializedObjectHelpers
 {
-    public abstract class SerializedPropertyChangeHandler
+    internal abstract class SerializedPropertyChangeHandler
     {
         public abstract void Store();
         
         public abstract void Check();
     }
 
-    public class SerializedPropertyChangeHandler<T> : SerializedPropertyChangeHandler
+    internal class SerializedPropertyChangeHandler<T> : SerializedPropertyChangeHandler
     {
         private EqualityComparer<T> EqualityComparer;
         private Action<SerializedPropertyChangedArgs<T>> OnChangedCallback;
