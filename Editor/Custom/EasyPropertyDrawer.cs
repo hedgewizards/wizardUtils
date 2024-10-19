@@ -18,7 +18,7 @@ public abstract class EasyPropertyDrawer : PropertyDrawer
         return EditorGUI.PropertyField(right, property, GUIContent.none);
     }
 
-    protected void EasySplitProperty(Rect position, SplittablePropertyField[] splittableProperties)
+    protected void EasySplitProperty(Rect position, SplittablePropertyField[] splittableProperties, float spacing = 0)
     {
         // first we need to figure out how big the expand should be if we have one
         SplittablePropertyField expandingProperty = null;
@@ -31,6 +31,7 @@ public abstract class EasyPropertyDrawer : PropertyDrawer
             }
             total += field.WidthFraction;
         }
+
         if (expandingProperty == null)
         {
             expandingProperty = splittableProperties[splittableProperties.Length - 1];
@@ -49,7 +50,7 @@ public abstract class EasyPropertyDrawer : PropertyDrawer
             partFractions[n] = field == expandingProperty? expandFraction : field.WidthFraction;
         }
 
-        Rect[] shapes = WizardUtils.RectExtensions.SplitRectHorizontally(position, partFractions);
+        Rect[] shapes = WizardUtils.RectExtensions.SplitRectHorizontally(position, partFractions, spacing);
 
 
         for (int n = 0; n < splittableProperties.Length; n++)

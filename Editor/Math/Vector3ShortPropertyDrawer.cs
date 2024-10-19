@@ -23,7 +23,7 @@ namespace WizardUtils.Math.Inspector
             EditorGUI.LabelField(left, label);
 
             float[] fractions = new float[] { 0.333f, 0.333f, 0.333f };
-            Rect[] rects = WizardUtils.RectExtensions.SplitRectHorizontally(right, fractions);
+            Rect[] rects = WizardUtils.RectExtensions.SplitRectHorizontally(right, fractions, 5);
 
             propertyX.intValue = EditorGUI.IntField(rects[0], propertyX.intValue);
             propertyY.intValue = EditorGUI.IntField(rects[1], propertyY.intValue);

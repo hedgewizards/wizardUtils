@@ -19,14 +19,15 @@ namespace WizardUtils
             return (left, right);
         }
 
-        public static Rect[] SplitRectHorizontally(Rect rect, params float[] partFractions)
+        public static Rect[] SplitRectHorizontally(Rect rect, float[] partFractions, float spacing = 0)
         {
             Rect[] results = new Rect[partFractions.Length];
             float left = rect.x;
             for (int n = 0; n < partFractions.Length; n++)
             {
                 float right = left + partFractions[n] * rect.width;
-                results[n] = new Rect(left, rect.y, rect.width * partFractions[n], rect.height);
+                float thisSpacing = n != 0 ? spacing : 0;
+                results[n] = new Rect(left + thisSpacing, rect.y, rect.width * partFractions[n], rect.height);
 
                 left = right;
             }
