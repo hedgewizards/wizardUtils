@@ -10,9 +10,20 @@ namespace WizardUtils.Vectors
     [System.Serializable]
     public struct AxisAngle
     {
+        /// <summary>
+        /// right handed axis of rotation
+        /// </summary>
         public Vector3 Axis;
+        /// <summary>
+        /// angle in degrees
+        /// </summary>
         public float Angle;
 
+        /// <summary>
+        /// Create an AxisAngle
+        /// </summary>
+        /// <param name="axis">right handed axis of rotation</param>
+        /// <param name="angle">angle in degrees</param>
         public AxisAngle(Vector3 axis, float angle)
         {
             Axis = axis;
