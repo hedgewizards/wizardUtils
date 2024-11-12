@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WizardUtils
 {
@@ -11,6 +12,8 @@ namespace WizardUtils
 
         public static T FromCollection<T>(this System.Random random, IList<T> source)
         {
+            if (source.Count == 0) throw new ArgumentOutOfRangeException($"source array is empty");
+
             return source[random.Next(source.Count)];
         }
 
