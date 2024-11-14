@@ -122,6 +122,14 @@ namespace WizardUtils.Vectors
 
     public static class GridRotationHelper
     {
+        public static GridRotation Random(this GridRotation self) =>
+            self.Random(new System.Random());
+
+        public static GridRotation Random(this GridRotation self, System.Random random)
+        {
+            return turnsToRotation(random.Next(4));
+        }
+
         public static int rotationToTurns(GridRotation rotation)
         {
             return (rotation.rotation == GridRotation.GridRotationType.r90 ? 1
