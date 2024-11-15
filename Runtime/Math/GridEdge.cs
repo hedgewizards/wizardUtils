@@ -17,7 +17,8 @@ namespace WizardUtils.Vectors
         }
 
         /// <summary>
-        /// Returns a new GridEdge local to Origin
+        /// Returns a new GridEdge from origin towards self<br/><br/>
+        /// If a vertical edge, only returns the first of 4 possible solutions (the one with no rotation)
         /// </summary>
         /// <param name="origin"></param>
         /// <returns></returns>
@@ -29,10 +30,17 @@ namespace WizardUtils.Vectors
             newEdge.Position -= origin.Position;
 
             // rotate
-            GridRotation rotation = Direction.forward.GetRotationFrom(origin.Direction);
-            newEdge = newEdge.Rotated(rotation);
-            
-            return newEdge;
+            if (origin.Direction.IsVertical)
+            {
+                return newEdge;
+            }
+            else
+            {
+                GridRotation rotation = Direction.forward.GetRotationFrom(origin.Direction);
+                newEdge = newEdge.Rotated(rotation);
+
+                return newEdge;
+            }
         }
         public GridEdge ToLevelSpace(Vector3Int origin, GridRotation rotation)
         {
