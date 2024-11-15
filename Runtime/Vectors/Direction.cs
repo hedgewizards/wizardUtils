@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace WizardUtils.Vectors
@@ -60,6 +57,8 @@ namespace WizardUtils.Vectors
         public int x => Vector.x;
         public int y => Vector.y;
         public int z => Vector.z;
+        public bool IsVertical => DirectionType == Directions.up || DirectionType == Directions.down;
+        public bool IsHorizontal => !IsVertical;
 
         public Direction(Vector3Int vector)
         {
