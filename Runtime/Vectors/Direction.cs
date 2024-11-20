@@ -324,6 +324,9 @@ namespace WizardUtils.Vectors
             nameof(back)
         };
         public static Direction[] all => new Direction[] { up, down, left, right, forward, back };
+        public static Direction[] allVertical => new Direction[] { up, down };
+        public static Direction[] allHorizontal => new Direction[] { left, back, right, forward };
+        public static Direction[] allPositive => new Direction[] { right, up, forward };
         public static Direction FromIndex(int index) => index switch
         {
             0 => up,
