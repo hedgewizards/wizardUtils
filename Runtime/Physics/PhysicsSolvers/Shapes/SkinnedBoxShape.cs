@@ -1,10 +1,4 @@
-﻿using PlasticGui.Gluon.Help.Conditions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using WizardUtils.Extensions;
 
 namespace WizardUtils.PhysicsSolvers.Shapes

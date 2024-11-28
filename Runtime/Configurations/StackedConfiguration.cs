@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor.Build.Content;
-using WizardUtils.Configurations;
 
 namespace WizardUtils.Configurations
 {
