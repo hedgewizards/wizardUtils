@@ -8,17 +8,20 @@ namespace WizardUtils.ManifestPattern
     [CustomEditor(typeof(ManifestedDescriptor), true)]
     public class ManifestedDescriptorEditor : Editor
     {
+        protected virtual string RegisterButtonsHeaderText => "Manifests";
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            DrawRegisterButtons(targets.Cast<ManifestedDescriptor>().ToArray());
+            DrawRegisterButtons();
         }
 
-        public void DrawRegisterButtons(ICollection<ManifestedDescriptor> targets, string headerText = "Manifests")
+        protected virtual void DrawRegisterButtons()
         {
+            ICollection<ManifestedDescriptor> descriptors = targets.Cast<ManifestedDescriptor>().ToArray();
             string manifestTypeName = ((ManifestedDescriptor)target).GetManifestType().Name;
-            GUILayout.Label(headerText, EditorStyles.boldLabel);
+            GUILayout.Label(RegisterButtonsHeaderText, EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             var manifests = AssetDatabase.FindAssets($"t:{manifestTypeName}")
                 .Select(id => AssetDatabase.LoadAssetAtPath<DescriptorManifest<ManifestedDescriptor>>(AssetDatabase.GUIDToAssetPath(id)))
@@ -27,7 +30,7 @@ namespace WizardUtils.ManifestPattern
             {
                 bool containsNone = true;
                 bool containsAll = true;
-                foreach (var target in targets)
+                foreach (var target in descriptors)
                 {
                     bool containsItem = manifest.Contains(target);
                     containsAll &= containsItem;
@@ -49,11 +52,11 @@ namespace WizardUtils.ManifestPattern
 
                 if (!toggle && containsAll)
                 {
-                    RemoveAll(manifest, targets);
+                    RemoveAll(manifest, descriptors);
                 }
                 else if (toggle && !containsAll)
                 {
-                    AddAll(manifest, targets);
+                    AddAll(manifest, descriptors);
                 }
             }
             EditorGUI.indentLevel--;
