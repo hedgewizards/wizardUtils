@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WizardUtils.Audio;
 
 namespace WizardUtils
 {

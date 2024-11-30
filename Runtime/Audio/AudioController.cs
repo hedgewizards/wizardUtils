@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WizardUtils
+namespace WizardUtils.Audio
 {
     [RequireComponent(typeof(AudioSource))]
     public class AudioController : MonoBehaviour
