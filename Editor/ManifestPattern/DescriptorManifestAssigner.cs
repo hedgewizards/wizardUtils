@@ -85,7 +85,7 @@ namespace WizardUtils.ManifestPattern
 
         private static void AddAll(ICollection<TDescriptor> items, TManifest manifest)
         {
-            Undo.RecordObject(manifest, "Add Descriptors to Manifest");
+            Undo.RecordObject(manifest, "Add Items to Manifest");
             foreach (var item in items)
             {
                 if (!manifest.Contains(item))
@@ -99,7 +99,7 @@ namespace WizardUtils.ManifestPattern
 
         private static void RemoveAll(ICollection<TDescriptor> items, TManifest manifest)
         {
-            Undo.RecordObject(manifest, "Remove Descriptors from Manifest");
+            Undo.RecordObject(manifest, "Remove Items from Manifest");
             foreach (var item in items)
             {
                 if (manifest.Contains(item))

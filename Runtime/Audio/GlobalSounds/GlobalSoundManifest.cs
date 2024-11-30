@@ -9,23 +9,7 @@ using WizardUtils.ManifestPattern;
 namespace WizardUtils.Audio.GlobalSounds
 {
     [CreateAssetMenu(fileName = "GlobalSoundManifest", menuName = "WizardUtils/Audio/GlobalSounds/GlobalSoundManifest", order = 100)]
-    public class GlobalSoundManifest : ScriptableObject, IDescriptorManifest<GlobalSoundDescriptor>
+    public class GlobalSoundManifest : DescriptorManifest<GlobalSoundDescriptor>
     {
-        public GlobalSoundDescriptor[] Descriptors;
-
-        public void Add(GlobalSoundDescriptor descriptor)
-        {
-            ArrayHelper.InsertAndResize(ref Descriptors, descriptor);
-        }
-
-        public bool Contains(GlobalSoundDescriptor descriptor)
-        {
-            return Descriptors.Contains(descriptor);
-        }
-
-        public void Remove(GlobalSoundDescriptor descriptor)
-        {
-            ArrayHelper.DeleteAndResize(ref Descriptors, descriptor);
-        }
     }
 }
