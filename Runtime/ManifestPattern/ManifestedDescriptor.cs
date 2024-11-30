@@ -9,7 +9,7 @@ using UnityEngine;
 namespace WizardUtils.ManifestPattern
 {
     public abstract class ManifestedDescriptor<T> : ManifestedDescriptor
-        where T : ScriptableObject
+        where T : DescriptorManifest
     {
         public override Type GetManifestType()
         {

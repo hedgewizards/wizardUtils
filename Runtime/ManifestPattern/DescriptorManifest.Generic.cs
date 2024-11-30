@@ -38,11 +38,16 @@ namespace WizardUtils
             Items.Remove(descriptor);
         }
 
-        public bool TryFindByKey(string key, out T item)
+        public T FindByKey(string key)
         {
-            item = Items
+            return Items
                 .Where(i => i.GetKey().Equals(key, StringComparison.InvariantCultureIgnoreCase))
                 .FirstOrDefault();
+        }
+
+        public bool TryFindByKey(string key, out T item)
+        {
+            item = FindByKey(key);
 
             return item != null;
         }
