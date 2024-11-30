@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using WizardUtils.GlobalSounds;
+using WizardUtils.Audio.GlobalSounds;
 using WizardUtils.Saving;
 
 

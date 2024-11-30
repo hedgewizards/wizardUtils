@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using WizardUtils.Audio.GlobalSounds;
 
-namespace WizardUtils.GlobalSounds
+namespace WizardUtils.Audio
 {
-    public class GlobalSoundService
+    public class SoundService
     {
         private readonly GameObject Parent;
         private readonly GlobalSoundManifest Manifest;
 
         Dictionary<GlobalSoundDescriptor, AudioSource> soundsDict = new Dictionary<GlobalSoundDescriptor, AudioSource>();
 
-        public GlobalSoundService(GameObject parent, GlobalSoundManifest manifest)
+        public SoundService(GameObject parent, GlobalSoundManifest manifest)
         {
             Parent = parent;
             Manifest = manifest;
         }
 
-        public void Play(GlobalSoundDescriptor sound)
+        public void PlayGlobalSound(GlobalSoundDescriptor sound)
         {
             AudioSource obj;
             if (!soundsDict.TryGetValue(sound, out obj))

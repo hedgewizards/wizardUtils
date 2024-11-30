@@ -25,7 +25,7 @@ namespace WizardUtils
         public IConfigurationService Configuration;
         public ExplicitConfigurationData DebugOverrideConfig;
         [HideInInspector]
-        public GlobalSounds.GlobalSoundService GlobalSoundService;
+        public Audio.SoundService GlobalSoundService;
         public string PersistentDataPath => Application.persistentDataPath;
         [NonSerialized]
         public UnityEvent OnQuitToMenu = new UnityEvent();
@@ -42,7 +42,7 @@ namespace WizardUtils
 
             Instance = this;
             PlatformService = BuildPlatformService();
-            GlobalSoundService = new GlobalSounds.GlobalSoundService(gameObject, Manifests.GlobalSound);
+            GlobalSoundService = new Audio.SoundService(gameObject, Manifests.GlobalSound);
             CurrentSceneLoaders = new List<SceneLoader>();
 
             InitializeConfigurationService();

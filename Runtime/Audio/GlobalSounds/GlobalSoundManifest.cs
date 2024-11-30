@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using WizardUtils.ManifestPattern;
 
-namespace WizardUtils.GlobalSounds
+namespace WizardUtils.Audio.GlobalSounds
 {
-    [CreateAssetMenu(fileName = "GlobalSoundManifest", menuName = "WizardUtils/GlobalSounds/GlobalSoundManifest", order = 100)]
+    [CreateAssetMenu(fileName = "GlobalSoundManifest", menuName = "WizardUtils/Audio/GlobalSounds/GlobalSoundManifest", order = 100)]
     public class GlobalSoundManifest : ScriptableObject, IDescriptorManifest<GlobalSoundDescriptor>
     {
         public GlobalSoundDescriptor[] Descriptors;

@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using WizardUtils.ManifestPattern;
 
-namespace WizardUtils.GlobalSounds
+namespace WizardUtils.Audio.GlobalSounds
 {
     [CustomEditor(typeof(GlobalSoundDescriptor))]
     public class GlobalSoundDescriptorEditor : Editor

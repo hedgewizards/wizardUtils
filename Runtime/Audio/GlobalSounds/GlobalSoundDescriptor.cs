@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WizardUtils.GlobalSounds
+namespace WizardUtils.Audio.GlobalSounds
 {
-    [CreateAssetMenu( fileName = "gsound_", menuName = "WizardUtils/GlobalSounds/GlobalSoundDescriptor")]
+    [CreateAssetMenu( fileName = "gsound_", menuName = "WizardUtils/Audio/GlobalSounds/GlobalSoundDescriptor")]
     public class GlobalSoundDescriptor : ScriptableObject
     {
         public GameObject Prefab;

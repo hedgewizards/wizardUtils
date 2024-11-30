@@ -5,19 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WizardUtils.GlobalSounds
+namespace WizardUtils.Audio.GlobalSounds
 {
     public class GlobalSoundPlayer : MonoBehaviour
     {
         public GlobalSoundDescriptor Sound;
         public void Play()
         {
-            GameManager.Instance.GlobalSoundService.Play(Sound);
+            GameManager.Instance.GlobalSoundService.PlayGlobalSound(Sound);
         }
 
         public void PlayOneShot(GlobalSoundDescriptor sound)
         {
-            GameManager.Instance.GlobalSoundService.Play(sound);
+            GameManager.Instance.GlobalSoundService.PlayGlobalSound(sound);
         }
     }
 }

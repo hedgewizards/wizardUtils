@@ -7,10 +7,10 @@ namespace WizardUtils.Audio
     [RequireComponent(typeof(AudioSource))]
     public class AudioController : MonoBehaviour
     {
-        private AudioSource audioSource;
+        private AudioSource baseAudioSource;
         public AudioClip[] Clips;
         /// <summary>
-        /// How long until Play() will produce another sound
+        /// How long until PlayGlobalSound() will produce another sound
         /// </summary>
         public float ReplayDelay;
 
@@ -20,7 +20,7 @@ namespace WizardUtils.Audio
 
         private void Awake()
         {
-            audioSource = GetComponent<AudioSource>();
+            baseAudioSource = GetComponent<AudioSource>();
         }
 
         float lastPlay = float.MinValue;
@@ -32,10 +32,10 @@ namespace WizardUtils.Audio
                 int chosenSoundIndex = Random.Range(0, Clips.Length);
                 if (RandomizePitch)
                 {
-                    audioSource.pitch = RandomPitch();
+                    baseAudioSource.pitch = RandomPitch();
                 }
 
-                audioSource.PlayOneShot(Clips[chosenSoundIndex]);
+                baseAudioSource.PlayOneShot(Clips[chosenSoundIndex]);
             }
         }
 
@@ -46,23 +46,23 @@ namespace WizardUtils.Audio
                 lastPlay = Time.time;
                 if (RandomizePitch)
                 {
-                    audioSource.pitch = RandomPitch();
+                    baseAudioSource.pitch = RandomPitch();
                 }
 
-                audioSource.Play();
+                baseAudioSource.Play();
             }
         }
 
         public float Volume
         {
-            get => audioSource.volume;
-            set => audioSource.volume = value;
+            get => baseAudioSource.volume;
+            set => baseAudioSource.volume = value;
         }
 
         public float Pitch
         {
-            get => audioSource.pitch;
-            set => audioSource.pitch = value;
+            get => baseAudioSource.pitch;
+            set => baseAudioSource.pitch = value;
         }
 
         private float RandomPitch()
@@ -91,11 +91,11 @@ namespace WizardUtils.Audio
         {
             if (RandomizePitch)
             {
-                audioSource.pitch = RandomPitch();
+                baseAudioSource.pitch = RandomPitch();
             }
 
             lastPlay = Time.time;
-            audioSource.PlayOneShot(clip, volume);
+            baseAudioSource.PlayOneShot(clip, volume);
         }
 
         private bool CanPlay => lastPlay + ReplayDelay < Time.time;
