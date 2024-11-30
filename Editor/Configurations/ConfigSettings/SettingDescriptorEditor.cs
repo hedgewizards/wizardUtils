@@ -10,24 +10,14 @@ namespace WizardUtils.Configurations.ConfigSettings
 {
     [CustomEditor(typeof(SettingDescriptor), editorForChildClasses: true)]
     [CanEditMultipleObjects]
-    public class SettingDescriptorEditor : Editor
+    public class SettingDescriptorEditor : ManifestedDescriptorEditor
     {
-        public DescriptorManifestAssigner<SettingManifest, SettingDescriptor> manifestAssigner;
-
-        public override VisualElement CreateInspectorGUI()
-        {
-            manifestAssigner = new DescriptorManifestAssigner<SettingManifest, SettingDescriptor>();
-            return base.CreateInspectorGUI();
-        }
-
         public override void OnInspectorGUI()
         {
             SettingDescriptor[] _targets = targets.Cast<SettingDescriptor>().ToArray();
             Validate(_targets);
 
             base.OnInspectorGUI();
-            EditorGUILayout.Space();
-            manifestAssigner.DrawRegisterButtons(_targets);
         }
 
         public void Validate(SettingDescriptor[] _targets)
