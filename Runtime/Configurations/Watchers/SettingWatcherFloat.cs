@@ -12,7 +12,7 @@ namespace WizardUtils.SettingWatchers
     public class SettingWatcherFloat : SettingWatcher<float>
     {
         public SettingWatcherFloat(IConfigurationService configurationService, RangeFloatSetting setting)
-            : base(configurationService, setting.Key, setting.DefaultValue)
+            : base(configurationService, setting.GetKey(), setting.DefaultValue)
         {
 
         }

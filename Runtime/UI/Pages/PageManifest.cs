@@ -11,13 +11,5 @@ namespace WizardUtils.UI.Pages
     [CreateAssetMenu(fileName = "PageManifest", menuName = "WizardUtils/UI/PageManifest", order = 100)]
     public class PageManifest : DescriptorManifest<PageDescriptor>
     {
-        public override bool TryFindByKey(string key, out PageDescriptor item)
-        {
-            item = Items
-                .Where(i => i.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
-
-            return item != null;
-        }
     }
 }

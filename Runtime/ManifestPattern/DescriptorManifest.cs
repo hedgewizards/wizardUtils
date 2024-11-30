@@ -8,7 +8,7 @@ using WizardUtils.UI.Pages;
 namespace WizardUtils
 {
     public class DescriptorManifest<T> : ScriptableObject, IDescriptorManifest<T>
-        where T : ScriptableObject
+        where T : ManifestedDescriptor
     {
         public List<T> Items;
 
@@ -32,10 +32,10 @@ namespace WizardUtils
             Items.Remove(descriptor);
         }
 
-        public virtual bool TryFindByKey(string key, out T item)
+        public bool TryFindByKey(string key, out T item)
         {
             item = Items
-                .Where(i => i.name.Equals(key, StringComparison.InvariantCultureIgnoreCase))
+                .Where(i => i.GetKey().Equals(key, StringComparison.InvariantCultureIgnoreCase))
                 .FirstOrDefault();
 
             return item != null;

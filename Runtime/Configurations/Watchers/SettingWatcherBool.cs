@@ -12,7 +12,7 @@ namespace WizardUtils.Configuration.SettingWatchers
     public class SettingWatcherBool : SettingWatcher<bool>
     {
         public SettingWatcherBool(IConfigurationService configurationService, BoolSetting setting)
-            : base(configurationService, setting.Key, setting.DefaultValue)
+            : base(configurationService, setting.GetKey(), setting.DefaultValue)
         {
         }
 
