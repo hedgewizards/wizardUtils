@@ -23,9 +23,13 @@ namespace WizardUtils.ManifestPattern
             string manifestTypeName = ((ManifestedDescriptor)target).GetManifestType().Name;
             GUILayout.Label(RegisterButtonsHeaderText, EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            var manifests = AssetDatabase.FindAssets($"t:{manifestTypeName}")
-                .Select(id => AssetDatabase.LoadAssetAtPath<DescriptorManifest<ManifestedDescriptor>>(AssetDatabase.GUIDToAssetPath(id)))
+
+            var assetGuids = AssetDatabase.FindAssets($"t:{manifestTypeName}");
+            var assetPaths = assetGuids.Select(id => AssetDatabase.GUIDToAssetPath(id));
+            var assets = assetPaths.Select(path => AssetDatabase.LoadAssetAtPath<ScriptableObject>(path));
+            var manifests = assets.Cast<DescriptorManifest>()
                 .OrderBy(x => x.name);
+
             foreach (var manifest in manifests)
             {
                 bool containsNone = true;
@@ -62,7 +66,7 @@ namespace WizardUtils.ManifestPattern
             EditorGUI.indentLevel--;
         }
 
-        private static void AddAll(DescriptorManifest<ManifestedDescriptor> manifest, ICollection<ManifestedDescriptor> items)
+        private static void AddAll(DescriptorManifest manifest, ICollection<ManifestedDescriptor> items)
         {
             Undo.RecordObject(manifest, "Add Items to Manifest");
             foreach (var item in items)
@@ -76,7 +80,7 @@ namespace WizardUtils.ManifestPattern
             AssetDatabase.SaveAssetIfDirty(manifest);
         }
 
-        private static void RemoveAll(DescriptorManifest<ManifestedDescriptor> manifest, ICollection<ManifestedDescriptor> items)
+        private static void RemoveAll(DescriptorManifest manifest, ICollection<ManifestedDescriptor> items)
         {
             Undo.RecordObject(manifest, "Remove Items from Manifest");
             foreach (var item in items)

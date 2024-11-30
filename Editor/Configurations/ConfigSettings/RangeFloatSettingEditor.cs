@@ -25,8 +25,6 @@ namespace WizardUtils.Configurations.ConfigSettings
         {
             RangeFloatSetting[] items = targets.Cast<RangeFloatSetting>().ToArray();
             Validate(items);
-            DrawDefaultInspector();
-
 
             if (items.Any(x => x.UseSlider))
             {
@@ -36,9 +34,7 @@ namespace WizardUtils.Configurations.ConfigSettings
                 EditorGUI.indentLevel--;
             }
 
-            EditorGUILayout.Space();
-            manifestAssigner.DrawRegisterButtons(items);
-
+            base.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();
         }
     }
