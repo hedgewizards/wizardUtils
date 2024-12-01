@@ -8,8 +8,9 @@ using WizardUtils.ManifestPattern;
 
 namespace WizardUtils.Audio
 {
-    [CreateAssetMenu(fileName = "audiotypemanifest", menuName = "WizardUtils/Audio/PooledAudioType Manifest")]
+    [CreateAssetMenu(fileName = "audiotypemanifest", menuName = "WizardUtils/Audio/PooledAudioType GlobalSoundManifest")]
     public class PooledAudioTypeManifest : DescriptorManifest<PooledAudioTypeDescriptor>
     {
+        public PooledAudioTypeDescriptor DefaultAudioType;
     }
 }

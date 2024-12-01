@@ -12,12 +12,12 @@ namespace WizardUtils.Audio.GlobalSounds
         public GlobalSoundDescriptor Sound;
         public void Play()
         {
-            GameManager.Instance.GlobalSoundService.PlayGlobalSound(Sound);
+            GameManager.Instance.SoundService.PlayGlobalSound(Sound);
         }
 
         public void PlayOneShot(GlobalSoundDescriptor sound)
         {
-            GameManager.Instance.GlobalSoundService.PlayGlobalSound(sound);
+            GameManager.Instance.SoundService.PlayGlobalSound(sound);
         }
     }
 }
