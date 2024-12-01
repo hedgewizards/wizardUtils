@@ -25,6 +25,12 @@ namespace WizardUtils.Audio
             random = new System.Random();
         }
 
+        public void PlayAdvancedSound(AdvancedSoundEffect sound, Vector3 position)
+        {
+            transform.position = position;
+            PlayAdvancedSound(sound);
+        }
+
         public void PlayAdvancedSound(AdvancedSoundEffect sound, Transform soundParent = null)
         {
             if (PlayCoroutine != null)
@@ -41,17 +47,24 @@ namespace WizardUtils.Audio
             PlaySound(RandomHelper.FromCollection(random, sound.Clips), pitch, soundParent);
         }
 
+        public void PlaySound(AudioClip clip, Vector3 position, float pitch = 1)
+        {
+            transform.position = position;
+            PlaySound(clip, pitch);
+        }
+
         public void PlaySound(AudioClip clip, float pitch = 1, Transform soundParent = null)
         {
+            AudioSource.clip = clip;
             AudioSource.pitch = pitch;
             AudioSource.Play();
             if (soundParent != null)
             {
-                PlayCoroutine = StartCoroutine(FollowParentThenFreeAsync(AudioSource.clip.length / Mathf.Abs(pitch), soundParent));
+                PlayCoroutine = StartCoroutine(FollowParentThenFreeAsync(clip.length / Mathf.Abs(pitch), soundParent));
             }
             else
             {
-                PlayCoroutine = StartCoroutine(WaitThenFreeAsync(AudioSource.clip.length / Mathf.Abs(pitch)));
+                PlayCoroutine = StartCoroutine(WaitThenFreeAsync(clip.length / Mathf.Abs(pitch)));
             }
         }
 

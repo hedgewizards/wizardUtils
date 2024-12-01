@@ -23,27 +23,27 @@ namespace WizardUtils.Audio
             PooledAudioTypeManifest = pooledAudioTypeManifest;
         }
 
-        public void PlaySound(AdvancedSoundEffect sound, Transform soundParent = null)
+        public void PlaySound(AdvancedSoundEffect sound, Vector3 position)
         {
-            SoundPool pool;
-            if (!soundsDictionary.TryGetValue(sound.AudioType, out pool))
-            {
-                pool = new SoundPool(Parent.transform, sound.AudioType);
-                soundsDictionary.Add(sound.AudioType, pool);
-            }
+            SoundPool pool = GetSoundPool(sound.AudioType);
+            pool.PlaySound(sound, position);
+        }
 
+        public void PlaySound(AdvancedSoundEffect sound, Transform soundParent)
+        {
+            SoundPool pool = GetSoundPool(sound.AudioType);
             pool.PlaySound(sound, soundParent);
+        }
+
+        public void PlaySound(AudioClip clip, Vector3 position)
+        {
+            SoundPool pool = GetSoundPool(PooledAudioTypeManifest.DefaultAudioType);
+            pool.PlaySound(clip, position);
         }
 
         public void PlaySound(AudioClip clip, Transform soundParent = null)
         {
-            SoundPool pool;
-            if (!soundsDictionary.TryGetValue(PooledAudioTypeManifest.DefaultAudioType, out pool))
-            {
-                pool = new SoundPool(Parent.transform, PooledAudioTypeManifest.DefaultAudioType);
-                soundsDictionary.Add(PooledAudioTypeManifest.DefaultAudioType, pool);
-            }
-
+            SoundPool pool = GetSoundPool(PooledAudioTypeManifest.DefaultAudioType);
             pool.PlaySound(clip, soundParent);
         }
 
@@ -58,5 +58,17 @@ namespace WizardUtils.Audio
             }
             obj.Play();
         }
+        private SoundPool GetSoundPool(PooledAudioTypeDescriptor audioType)
+        {
+            SoundPool pool;
+            if (!soundsDictionary.TryGetValue(audioType, out pool))
+            {
+                pool = new SoundPool(Parent.transform, audioType);
+                soundsDictionary.Add(audioType, pool);
+            }
+
+            return pool;
+        }
+
     }
 }

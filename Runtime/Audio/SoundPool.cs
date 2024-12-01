@@ -26,10 +26,22 @@ namespace WizardUtils.Audio
             source.PlayAdvancedSound(effect, soundParent);
         }
 
+        public void PlaySound(AdvancedSoundEffect effect, Vector3 position)
+        {
+            var source = Pop();
+            source.PlayAdvancedSound(effect, position);
+        }
+
         public void PlaySound(AudioClip clip, Transform soundParent = null)
         {
             var source = Pop();
             source.PlaySound(clip, 1, soundParent);
+        }
+
+        public void PlaySound(AudioClip clip, Vector3 position)
+        {
+            var source = Pop();
+            source.PlaySound(clip, 1);
         }
 
         private PooledAudioSource Pop()
@@ -39,7 +51,7 @@ namespace WizardUtils.Audio
             {
                 source = InactivePool.Dequeue();
             }
-            else if (ActiveList.Count >= MaxCount)
+            else if (MaxCount > 0 && ActiveList.Count >= MaxCount)
             {
                 Debug.LogWarning($"overtaxed SoundPool of type {AudioType}. sound artifacts may occur");
                 source = ActiveList[0];

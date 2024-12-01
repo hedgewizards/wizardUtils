@@ -42,7 +42,9 @@ namespace WizardUtils
 
             Instance = this;
             PlatformService = BuildPlatformService();
-            SoundService = new Audio.SoundService(gameObject, Manifests.GlobalSound, Manifests.PooledAudioTypes);
+            GameObject soundServiceParent = new GameObject("SoundService Pools");
+            soundServiceParent.transform.parent = transform;
+            SoundService = new Audio.SoundService(soundServiceParent, Manifests.GlobalSound, Manifests.PooledAudioTypes);
             CurrentSceneLoaders = new List<SceneLoader>();
 
             InitializeConfigurationService();
