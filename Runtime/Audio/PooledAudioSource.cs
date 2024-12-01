@@ -78,6 +78,11 @@ namespace WizardUtils.Audio
             var startTime = Time.time;
             while (Time.time < startTime + durationSeconds)
             {
+                if (soundParent == null)
+                {
+                    yield return new WaitForSeconds((startTime + durationSeconds) - Time.time);
+                    break;
+                }
                 transform.position = soundParent.position;
                 yield return null;
             }
