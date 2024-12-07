@@ -27,9 +27,10 @@ namespace WizardUtils.Math
             return Mathf.Abs(a - b) < 1 / (float)short.MaxValue;
         }
 
-        public static bool IsUpright(this Quaternion quaternion)
+        public static bool IsUpright(this Quaternion quaternion, float approximationThreshold = 0)
         {
-            return quaternion.x == 0 && quaternion.z == 0;
+            return Mathf.Abs(quaternion.x) < approximationThreshold
+                && Mathf.Abs(quaternion.z) < approximationThreshold;
         }
     }
 }
