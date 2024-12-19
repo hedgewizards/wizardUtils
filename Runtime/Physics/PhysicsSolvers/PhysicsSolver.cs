@@ -99,7 +99,7 @@ namespace WizardUtils.PhysicsSolvers
                 return true;
             }
 
-            return _OverlapCache[0] != Shape.Collider;
+            return overlapCount == 1 && _OverlapCache[0] != Shape.Collider;
         }
     }
 }
