@@ -187,6 +187,10 @@ namespace WizardUtils.SceneManagement
         {
             CanCancelActiveCoroutine = false;
             AsyncOperation loadTask = SceneManager.LoadSceneAsync(SceneIndex, LoadSceneMode.Additive);
+            if (loadTask == null)
+            {
+                yield break;
+            }
             loadTask.allowSceneActivation = AllowSceneActivation;
 
             while (true)
