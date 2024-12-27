@@ -21,6 +21,7 @@ namespace WizardUtils
     {
         public static GameManager Instance;
         public ManifestSet Manifests;
+        public Camera UICamera;
         public IPlatformService PlatformService;
         public IConfigurationService Configuration;
         public ExplicitConfigurationData DebugOverrideConfig;

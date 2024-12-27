@@ -7,9 +7,15 @@ using UnityEngine;
 
 namespace WizardUtils.Dialogs
 {
+    [RequireComponent(typeof(Canvas))]
     public class DialogScreen : MonoBehaviour
     {
         public bool IsShowing => gameObject.activeSelf;
+
+        public void Awake()
+        {
+            GetComponent<Canvas>().worldCamera = GameManager.Instance.UICamera;
+        }
 
         public virtual void ShowLoading()
         {
