@@ -16,22 +16,28 @@ namespace WizardUtils.UI
         public void Recalculate()
         {
             float totalWidthNoPadding = 0;
+            int itemCount = 0;
             RectTransform[] rectTransforms = new RectTransform[transform.childCount];
             for (int n = 0; n < transform.childCount; n++)
             {
                 rectTransforms[n] = transform.GetChild(n).GetComponent<RectTransform>();
+                if (!rectTransforms[n].gameObject.activeSelf) continue;
+                itemCount++;
                 totalWidthNoPadding += rectTransforms[n].rect.width;
             }
 
             float runningX = Padding;
+            float runningCount = 0;
             for (int n = 0; n < rectTransforms.Length; n++)
             {
+                if (!rectTransforms[n].gameObject.activeSelf) continue;
                 rectTransforms[n].anchoredPosition = new Vector2(runningX, 0);
                 runningX += rectTransforms[n].rect.width;
-                if (n < rectTransforms.Length - 1)
+                if (runningCount < itemCount - 1)
                 {
                     runningX += Spacing;
                 }
+                runningCount++;
             }
 
             if (AutoResizeSelf)
