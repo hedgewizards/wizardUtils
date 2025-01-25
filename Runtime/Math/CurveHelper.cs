@@ -18,5 +18,20 @@ namespace WizardUtils.Math
         {
             return t / (t + dullness);
         }
+
+        public static float EaseInAndOut(float t)
+        {
+            return t * t * (3 - 2 * t);
+        }
+
+        public static float EaseIn(float t)
+        {
+            return t * t;
+        }
+
+        public static float EaseOut(float t)
+        {
+            return 1 - (1 - t) * (1 - t);
+        }
     }
 }
