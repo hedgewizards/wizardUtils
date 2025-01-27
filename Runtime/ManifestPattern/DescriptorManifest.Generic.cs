@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using WizardUtils.ManifestPattern;
 using WizardUtils.UI.Pages;
@@ -11,6 +12,9 @@ namespace WizardUtils
         where T : ManifestedDescriptor
     {
         public List<T> Items;
+#if UNITY_EDITOR
+        private static DescriptorManifest<T> Editor_GlobalManifest; 
+#endif
 
         void Reset()
         {
@@ -51,5 +55,53 @@ namespace WizardUtils
 
             return item != null;
         }
+
+
+        #region Editor Access
+#if UNITY_EDITOR
+
+        public static bool TryGetGlobalManifest(out DescriptorManifest<T> result)
+        {
+            if (Editor_GlobalManifest == null)
+            {
+                Editor_LoadGlobalManifest();
+                if (Editor_GlobalManifest == null)
+                {
+                    result = default;
+                    return false;
+                }
+            }
+
+            result = Editor_GlobalManifest;
+            return true;
+        }
+
+        public static bool Editor_TryGetByKeyInGlobalManifest(string key, out T result)
+        {
+            if (!TryGetGlobalManifest(out var manifest))
+            {
+                result = default;
+                return false;
+            }
+
+            return manifest.TryFindByKey(key, out result);
+        }
+
+        private static void Editor_LoadGlobalManifest()
+        {
+            var assetGuids = AssetDatabase.FindAssets($"t:{nameof(DescriptorManifest)}");
+            var assetPaths = assetGuids.Select(id => AssetDatabase.GUIDToAssetPath(id));
+            var assets = assetPaths.Select(path => AssetDatabase.LoadAssetAtPath<ScriptableObject>(path));
+            Editor_GlobalManifest = assets.OfType<DescriptorManifest<T>>()
+                .Where(m => m.UseAsDefaultManifestInEditor)
+                .FirstOrDefault();
+
+            if (Editor_GlobalManifest == null)
+            {
+                Debug.LogWarning($"Missing GlobalManifest for type {nameof(T)}! something is probably about to explode.");
+            }
+        }
+#endif
+        #endregion
     }
 }
