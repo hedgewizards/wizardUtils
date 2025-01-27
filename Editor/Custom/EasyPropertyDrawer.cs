@@ -5,9 +5,11 @@ using UnityEngine;
 
 public abstract class EasyPropertyDrawer : PropertyDrawer
 {
-    protected abstract float lineCount { get; }
+    protected abstract float GetLineCount(SerializedProperty property);
+
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
+        float lineCount = GetLineCount(property);
         return EditorGUIUtility.singleLineHeight * lineCount + (2 * lineCount - 1);
     }
 

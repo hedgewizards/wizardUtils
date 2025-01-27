@@ -9,7 +9,10 @@ namespace WizardUtils
     [CustomPropertyDrawer(typeof(KeyValuePairString))]
     public class KeyValuePairStringDrawer : EasyPropertyDrawer
     {
-        protected override float lineCount => 1;
+        protected override float GetLineCount(SerializedProperty property)
+        {
+            return 1;
+        }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
