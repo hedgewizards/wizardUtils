@@ -49,22 +49,33 @@ namespace WizardUtils
 
         public static void InsertAndResize<T>(ref T[] array, T newMember)
         {
+            array = InsertAndResize(array, newMember);
+        }
+
+        public static void InsertAndResize<T>(ref T[] array, T newMember, int insertIndex)
+        {
+            array = InsertAndResize(array, newMember, insertIndex);
+        }
+
+        public static T[] InsertAndResize<T>(T[] array, T newMember)
+        {
             T[] newArray = new T[array.Length + 1];
             Array.Copy(array, newArray, array.Length);
             newArray[array.Length] = newMember;
 
-            array = newArray;
+            return newArray;
         }
 
-        public static void InsertAndResize<T>(ref T[] array, T newMember, int insertIndex)
+        public static T[] InsertAndResize<T>(T[] array, T newMember, int insertIndex)
         {
             T[] newArray = new T[array.Length + 1];
             Array.Copy(array, 0, newArray, 0, insertIndex);
             Array.Copy(array, insertIndex, newArray, insertIndex + 1, array.Length - insertIndex);
             newArray[insertIndex] = newMember;
 
-            array = newArray;
+            return newArray;
         }
+
 
         public static bool Contains<T>(T[] array, T member)
         {
