@@ -35,10 +35,10 @@ namespace WizardUtils.Audio
         {
             if (PlayCoroutine != null)
             {
-                AudioSource.Stop();
                 StopCoroutine(PlayCoroutine);
             }
 
+            AudioSource.Stop();
             var volume = sound.VolumeRange > 0 ? UnityEngine.Random.Range(sound.Volume - sound.VolumeRange, sound.Volume + sound.VolumeRange) : sound.Volume;
             AudioSource.volume = volume;
             var pitch = sound.PitchRange > 0 ? UnityEngine.Random.Range(sound.Pitch - sound.PitchRange, sound.Pitch + sound.PitchRange) : sound.Pitch;
