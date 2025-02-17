@@ -9,15 +9,37 @@ namespace WizardUtils.Audio
         private Transform SourceParent;
         private int MaxCount => AudioType.PoolSize;
 
-        private Queue<PooledAudioSource> InactivePool;
-        private List<PooledAudioSource> ActiveList;
+        private Queue<PooledAdvancedAudioSource> InactivePool;
+        private List<PooledAdvancedAudioSource> ActiveList;
 
         public SoundPool(Transform parent, PooledAudioTypeDescriptor audioType)
         {
             SourceParent = parent;
             AudioType = audioType;
-            InactivePool = new Queue<PooledAudioSource>();
-            ActiveList = new List<PooledAudioSource>();
+            InactivePool = new Queue<PooledAdvancedAudioSource>();
+            ActiveList = new List<PooledAdvancedAudioSource>();
+        }
+
+        public AdvancedAudioSource BorrowAudioSource()
+        {
+            var source = Pop();
+            ActiveList.Remove(source);
+            source.OnFree -= Source_OnFree;
+
+            return source;
+        }
+
+        public void ReturnBorrowedAudioSource(AdvancedAudioSource source)
+        {
+            PooledAdvancedAudioSource pooledSource = (PooledAdvancedAudioSource)source;
+            if (ActiveList.Contains(pooledSource)
+                || InactivePool.Contains(pooledSource))
+            {
+                return;
+            }
+
+            pooledSource.transform.SetParent(SourceParent);
+            InactivePool.Enqueue(pooledSource);
         }
 
         public void PlaySound(AdvancedSoundEffect effect, Transform soundParent = null)
@@ -44,9 +66,9 @@ namespace WizardUtils.Audio
             source.PlaySound(clip, 1);
         }
 
-        private PooledAudioSource Pop()
+        private PooledAdvancedAudioSource Pop()
         {
-            PooledAudioSource source;
+            PooledAdvancedAudioSource source;
             if (InactivePool.Count != 0)
             {
                 source = InactivePool.Dequeue();
@@ -61,7 +83,7 @@ namespace WizardUtils.Audio
             {
                 GameObject newSourceObject = Object.Instantiate(AudioType.Prefab, SourceParent);
                 newSourceObject.name = $"Pooled Audio {InactivePool.Count + ActiveList.Count} {AudioType.name}";
-                source = newSourceObject.GetComponent<PooledAudioSource>();
+                source = newSourceObject.GetComponent<PooledAdvancedAudioSource>();
                 if (source == null) throw new MissingComponentException($"Missing PooledAudioSource for {AudioType} prefab {AudioType.Prefab}");
                 source.OnFree += Source_OnFree;
             }
@@ -72,7 +94,7 @@ namespace WizardUtils.Audio
 
         private void Source_OnFree(object sender, System.EventArgs e)
         {
-            var source = sender as PooledAudioSource;
+            var source = sender as PooledAdvancedAudioSource;
             ActiveList.Remove(source);
             InactivePool.Enqueue(source);
         }

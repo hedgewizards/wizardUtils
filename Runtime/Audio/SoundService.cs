@@ -23,6 +23,24 @@ namespace WizardUtils.Audio
             PooledAudioTypeManifest = pooledAudioTypeManifest;
         }
 
+        /// <summary>
+        /// Steal an audio source from the pool to use yourself.<br/>
+        /// you can either return it later, or destroy it when you are done (possibly by changing its transform parent!)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public AdvancedAudioSource BorrowAudioSource(PooledAudioTypeDescriptor type)
+        {
+            SoundPool pool = GetSoundPool(type);
+            return pool.BorrowAudioSource();
+        }
+
+        public void ReturnBorrowedAudioSource(PooledAudioTypeDescriptor type, AdvancedAudioSource source)
+        {
+            SoundPool pool = GetSoundPool(type);
+            pool.ReturnBorrowedAudioSource(source);
+        }
+
         public void PlaySound(AdvancedSoundEffect sound, Vector3 position)
         {
             SoundPool pool = GetSoundPool(sound.AudioType);
