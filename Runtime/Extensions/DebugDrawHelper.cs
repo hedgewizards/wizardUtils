@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,29 @@ namespace WizardUtils.Extensions
     {
         private const int CircleDefaultResolution = 16;
         private const int DefaultDrawDuration = 0;
+
+        public static void DrawSquare(Vector3 center, float radius, Quaternion orientation, Color color, float duration = DefaultDrawDuration)
+        {
+            Vector3[,] corners = new Vector3[2, 2];
+            for (int x = 0; x < 2; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    corners[x, y] = new Vector3()
+                    {
+                        x = radius * (x == 0 ? 1 : -1),
+                        y = 0,
+                        z = radius * (y == 0 ? 1 : -1),
+                    };
+                    corners[x, y] = center + orientation * corners[x, y];
+                }
+            }
+
+            Debug.DrawLine(corners[0, 0], corners[0, 1], color, duration);
+            Debug.DrawLine(corners[0, 0], corners[1, 0], color, duration);
+            Debug.DrawLine(corners[1, 1], corners[0, 1], color, duration);
+            Debug.DrawLine(corners[1, 1], corners[1, 0], color, duration);
+        }
 
         public static void DrawBox(Vector3 center, Vector3 extents, Quaternion orientation, Color color, float duration = DefaultDrawDuration)
         {
