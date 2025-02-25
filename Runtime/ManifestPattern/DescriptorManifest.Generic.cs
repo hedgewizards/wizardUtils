@@ -56,6 +56,17 @@ namespace WizardUtils
             return item != null;
         }
 
+        public bool TryGet(ushort id, out T item)
+        {
+            if (id < 0 || id >= Items.Count)
+            {
+                item = default;
+                return false;
+            }
+            item = Items[id];
+            return true;
+        }
+
 
         #region Editor Access
 #if UNITY_EDITOR
