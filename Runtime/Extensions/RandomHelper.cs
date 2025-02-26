@@ -7,7 +7,7 @@ namespace WizardUtils
     {
         public static float Range(this System.Random random, float minInclusive, float maxExclusive)
         {
-            return random.Next() * (maxExclusive - minInclusive) + minInclusive;
+            return (float)(random.NextDouble() * (maxExclusive - minInclusive) + minInclusive);
         }
 
         public static T FromCollection<T>(IList<T> source)
