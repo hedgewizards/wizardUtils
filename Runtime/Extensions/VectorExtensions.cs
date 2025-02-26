@@ -42,6 +42,11 @@ namespace WizardUtils
             return vec;
         }
 
+        public static bool IsNaN(this Vector3 vec)
+        {
+            return float.IsNaN(vec.x) || float.IsNaN(vec.y) || float.IsNaN(vec.z);
+        }
+
         /// <summary>
         /// Scales each component of a Vector3 by another vector3's components
         /// </summary>
@@ -129,6 +134,7 @@ namespace WizardUtils
                 z = 1 / vec.z
             };
         }
+
 
         public static Vector3Int MemberwiseRound(this Vector3 vec)
         {
