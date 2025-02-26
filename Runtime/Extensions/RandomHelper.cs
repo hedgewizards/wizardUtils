@@ -77,6 +77,17 @@ namespace WizardUtils
             return choices;
         }
 
+        public static void Shuffle<T>(this System.Random random, IList<T> collection)
+        {
+            for (int choice = 0; choice < collection.Count; choice++)
+            {
+                var chosenIndex = random.Next(choice, collection.Count);
+                var temp = collection[choice];
+                collection[choice] = collection[chosenIndex];
+                collection[chosenIndex] = temp;
+            }
+        }
+
         /// <summary>
         /// assigns to buffer k different integers between 0 (inclusive) and n (exclusive)
         /// </summary>
