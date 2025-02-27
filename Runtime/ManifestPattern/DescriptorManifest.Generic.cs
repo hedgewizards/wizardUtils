@@ -71,6 +71,16 @@ namespace WizardUtils
         #region Editor Access
 #if UNITY_EDITOR
 
+
+        public static bool TryGetGlobalManifest<TManifest>(out TManifest result)
+            where TManifest : DescriptorManifest<T>
+        {
+            bool success = TryGetGlobalManifest(out DescriptorManifest<T> _result);
+            result = _result as TManifest;
+            return success;
+        }
+
+
         public static bool TryGetGlobalManifest(out DescriptorManifest<T> result)
         {
             if (Editor_GlobalManifest == null)
