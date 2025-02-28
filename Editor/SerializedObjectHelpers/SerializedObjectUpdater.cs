@@ -15,7 +15,7 @@ namespace WizardUtils.SerializedObjectHelpers
             Handlers = new List<SerializedPropertyChangeHandler>();
         }
 
-        public void Add<T>(Func<T> get, Action<SerializedPropertyChangedArgs<T>> onChangedCallback, EqualityComparer<T> equalityComparer = null)
+        public void Add<T>(Func<T> get, Action<SerializedPropertyChangedArgs<T>> onChangedCallback = null, EqualityComparer<T> equalityComparer = null)
         {
             SerializedPropertyChangeHandler<T> item = new SerializedPropertyChangeHandler<T>(get, onChangedCallback, equalityComparer);
             Handlers.Add(item);

@@ -18,7 +18,7 @@ namespace WizardUtils.SerializedObjectHelpers
 
         private T cachedValue;
 
-        public SerializedPropertyChangeHandler(Func<T> get, Action<SerializedPropertyChangedArgs<T>> onChangedCallback, EqualityComparer<T> equalityComparer = null)
+        public SerializedPropertyChangeHandler(Func<T> get, Action<SerializedPropertyChangedArgs<T>> onChangedCallback = null, EqualityComparer<T> equalityComparer = null)
         {
             OnChangedCallback = onChangedCallback;
             EqualityComparer = equalityComparer ?? EqualityComparer<T>.Default;
@@ -32,6 +32,8 @@ namespace WizardUtils.SerializedObjectHelpers
 
         public override void Check()
         {
+            if (OnChangedCallback == null) return;
+
             T newValue = Get();
             if (!EqualityComparer.Equals(cachedValue, newValue))
             {
