@@ -68,6 +68,39 @@ namespace WizardUtils.PhysicsSolvers
             return position;
         }
 
+        /// <summary>
+        /// Like <see cref="Shape"/>'s ShapeCastSingle, but ignores its own collider<br/>
+        /// Relies on Layer 2 (Stock unity "Ignore Raycast") Being excluded from the layermask!
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool ShapeCastSingleIgnoreSelf(
+            out RaycastHit hitInfo,
+            Vector3 worldPosition,
+            Vector3 direction,
+            Quaternion orientation,
+            float maxDistance,
+            float scale = 1,
+            int layermask = -1,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        {
+            var initialLayer = Shape.Collider.gameObject.layer;
+            Shape.Collider.gameObject.layer = 2; // unity's stock Ignore Raycast layer
+
+            bool result = Shape.ShapeCastSingle(
+                out hitInfo,
+                worldPosition,
+                direction,
+                orientation,
+                maxDistance,
+                scale,
+                layermask,
+                queryTriggerInteraction);
+
+            Shape.Collider.gameObject.layer = initialLayer;
+            return result;
+        }
+
         public bool Raycast(
             out RaycastHit hitInfo,
             Vector3 position,
