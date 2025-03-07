@@ -38,23 +38,31 @@ namespace WizardUtils.Platforms.Steam
             }
             catch (DllNotFoundException e)
             {
-                Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. \n" + e);
-
-                Application.Quit();
+                DoInitializeError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. \n" + e);
                 return;
             }
 
             initialized = SteamAPI.Init();
             if (!initialized)
             {
-                Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.");
-                
-                Application.Quit();
+                DoInitializeError("[Steamworks.NET] SteamAPI_Init() failed.");
                 return;
             }
 
             SetupPersistentDataPath();
             GameManager.StartCoroutine(SpawnRunCallbacksCoroutine());
+        }
+
+        private void DoInitializeError(string message)
+        {
+            Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.");
+
+#if !SPACEWAR
+            Debug.LogWarning(message);
+#else
+            Debug.LogError(message);
+            Application.Quit();
+#endif
         }
 
         private IEnumerator SpawnRunCallbacksCoroutine()

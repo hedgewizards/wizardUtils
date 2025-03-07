@@ -72,7 +72,20 @@ namespace WizardUtils
 #if DISABLESTEAMWORKS
             return new Platforms.Portable.PortablePlatformService();
 #else
+
+#if SPACEWAR
+            var platformService = new Platforms.Steam.SteamPlatformService(this);
+            if (platformService.Initialized)
+            {
+                return platformService;
+            }
+            else
+            {
+                return new Platforms.Portable.PortablePlatformService();
+            }
+#else
             return new Platforms.Steam.SteamPlatformService(this);
+#endif
 #endif
         }
         #endregion
