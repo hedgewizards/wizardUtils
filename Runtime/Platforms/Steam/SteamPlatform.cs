@@ -57,7 +57,7 @@ namespace WizardUtils.Platforms.Steam
         {
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.");
 
-#if !SPACEWAR
+#if SPACEWAR
             Debug.LogWarning(message);
 #else
             Debug.LogError(message);
