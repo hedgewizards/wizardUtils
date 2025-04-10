@@ -13,6 +13,7 @@ namespace WizardUtils.UI
         public float Padding;
         public bool AutoResizeSelf;
 
+        [ContextMenu("Recalculate")]
         public void Recalculate()
         {
             float totalWidthNoPadding = 0;
