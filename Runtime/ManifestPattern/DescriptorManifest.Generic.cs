@@ -27,6 +27,12 @@ namespace WizardUtils
 
         public override void Remove(object descriptor) => Remove((T)descriptor);
 
+        public bool TryGetIndexOf(T descriptor, out int index)
+        {
+            index = Items.IndexOf(descriptor);
+            return index >= 0;
+        }
+
         public void Add(T descriptor)
         {
             Items.Add(descriptor);
