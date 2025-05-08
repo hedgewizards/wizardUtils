@@ -76,7 +76,10 @@ namespace WizardUtils
 
         public void SetGameMuted(bool muted)
         {
-            Controllers[0].Muted = muted;
+            if (Controllers[0].Muted != muted)
+            {
+                Controllers[0].Muted = muted;
+            }
         }
 
         private AudioChannelSettingData[] GenerateAllChannels() => BaseChannels.Concat(AdditionalChannels).ToArray();

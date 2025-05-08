@@ -52,9 +52,14 @@ namespace WizardUtils.Audio
 
         private void UpdateMixer()
         {
-            float rawVolume = Muted ? 0.001f : settingWatcher.Value;
-            mixer.SetFloat(channelVolumeParamName, AudioUtils.LinearAudioLevelToLog(rawVolume));
-
+            if (Muted || settingWatcher.Value == 0)
+            {
+                mixer.SetFloat(channelVolumeParamName, -80);
+            }
+            else
+            {
+                mixer.SetFloat(channelVolumeParamName, AudioUtils.LinearAudioLevelToLog(settingWatcher.Value));
+            }
         }
     }
 
