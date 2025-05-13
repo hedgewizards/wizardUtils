@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using WizardUtils.Audio.GlobalSounds;
+using WizardUtils.Coroutines;
 
 namespace WizardUtils.Audio
 {
@@ -33,6 +34,31 @@ namespace WizardUtils.Audio
         {
             SoundPool pool = GetSoundPool(type);
             return pool.BorrowAudioSource();
+        }
+
+        public AudioLoopInstance StartAudioLoop(
+                MonoBehaviour coroutineHost,
+                Transform parent,
+                AdvancedSoundEffect loop)
+        {
+            AdvancedAudioSource source = BorrowAudioSource(loop.AudioType);
+            source.transform.SetParent(parent);
+            source.transform.localPosition = Vector3.zero;
+            source.AudioSource.loop = true;
+            CoroutineHelpers.StartNextFrameCoroutine(coroutineHost, () =>
+            {
+                source.PlayAdvancedSound(loop);
+            });
+
+            return new AudioLoopInstance(loop, source);
+        }
+
+        public void StopAudioLoop(AudioLoopInstance instance)
+        {
+            instance.Source.AudioSource.Stop();
+            instance.Source.AudioSource.loop = false;
+
+            ReturnBorrowedAudioSource(instance.Sound.AudioType, instance.Source);
         }
 
         public void ReturnBorrowedAudioSource(PooledAudioTypeDescriptor type, AdvancedAudioSource source)
