@@ -56,8 +56,8 @@ namespace WizardUtils.Audio
         public void StopAudioLoop(AudioLoopInstance instance)
         {
             float duration = instance.Source.StopLoop(instance.Sound);
+            instance.Source.AudioSource.loop = false;
             ReturnBorrowedAudioSource(instance.Sound.AudioType, instance.Source, duration > 0);
-
         }
 
         public void ReturnBorrowedAudioSource(PooledAudioTypeDescriptor type, AdvancedAudioSource source, bool isBusy)
