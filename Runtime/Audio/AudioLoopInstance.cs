@@ -8,8 +8,8 @@ namespace WizardUtils.Audio
 {
     public struct AudioLoopInstance
     {
-        internal AdvancedSoundEffect Sound;
-        internal AdvancedAudioSource Source;
+        public AdvancedSoundEffect Sound { get; private set; }
+        public AdvancedAudioSource Source { get; private set; }
 
         public AudioLoopInstance(AdvancedSoundEffect sound, AdvancedAudioSource source)
         {
