@@ -13,5 +13,9 @@ namespace WizardUtils.Audio
         public float VolumeRange;
         [Tooltip("If >0, the max range this audio should be heard from. otherwise use the default value")]
         public float MaxDistance = -1;
+        [Tooltip("If >0, fade in volume from zero when playing the sound")]
+        public float FadeInTime = 0;
+        [Tooltip("if >0, fade out volume from zero when the sound ends")]
+        public float FadeOutTime = 0;
     }
 }

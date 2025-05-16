@@ -55,16 +55,15 @@ namespace WizardUtils.Audio
 
         public void StopAudioLoop(AudioLoopInstance instance)
         {
-            instance.Source.AudioSource.Stop();
-            instance.Source.AudioSource.loop = false;
+            float duration = instance.Source.StopLoop(instance.Sound);
+            ReturnBorrowedAudioSource(instance.Sound.AudioType, instance.Source, duration > 0);
 
-            ReturnBorrowedAudioSource(instance.Sound.AudioType, instance.Source);
         }
 
-        public void ReturnBorrowedAudioSource(PooledAudioTypeDescriptor type, AdvancedAudioSource source)
+        public void ReturnBorrowedAudioSource(PooledAudioTypeDescriptor type, AdvancedAudioSource source, bool isBusy)
         {
             SoundPool pool = GetSoundPool(type);
-            pool.ReturnBorrowedAudioSource(source);
+            pool.ReturnBorrowedAudioSource(source, isBusy);
         }
 
         public void PlaySound(AdvancedSoundEffect sound, Vector3 position)

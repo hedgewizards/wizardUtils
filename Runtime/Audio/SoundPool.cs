@@ -29,7 +29,7 @@ namespace WizardUtils.Audio
             return source;
         }
 
-        public void ReturnBorrowedAudioSource(AdvancedAudioSource source)
+        public void ReturnBorrowedAudioSource(AdvancedAudioSource source, bool isBusy)
         {
             PooledAdvancedAudioSource pooledSource = (PooledAdvancedAudioSource)source;
             if (ActiveList.Contains(pooledSource)
@@ -38,8 +38,17 @@ namespace WizardUtils.Audio
                 return;
             }
 
+            pooledSource.OnFree += Source_OnFree;
             pooledSource.transform.SetParent(SourceParent);
-            InactivePool.Enqueue(pooledSource);
+            
+            if (isBusy)
+            {
+                ActiveList.Add(pooledSource);
+            }
+            else
+            {
+                InactivePool.Enqueue(pooledSource);
+            }
         }
 
         public void PlaySound(AdvancedSoundEffect effect, Transform soundParent = null)
