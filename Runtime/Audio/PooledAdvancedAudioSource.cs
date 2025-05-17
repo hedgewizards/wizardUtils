@@ -27,7 +27,7 @@ namespace WizardUtils.Audio
                 StopCoroutine(PlayCoroutine);
             }
 
-            base.PlayAdvancedSound(sound);
+            base.PlayAdvancedSound(sound, soundParent);
         }
 
         public override float StopLoop(AdvancedSoundEffect sound)
