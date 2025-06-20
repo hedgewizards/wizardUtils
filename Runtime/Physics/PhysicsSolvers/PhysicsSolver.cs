@@ -33,10 +33,7 @@ namespace WizardUtils.PhysicsSolvers
         /// <returns></returns>
         public Vector3 Move(Vector3 position, Vector3 movement, Func<CollisionEventData, bool> OnCollide)
         {
-            CollisionEventData eventData = new CollisionEventData()
-            {
-                Position = position,
-            };
+            CollisionEventData eventData = new CollisionEventData();
             position += movement;
 
             int overlapCount = Shape.OverlapShapeNonAlloc(_OverlapCache, position, Quaternion.identity, LayerMask);
