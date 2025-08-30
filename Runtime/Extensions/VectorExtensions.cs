@@ -135,6 +135,15 @@ namespace WizardUtils
             };
         }
 
+        /// <summary>
+        /// Gets the angle in degrees (0,0,1) would have to be rotated to match the yaw of <paramref name="vec"/>
+        /// </summary>
+        /// <param name="vec"></param>
+        /// <returns></returns>
+        public static float YawFromForward(this Vector3 vec)
+        {
+            return Mathf.Atan2(vec.x, vec.z) * Mathf.Rad2Deg;
+        }
 
         public static Vector3Int MemberwiseRound(this Vector3 vec)
         {
