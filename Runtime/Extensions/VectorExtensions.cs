@@ -244,7 +244,7 @@ namespace WizardUtils
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        /// <returns></returns>
+        /// <returns>Angle in Degrees</returns>
         public static float AngleBetween(Vector2 left, Vector2 right)
         {
             float leftAngle = Mathf.Atan2(left.y, left.x) * Mathf.Rad2Deg;
