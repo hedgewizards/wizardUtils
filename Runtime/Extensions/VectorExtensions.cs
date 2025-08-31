@@ -144,6 +144,11 @@ namespace WizardUtils
         {
             return Mathf.Atan2(vec.x, vec.z) * Mathf.Rad2Deg;
         }
+        public static Vector3 YawToForward(float yaw)
+        {
+            yaw *= UnityEngine.Mathf.Deg2Rad;
+            return new Vector3(UnityEngine.Mathf.Cos(yaw), 0, UnityEngine.Mathf.Sin(yaw));
+        }
 
         public static Vector3Int MemberwiseRound(this Vector3 vec)
         {
