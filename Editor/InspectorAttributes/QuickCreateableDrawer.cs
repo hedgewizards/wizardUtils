@@ -2,9 +2,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using WizardUtils.InspectorAttributes;
-using UnityEngine.WSA;
 using System.IO;
 
 [CustomPropertyDrawer(typeof(QuickCreateableAttribute))]
@@ -19,18 +17,27 @@ public class QuickCreateableDrawer : PropertyDrawer
         Rect fieldRect = new Rect(position.x, position.y, position.width - buttonWidth - 2, position.height);
         Rect buttonRect = new Rect(position.x + position.width - buttonWidth, position.y, buttonWidth, position.height);
 
-        EditorGUI.PropertyField(fieldRect, property, label);
 
-        if (GUI.Button(buttonRect, "+"))
+        if (GUI.enabled)
         {
-            if (attr.ListSubclasses)
+            EditorGUI.PropertyField(fieldRect, property, label);
+
+            if (GUI.Button(buttonRect, "+"))
             {
-                ShowTypeDropdown(attr.AssetType, property);
+                if (attr.ListSubclasses)
+                {
+                    ShowTypeDropdown(attr.AssetType, property);
+                }
+                else
+                {
+                    CreateAndAssignAsset(attr.AssetType, property);
+                }
             }
-            else
-            {
-                CreateAndAssignAsset(attr.AssetType, property);
-            }
+        }
+
+        else
+        {
+            EditorGUI.PropertyField(position, property, label);
         }
     }
 
