@@ -24,7 +24,7 @@ namespace WizardUtils.InspectorAttributes
             var cond = (ShouldDrawConditionAttribute)attribute;
             bool shouldDraw = CalculateShouldDraw(property, cond.ShouldHideMethodName);
 
-            return shouldDraw ? 0 : EditorGUI.GetPropertyHeight(property, label, true);
+            return shouldDraw ? EditorGUI.GetPropertyHeight(property, label, true) : 0;
         }
 
         private bool CalculateShouldDraw(SerializedProperty property, string methodName)
