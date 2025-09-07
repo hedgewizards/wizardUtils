@@ -18,26 +18,31 @@ public class QuickCreateableDrawer : PropertyDrawer
         Rect buttonRect = new Rect(position.x + position.width - buttonWidth, position.y, buttonWidth, position.height);
 
 
-        if (GUI.enabled)
-        {
-            EditorGUI.PropertyField(fieldRect, property, label);
-
-            if (GUI.Button(buttonRect, "+"))
-            {
-                if (attr.ListSubclasses)
-                {
-                    ShowTypeDropdown(attr.AssetType, property);
-                }
-                else
-                {
-                    CreateAndAssignAsset(attr.AssetType, property);
-                }
-            }
-        }
-
-        else
+        if (!GUI.enabled)
         {
             EditorGUI.PropertyField(position, property, label);
+            return;
+        }
+
+        if (!fieldInfo.FieldType.IsAssignableFrom(attr.AssetType))
+        {
+            Debug.LogError($"QuickCreateableAttribute: {attr.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
+            EditorGUI.PropertyField(position, property, label);
+            return;
+        }
+
+        EditorGUI.PropertyField(fieldRect, property, label);
+
+        if (GUI.Button(buttonRect, "+"))
+        {
+            if (attr.ListSubclasses)
+            {
+                ShowTypeDropdown(attr.AssetType, property);
+            }
+            else
+            {
+                CreateAndAssignAsset(attr.AssetType, property);
+            }
         }
     }
 
