@@ -67,7 +67,16 @@ public class QuickCreateableDrawer : PropertyDrawer
     {
         var instance = ScriptableObject.CreateInstance(type);
 
-        string parentPath = AssetDatabase.GetAssetPath(property.serializedObject.targetObject);
+        string parentPath;
+
+        if (property.serializedObject.targetObject is MonoBehaviour monoBehaviour)
+        {
+            parentPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(monoBehaviour.gameObject);
+        }
+        else
+        {
+            parentPath = AssetDatabase.GetAssetPath(property.serializedObject.targetObject);
+        }
         string fullPath;
         if (string.IsNullOrEmpty(parentPath))
         {
