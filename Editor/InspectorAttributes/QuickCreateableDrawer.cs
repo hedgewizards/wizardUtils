@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using WizardUtils.InspectorAttributes;
 using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 
 [CustomPropertyDrawer(typeof(QuickCreateableAttribute))]
 public class QuickCreateableDrawer : PropertyDrawer
@@ -24,7 +26,24 @@ public class QuickCreateableDrawer : PropertyDrawer
             return;
         }
 
-        if (!fieldInfo.FieldType.IsAssignableFrom(attr.AssetType))
+        Type fieldType = fieldInfo.FieldType;
+        Type internalFieldType = fieldType;
+        if (fieldType.IsArray)
+        {
+            internalFieldType = fieldType.GetElementType();
+        }
+        else
+        {
+            var enumerableType = fieldType.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+            if (enumerableType != null)
+            {
+                internalFieldType = enumerableType.GetGenericArguments()[0];
+            }
+        }
+
+
+        if (!internalFieldType.IsAssignableFrom(attr.AssetType))
         {
             Debug.LogError($"QuickCreateableAttribute: {attr.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
             EditorGUI.PropertyField(position, property, label);
