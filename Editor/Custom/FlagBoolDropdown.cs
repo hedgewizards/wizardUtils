@@ -35,9 +35,24 @@ namespace WizardUtils.Custom
 
         public void DrawChannelField(GUIContent label, string channel = "default")
         {
-            if (!_channels.TryGetValue(channel, out var fields)) return;
+            if (!_channels.TryGetValue(channel, out var fields))
+            {
+                fields = new List<FieldInfo>();
+            }
 
-            if (EditorGUILayout.DropdownButton(label, FocusType.Keyboard))
+            // Build concatenated string of current "on" flags
+            var activeNames = fields
+                .Where(f => (bool)f.GetValue(_target))
+                .Select(f => ObjectNames.NicifyVariableName(f.Name));
+
+            string buttonText = string.Join(", ", activeNames);
+            if (string.IsNullOrEmpty(buttonText))
+                buttonText = "None";
+
+            Rect rect = EditorGUILayout.GetControlRect();
+            rect = EditorGUI.PrefixLabel(rect, label);
+
+            if (EditorGUI.DropdownButton(rect, new GUIContent(buttonText), FocusType.Keyboard))
             {
                 var menu = new GenericMenu();
                 foreach (var f in fields)
