@@ -6,11 +6,13 @@ namespace WizardUtils.InspectorAttributes
     {
         public System.Type AssetType { get; }
         public bool ListSubclasses { get; }
+        public bool ShowPresets { get; }
 
-        public QuickCreateableAttribute(System.Type assetType, bool listSubclasses = false)
+        public QuickCreateableAttribute(System.Type assetType, bool listSubclasses = false, bool showPresets = true)
         {
             AssetType = assetType;
             ListSubclasses = listSubclasses;
+            ShowPresets = showPresets;
         }
     }
 }

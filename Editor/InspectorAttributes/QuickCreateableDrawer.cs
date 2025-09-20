@@ -6,14 +6,14 @@ using WizardUtils.InspectorAttributes;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Presets;
 
 [CustomPropertyDrawer(typeof(QuickCreateableAttribute))]
 public class QuickCreateableDrawer : PropertyDrawer
 {
+    new QuickCreateableAttribute attribute => (QuickCreateableAttribute)base.attribute;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        var attr = (QuickCreateableAttribute)attribute;
-
         // Layout: property field + plus button
         float buttonWidth = 20f;
         Rect fieldRect = new Rect(position.x, position.y, position.width - buttonWidth - 2, position.height);
@@ -43,9 +43,9 @@ public class QuickCreateableDrawer : PropertyDrawer
         }
 
 
-        if (!internalFieldType.IsAssignableFrom(attr.AssetType))
+        if (!internalFieldType.IsAssignableFrom(attribute.AssetType))
         {
-            Debug.LogError($"QuickCreateableAttribute: {attr.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
+            Debug.LogError($"QuickCreateableAttribute: {attribute.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
             EditorGUI.PropertyField(position, property, label);
             return;
         }
@@ -54,20 +54,24 @@ public class QuickCreateableDrawer : PropertyDrawer
 
         if (GUI.Button(buttonRect, "+"))
         {
-            if (attr.ListSubclasses)
+            if (attribute.ListSubclasses)
             {
-                ShowTypeDropdown(attr.AssetType, property);
+                ShowTypeDropdown(attribute.AssetType, property);
+            }
+            else if (attribute.ShowPresets)
+            {
+                ShowPresetsDropdown(attribute.AssetType, property);
             }
             else
             {
-                CreateAndAssignAsset(attr.AssetType, property);
+                CreateAndAssignAsset(attribute.AssetType, property);
             }
         }
     }
 
     private void ShowTypeDropdown(Type baseType, SerializedProperty property)
     {
-        var types = TypeCache.GetTypesDerivedFrom(baseType)
+        List<Type> types = TypeCache.GetTypesDerivedFrom(baseType)
             .Where(t => !t.IsAbstract && !t.IsGenericType)
             .ToList();
 
@@ -79,6 +83,24 @@ public class QuickCreateableDrawer : PropertyDrawer
         var menu = new GenericMenu();
         foreach (var type in types)
         {
+            if (attribute.ShowPresets)
+            {
+                var presets = FindPresetsForType(type);
+                if (presets.Count > 0)
+                {
+                    menu.AddItem(new GUIContent($"{type.Name}/Default Preset"), true, () =>
+                    {
+                        CreateAndAssignAsset(type, property);
+                    });
+                    foreach (var preset in presets)
+                    {
+                        menu.AddItem(new GUIContent($"{type.Name}/{preset.name}"), false, () =>
+                        {
+                            CreateAndAssignAsset(type, property, preset);
+                        });
+                    }
+                }
+            }
             menu.AddItem(new GUIContent(type.Name), false, () =>
             {
                 CreateAndAssignAsset(type, property);
@@ -87,7 +109,33 @@ public class QuickCreateableDrawer : PropertyDrawer
         menu.ShowAsContext();
     }
 
-    private void CreateAndAssignAsset(Type type, SerializedProperty property)
+    private void ShowPresetsDropdown(Type baseType, SerializedProperty property)
+    {
+        var menu = new GenericMenu();
+        var presets = FindPresetsForType(baseType);
+        if (presets.Count == 0)
+        {
+            CreateAndAssignAsset(baseType, property);
+            return;
+        }
+
+        menu.AddItem(new GUIContent($"Default Preset"), true, () =>
+        {
+            CreateAndAssignAsset(baseType, property);
+        });
+
+        foreach (var preset in presets)
+        {
+            menu.AddItem(new GUIContent($"Default Preset/{preset.name}"), false, () =>
+            {
+                CreateAndAssignAsset(baseType, property, preset);
+            });
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private void CreateAndAssignAsset(Type type, SerializedProperty property, Preset preset = null)
     {
         var instance = ScriptableObject.CreateInstance(type);
 
@@ -121,10 +169,37 @@ public class QuickCreateableDrawer : PropertyDrawer
 
         // Create and save the new asset
         var newAsset = ScriptableObject.CreateInstance(type);
+        if (preset != null)
+        {
+            preset.ApplyTo(newAsset);
+        }
+        else
+        {
+            var defaultPresets = Preset.GetDefaultPresetsForObject(newAsset);
+            if (defaultPresets.Length > 0)
+            {
+                defaultPresets[0].ApplyTo(newAsset);
+            }
+        }
         AssetDatabase.CreateAsset(newAsset, fullPath);
         AssetDatabase.SaveAssets();
         property.objectReferenceValue = newAsset;
         EditorGUIUtility.PingObject(newAsset);
         property.serializedObject.ApplyModifiedProperties();
+    }
+
+    private static List<Preset> FindPresetsForType(Type type)
+    {
+        List<Preset> presets = new List<Preset>();
+        var presetGuids = AssetDatabase.FindAssets("t:Preset");
+        foreach (var presetGuid in presetGuids)
+        {
+            var preset = AssetDatabase.LoadAssetAtPath<Preset>(AssetDatabase.GUIDToAssetPath(presetGuid));
+            if (preset != null && preset.GetTargetFullTypeName() == type.FullName)
+            {
+                presets.Add(preset);
+            }
+        }
+        return presets;
     }
 }
