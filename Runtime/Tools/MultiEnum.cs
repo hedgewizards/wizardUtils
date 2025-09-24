@@ -45,7 +45,7 @@ namespace WizardUtils.Tools
         }
 
         public IEnumerator<T> GetEnumerator()
-            => (IEnumerator<T>)Values.GetEnumerator();
+            => ((IEnumerable<T>)Values).GetEnumerator();
 
         public bool Remove(T item)
         {
