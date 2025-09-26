@@ -9,12 +9,12 @@ namespace WizardUtils.Custom
 {
     public class FlagBoolDropdown
     {
-        private readonly UnityEngine.Object _target;
-        private readonly Dictionary<string, List<FieldInfo>> _channels = new();
+        private readonly UnityEngine.Object Target;
+        private readonly Dictionary<string, List<FieldInfo>> Channels = new();
 
         public FlagBoolDropdown(UnityEngine.Object target)
         {
-            _target = target;
+            Target = target;
 
             var flags = target.GetType()
                 .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
@@ -24,10 +24,10 @@ namespace WizardUtils.Custom
 
             foreach (var (field, attr) in flags)
             {
-                if (!_channels.TryGetValue(attr.Channel, out var list))
+                if (!Channels.TryGetValue(attr.Channel, out var list))
                 {
                     list = new List<FieldInfo>();
-                    _channels[attr.Channel] = list;
+                    Channels[attr.Channel] = list;
                 }
                 list.Add(field);
             }
@@ -35,14 +35,14 @@ namespace WizardUtils.Custom
 
         public void DrawChannelField(GUIContent label, string channel = "default")
         {
-            if (!_channels.TryGetValue(channel, out var fields))
+            if (!Channels.TryGetValue(channel, out var fields))
             {
                 fields = new List<FieldInfo>();
             }
 
             // Build concatenated string of current "on" flags
             var activeNames = fields
-                .Where(f => (bool)f.GetValue(_target))
+                .Where(f => (bool)f.GetValue(Target))
                 .Select(f => ObjectNames.NicifyVariableName(f.Name));
 
             string buttonText = string.Join(", ", activeNames);
@@ -57,14 +57,14 @@ namespace WizardUtils.Custom
                 var menu = new GenericMenu();
                 foreach (var f in fields)
                 {
-                    bool current = (bool)f.GetValue(_target);
+                    bool current = (bool)f.GetValue(Target);
                     string name = ObjectNames.NicifyVariableName(f.Name);
 
                     menu.AddItem(new GUIContent(name), current, () =>
                     {
-                        Undo.RecordObject(_target, $"Toggle {f.Name}");
-                        f.SetValue(_target, !current);
-                        EditorUtility.SetDirty(_target);
+                        Undo.RecordObject(Target, $"Toggle {f.Name}");
+                        f.SetValue(Target, !current);
+                        EditorUtility.SetDirty(Target);
                     });
                 }
                 menu.ShowAsContext();
