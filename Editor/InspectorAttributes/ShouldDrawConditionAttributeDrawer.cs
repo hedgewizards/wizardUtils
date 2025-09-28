@@ -31,7 +31,7 @@ namespace WizardUtils.InspectorAttributes
         {
             if (property.serializedObject.targetObject == null) return true;
 
-            object target = property.serializedObject.targetObject;
+            object target = GetDeclaringObject(property);
             MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             if (method == null)
@@ -47,6 +47,20 @@ namespace WizardUtils.InspectorAttributes
             }
 
             return (bool)method.Invoke(target, null);
+        }
+
+        private object GetDeclaringObject(SerializedProperty property)
+        {
+            object obj = property.serializedObject.targetObject;
+            string[] elements = property.propertyPath.Split('.');
+            for (int i = 0; i < elements.Length - 1; i++) // skip the last = the field itself
+            {
+                var type = obj.GetType();
+                var field = type.GetField(elements[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (field == null) return null;
+                obj = field.GetValue(obj);
+            }
+            return obj;
         }
     }
 }
