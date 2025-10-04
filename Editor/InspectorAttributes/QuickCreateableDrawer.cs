@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Presets;
+using System.Reflection;
 
 [CustomPropertyDrawer(typeof(QuickCreateableAttribute))]
 public class QuickCreateableDrawer : PropertyDrawer
@@ -83,25 +84,26 @@ public class QuickCreateableDrawer : PropertyDrawer
         var menu = new GenericMenu();
         foreach (var type in types)
         {
+            DisplayableType displayableType = new DisplayableType(type);
             if (attribute.ShowPresets)
             {
                 var presets = FindPresetsForType(type);
                 if (presets.Count > 0)
                 {
-                    menu.AddItem(new GUIContent($"{type.Name}/Default Preset"), true, () =>
+                    menu.AddItem(new GUIContent($"{displayableType.Path}/Default Preset"), true, () =>
                     {
                         CreateAndAssignAsset(type, property);
                     });
                     foreach (var preset in presets)
                     {
-                        menu.AddItem(new GUIContent($"{type.Name}/{preset.name}"), false, () =>
+                        menu.AddItem(new GUIContent($"{displayableType.Path}/{preset.name}"), false, () =>
                         {
                             CreateAndAssignAsset(type, property, preset);
                         });
                     }
                 }
             }
-            menu.AddItem(new GUIContent(type.Name), false, () =>
+            menu.AddItem(new GUIContent(displayableType.Path), false, () =>
             {
                 CreateAndAssignAsset(type, property);
             });
@@ -201,5 +203,33 @@ public class QuickCreateableDrawer : PropertyDrawer
             }
         }
         return presets;
+    }
+
+    private struct DisplayableType
+    {
+        public Type Type;
+        public string Path;
+
+        public DisplayableType(Type type) : this()
+        {
+            Type = type;
+            var attribute = Type.GetCustomAttribute<QuickCreatableOrderAttribute>();
+            if (attribute == null)
+            {
+                Path = ObjectNames.NicifyVariableName(type.Name);
+            }
+            else
+            {
+                string name = attribute.DisplayName ?? ObjectNames.NicifyVariableName(type.Name);
+                if (!string.IsNullOrEmpty(attribute.Path))
+                {
+                    Path = $"{attribute.Path}/{name}";
+                }
+                else
+                {
+                    Path = name;
+                }
+            }
+        }
     }
 }
