@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -32,6 +33,10 @@ namespace WizardUtils.InspectorAttributes
             if (property.serializedObject.targetObject == null) return true;
 
             object target = GetDeclaringObject(property);
+            if (target == null)
+            {
+                return true;
+            }
             MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             if (method == null)
@@ -56,8 +61,13 @@ namespace WizardUtils.InspectorAttributes
             for (int i = 0; i < elements.Length - 1; i++) // skip the last = the field itself
             {
                 var type = obj.GetType();
-                var field = type.GetField(elements[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (field == null) return null;
+                var field = type.GetField(elements[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+                if (field == null)
+                {
+                    var rootName = property.serializedObject.targetObject.GetType().Name;
+                    Debug.LogError($"ShouldDrawConditionAttribute: Failed to GetDeclaringObject with path {rootName}/{string.Join('/',elements)} on step '{elements[i]}'");
+                    return null;
+                }
                 obj = field.GetValue(obj);
             }
             return obj;
