@@ -53,24 +53,44 @@ namespace WizardUtils.InspectorAttributes
 
             return (bool)method.Invoke(target, null);
         }
-
         private object GetDeclaringObject(SerializedProperty property)
         {
             object obj = property.serializedObject.targetObject;
             string[] elements = property.propertyPath.Split('.');
-            for (int i = 0; i < elements.Length - 1; i++) // skip the last = the field itself
+
+            for (int i = 0; i < elements.Length - 1; i++)
             {
+                string element = elements[i];
                 var type = obj.GetType();
-                var field = type.GetField(elements[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+
+                if (element == "Array" && i + 1 < elements.Length && elements[i + 1].StartsWith("data["))
+                {
+                    // handle array or list index
+                    int start = elements[i + 1].IndexOf('[') + 1;
+                    int end = elements[i + 1].IndexOf(']');
+                    int index = int.Parse(elements[i + 1].Substring(start, end - start));
+
+                    if (obj is System.Collections.IList list && index < list.Count)
+                        obj = list[index];
+                    else
+                        return null;
+
+                    i++; // skip "data[i]"
+                    continue;
+                }
+
+                var field = type.GetField(element, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
                 if (field == null)
                 {
-                    var rootName = property.serializedObject.targetObject.GetType().Name;
-                    Debug.LogError($"ShouldDrawConditionAttribute: Failed to GetDeclaringObject with path {rootName}/{string.Join('/',elements)} on step '{elements[i]}'");
+                    Debug.LogError($"ShouldDrawConditionAttribute: Failed to GetDeclaringObject step '{element}' on {type}");
                     return null;
                 }
+
                 obj = field.GetValue(obj);
             }
+
             return obj;
         }
+
     }
 }
