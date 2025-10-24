@@ -59,6 +59,14 @@ public class QuickCreateableDrawer : PropertyDrawer
             targetType = internalFieldType;
         }
 
+        if (!typeof(UnityEngine.ScriptableObject).IsAssignableFrom(targetType))
+        {
+            Debug.LogError($"QuickCreateableAttribute: {targetType.Name} is not a ScriptableObject! field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
+            EditorGUI.PropertyField(position, property, label);
+            return;
+        }
+
+
         EditorGUI.PropertyField(fieldRect, property, label);
 
         if (GUI.Button(buttonRect, "+"))
