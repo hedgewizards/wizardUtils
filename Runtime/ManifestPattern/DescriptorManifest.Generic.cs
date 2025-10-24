@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using WizardUtils.InspectorAttributes;
 using WizardUtils.ManifestPattern;
 using WizardUtils.UI.Pages;
 
@@ -11,6 +12,7 @@ namespace WizardUtils
     public class DescriptorManifest<T> : DescriptorManifest, IDescriptorManifest<T>
         where T : ManifestedDescriptor
     {
+        [QuickCreateable]
         public List<T> Items;
 #if UNITY_EDITOR
         private static DescriptorManifest<T> Editor_GlobalManifest; 
