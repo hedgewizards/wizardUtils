@@ -43,12 +43,20 @@ public class QuickCreateableDrawer : PropertyDrawer
             }
         }
 
-
-        if (!internalFieldType.IsAssignableFrom(attribute.AssetType))
+        Type targetType;
+        if (attribute.AssetType != null)
         {
-            Debug.LogError($"QuickCreateableAttribute: {attribute.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
-            EditorGUI.PropertyField(position, property, label);
-            return;
+            if (!internalFieldType.IsAssignableFrom(attribute.AssetType))
+            {
+                Debug.LogError($"QuickCreateableAttribute: {attribute.AssetType.Name} is not assignable to field {fieldInfo.Name} in {property.serializedObject.targetObject.GetType()}");
+                EditorGUI.PropertyField(position, property, label);
+                return;
+            }
+            targetType = attribute.AssetType;
+        }
+        else
+        {
+            targetType = internalFieldType;
         }
 
         EditorGUI.PropertyField(fieldRect, property, label);
@@ -57,15 +65,15 @@ public class QuickCreateableDrawer : PropertyDrawer
         {
             if (attribute.ListSubclasses)
             {
-                ShowTypeDropdown(attribute.AssetType, property);
+                ShowTypeDropdown(targetType, property);
             }
             else if (attribute.ShowPresets)
             {
-                ShowPresetsDropdown(attribute.AssetType, property);
+                ShowPresetsDropdown(targetType, property);
             }
             else
             {
-                CreateAndAssignAsset(attribute.AssetType, property);
+                CreateAndAssignAsset(targetType, property);
             }
         }
     }

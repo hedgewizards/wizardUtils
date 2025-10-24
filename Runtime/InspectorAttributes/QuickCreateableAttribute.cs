@@ -14,5 +14,11 @@ namespace WizardUtils.InspectorAttributes
             ListSubclasses = listSubclasses;
             ShowPresets = showPresets;
         }
+
+        public QuickCreateableAttribute(bool listSubclasses = false, bool showPresets = true)
+        {
+            ListSubclasses = listSubclasses;
+            ShowPresets = showPresets;
+        }
     }
 }
