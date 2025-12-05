@@ -75,24 +75,62 @@ namespace WizardUtils.Extensions
             Debug.DrawLine(corners[0, 1, 0], corners[1, 1, 0], color, duration);
             Debug.DrawLine(corners[0, 1, 1], corners[1, 1, 1], color, duration);
         }
+        public static void DrawCapsule(
+            Vector3 p1,
+            Vector3 p2,
+            float radius,
+            Color color,
+            int resolution = CircleDefaultResolution,
+            float duration = DefaultDrawDuration)
+        {
+#if UNITY_EDITOR
+            Vector3 up = (p1 - p2).normalized;
+            float height = Vector3.Distance(p1, p2);
 
-        public static void DrawCapsule(Vector3 center, float height, float radius, Color color, int resolution = CircleDefaultResolution)
+            // Orthonormal basis
+            Vector3 forward = Vector3.Cross(up, Vector3.right);
+            if (forward.sqrMagnitude < 0.001f)
+                forward = Vector3.Cross(up, Vector3.forward);
+            forward.Normalize();
+            Vector3 right = Vector3.Cross(forward, up);
+
+            // Top and bottom centers
+            Vector3 top = p1;
+            Vector3 bottom = p2;
+
+            DrawHalfCircle(top, Quaternion.LookRotation(right, -up), radius, color, resolution, duration);
+            DrawHalfCircle(top, Quaternion.LookRotation(forward, -up), radius, color, resolution, duration);
+            DrawCircle(top, Quaternion.LookRotation(up, right), radius, color, resolution, duration);
+
+            DrawHalfCircle(bottom, Quaternion.LookRotation(right, up), radius, color, resolution, duration);
+            DrawHalfCircle(bottom, Quaternion.LookRotation(forward, up), radius, color, resolution, duration);
+            DrawCircle(bottom, Quaternion.LookRotation(up, right), radius, color, resolution, duration);
+
+            Debug.DrawRay(top + radius * forward, -up * height, color, duration);
+            Debug.DrawRay(top + radius * right, -up * height, color, duration);
+            Debug.DrawRay(top + radius * -right, -up * height, color, duration);
+            Debug.DrawRay(top + radius * -forward, -up * height, color, duration);
+#endif
+        }
+
+
+        public static void DrawCapsule(Vector3 center, float height, float radius, Color color, int resolution = CircleDefaultResolution, float duration = DefaultDrawDuration)
         {
 #if UNITY_EDITOR
             Vector3 upHeight = Vector3.up * ( height - radius * 2 );
 
-            DrawHalfCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.left, Vector3.down), radius, color, resolution);
-            DrawHalfCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.forward, Vector3.down), radius, color, resolution);
-            DrawCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.up, Vector3.left), radius, color, resolution);
+            DrawHalfCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.left, Vector3.down), radius, color, resolution, duration);
+            DrawHalfCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.forward, Vector3.down), radius, color, resolution, duration);
+            DrawCircle(center + upHeight / 2, Quaternion.LookRotation(Vector3.up, Vector3.left), radius, color, resolution, duration);
 
-            DrawHalfCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.left, Vector3.up), radius, color, resolution);
-            DrawHalfCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.forward, Vector3.up), radius, color, resolution);
-            DrawCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.up, Vector3.left), radius, color, resolution);
+            DrawHalfCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.left, Vector3.up), radius, color, resolution, duration);
+            DrawHalfCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.forward, Vector3.up), radius, color, resolution, duration);
+            DrawCircle(center - upHeight / 2, Quaternion.LookRotation(Vector3.up, Vector3.left), radius, color, resolution, duration);
 
-            Debug.DrawRay(center + radius * Vector3.forward + upHeight / 2, -1 * upHeight, color);
-            Debug.DrawRay(center + radius * Vector3.left + upHeight / 2, -1 * upHeight, color);
-            Debug.DrawRay(center + radius * Vector3.right + upHeight / 2, -1 * upHeight, color);
-            Debug.DrawRay(center + radius * Vector3.back + upHeight / 2, -1 * upHeight, color);
+            Debug.DrawRay(center + radius * Vector3.forward + upHeight / 2, -1 * upHeight, color, duration);
+            Debug.DrawRay(center + radius * Vector3.left + upHeight / 2, -1 * upHeight, color, duration);
+            Debug.DrawRay(center + radius * Vector3.right + upHeight / 2, -1 * upHeight, color, duration);
+            Debug.DrawRay(center + radius * Vector3.back + upHeight / 2, -1 * upHeight, color, duration);
 #endif
         }
 

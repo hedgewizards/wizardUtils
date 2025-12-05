@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WizardUtils.PhysicsSolvers.Shapes;
 
 namespace WizardUtils.PhysicsSolvers
 {
@@ -23,6 +24,17 @@ namespace WizardUtils.PhysicsSolvers
             Shape = shape;
             LayerMask = layerMask;
         }
+
+        public PhysicsSolver(Collider collider, int layerMask)
+        : this(
+            collider switch
+            {
+                BoxCollider boxCollider => new BoxShape(boxCollider),
+                SphereCollider sphereCollider => new SphereShape(sphereCollider),
+                _ => throw new ArgumentException($"Invalid collider type {collider.GetType()}"),
+            },
+            layerMask)
+        { }
 
         /// <summary>
         /// 
