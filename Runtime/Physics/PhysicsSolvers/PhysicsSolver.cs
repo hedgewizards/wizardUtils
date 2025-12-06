@@ -31,6 +31,7 @@ namespace WizardUtils.PhysicsSolvers
             {
                 BoxCollider boxCollider => new BoxShape(boxCollider),
                 SphereCollider sphereCollider => new SphereShape(sphereCollider),
+                CapsuleCollider capsuleCollider => new CapsuleShape(capsuleCollider),
                 _ => throw new ArgumentException($"Invalid collider type {collider.GetType()}"),
             },
             layerMask)
