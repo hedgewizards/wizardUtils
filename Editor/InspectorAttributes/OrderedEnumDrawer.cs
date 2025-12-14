@@ -24,10 +24,11 @@ public class OrderedEnumDrawer : PropertyDrawer
         if (!_cachedEnumMenu.TryGetValue(enumType, out List<DisplayableEnum> menuEntries))
         {
             menuEntries = Enum.GetValues(enumType)
-                              .Cast<Enum>()
-                              .Select(e => new DisplayableEnum(e))
-                              .OrderBy(e => e.Path)
-                              .ToList();
+                .Cast<Enum>()
+                .Select(e => new DisplayableEnum(e))
+                .OrderBy(e => e.Path)
+                .ToList();
+
             _cachedEnumMenu[enumType] = menuEntries;
         }
 
