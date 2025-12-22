@@ -19,6 +19,26 @@ namespace WizardUtils.Math
             return Accelerate(velocity, direction, maxSpeed, accel * deltaTime);
         }
 
+        /// <summary>
+        /// move horizontal speed towards minimumSpeed
+        /// </summary>
+        /// <param name="velocity"></param>
+        /// <param name="drag"></param>
+        /// <returns></returns>
+        public static Vector3 Decelerate(
+            Vector3 velocity,
+            float minimumSpeed,
+            float deltaTime,
+            float drag)
+        {
+            if (minimumSpeed > 0 && velocity.sqrMagnitude < minimumSpeed * minimumSpeed) return velocity;
+            Vector3 desiredVelocity = velocity.Flatten().normalized * minimumSpeed;
+            Vector3 result = Vector3.MoveTowards(velocity.Flatten(), desiredVelocity, drag * deltaTime);
+            result.y = velocity.y;
+
+            return result;
+        }
+
         public static Vector3 Accelerate(
             Vector3 velocity,
             Vector3 direction,
