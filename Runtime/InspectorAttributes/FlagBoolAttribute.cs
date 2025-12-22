@@ -10,10 +10,12 @@ namespace WizardUtils.InspectorAttributes
     public class FlagBoolAttribute : PropertyAttribute
     {
         public string Channel;
+        public string Title;
 
-        public FlagBoolAttribute(string channel = "default")
+        public FlagBoolAttribute(string channel = "default", string title = null)
         {
             Channel = channel;
+            Title = title;
         }
     }
 }

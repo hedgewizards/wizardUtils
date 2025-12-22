@@ -10,7 +10,7 @@ namespace WizardUtils.Custom
     public class FlagBoolDropdown
     {
         private readonly UnityEngine.Object Target;
-        private readonly Dictionary<string, List<FieldInfo>> Channels = new();
+        private readonly Dictionary<string, List<DisplayableFlag>> Channels = new();
 
         public FlagBoolDropdown(UnityEngine.Object target)
         {
@@ -26,24 +26,28 @@ namespace WizardUtils.Custom
             {
                 if (!Channels.TryGetValue(attr.Channel, out var list))
                 {
-                    list = new List<FieldInfo>();
+                    list = new List<DisplayableFlag>();
                     Channels[attr.Channel] = list;
                 }
-                list.Add(field);
+                list.Add(new DisplayableFlag()
+                {
+                    FieldInfo = field,
+                    NiceName = attr.Title ?? ObjectNames.NicifyVariableName(field.Name)
+                });
             }
         }
 
         public void DrawChannelField(GUIContent label, string channel = "default")
         {
-            if (!Channels.TryGetValue(channel, out var fields))
+            if (!Channels.TryGetValue(channel, out var flags))
             {
-                fields = new List<FieldInfo>();
+                flags = new List<DisplayableFlag>();
             }
 
             // Build concatenated string of current "on" flags
-            var activeNames = fields
-                .Where(f => (bool)f.GetValue(Target))
-                .Select(f => ObjectNames.NicifyVariableName(f.Name));
+            var activeNames = flags
+                .Where(f => (bool)f.FieldInfo.GetValue(Target))
+                .Select(f => f.NiceName);
 
             string buttonText = string.Join(", ", activeNames);
             if (string.IsNullOrEmpty(buttonText))
@@ -55,20 +59,26 @@ namespace WizardUtils.Custom
             if (EditorGUI.DropdownButton(rect, new GUIContent(buttonText), FocusType.Keyboard))
             {
                 var menu = new GenericMenu();
-                foreach (var f in fields)
+                foreach (var f in flags)
                 {
-                    bool current = (bool)f.GetValue(Target);
-                    string name = ObjectNames.NicifyVariableName(f.Name);
+                    bool current = (bool)f.FieldInfo.GetValue(Target);
+                    string name = f.NiceName;
 
                     menu.AddItem(new GUIContent(name), current, () =>
                     {
-                        Undo.RecordObject(Target, $"Toggle {f.Name}");
-                        f.SetValue(Target, !current);
+                        Undo.RecordObject(Target, $"Toggle {f.NiceName}");
+                        f.FieldInfo.SetValue(Target, !current);
                         EditorUtility.SetDirty(Target);
                     });
                 }
                 menu.ShowAsContext();
             }
+        }
+
+        private struct DisplayableFlag
+        {
+            public FieldInfo FieldInfo;
+            public string NiceName;
         }
     }
 }
