@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WizardUtils.Extensions;
 
 namespace WizardUtils
 {
@@ -123,6 +124,18 @@ namespace WizardUtils
                 int temp = buffer[thisIndex];
                 buffer[thisIndex] = buffer[otherIndex];
                 buffer[otherIndex] = temp;
+            }
+        }
+
+        public static int RoundToInt(this System.Random random, float value)
+        {
+            if (random.NextDouble() < value.PositiveModulo(1))
+            {
+                return UnityEngine.Mathf.CeilToInt(value);
+            }
+            else
+            {
+                return UnityEngine.Mathf.FloorToInt(value);
             }
         }
     }
