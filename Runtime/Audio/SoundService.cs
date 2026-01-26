@@ -74,6 +74,13 @@ namespace WizardUtils.Audio
 
         public void PlaySound(AdvancedSoundEffect sound, Transform soundParent)
         {
+#if DEBUG
+            if (sound.AudioType == null)
+            {
+                Debug.LogWarning($"AdvancedSoundEffect: Missing AudioType on {sound}", sound);
+                return;
+            }    
+#endif
             SoundPool pool = GetSoundPool(sound.AudioType);
             pool.PlaySound(sound, soundParent);
         }
