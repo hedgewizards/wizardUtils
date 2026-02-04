@@ -35,6 +35,23 @@ namespace WizardUtils
         }
 
         /// <summary>
+        /// Rolls a random number in range [0,<paramref name="max"/>) <paramref name="count"/> times, returning the sum
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static int RollDice(this System.Random random, int count, int max)
+        {
+            int result = 0;
+            for (int n = 0; n < count; n++)
+            {
+                result += random.Next(max);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns K different integers between 0 (inclusive) and n (exclusive)
         /// </summary>
         /// <param name="k"></param>
