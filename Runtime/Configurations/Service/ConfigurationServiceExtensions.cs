@@ -42,7 +42,7 @@ namespace WizardUtils.Configurations
 
         public static void WriteBool(this IConfigurationService config, string key, bool value, bool writeToConfig = false)
         {
-            config.Write(key, ConfigHelper.SerializeBool(value));
+            config.Write(key, ConfigHelper.SerializeBool(value), writeToConfig);
         }
 
         public static bool ReadBool(this IConfigurationService config, string key, bool defaultValue)
