@@ -35,14 +35,14 @@ namespace WizardUtils
         }
 
         /// <summary>
-        /// Rolls a random number in range [0,<paramref name="max"/>) <paramref name="count"/> times, returning the sum
+        /// returns the sum of <paramref name="count"/> randomly rolled <paramref name="max"/>-sided Dice
         /// </summary>
         /// <param name="count"></param>
         /// <param name="max"></param>
         /// <returns></returns>
         public static int RollDice(this System.Random random, int count, int max)
         {
-            int result = 0;
+            int result = count;
             for (int n = 0; n < count; n++)
             {
                 result += random.Next(max);
