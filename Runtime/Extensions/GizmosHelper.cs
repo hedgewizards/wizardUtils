@@ -10,6 +10,9 @@ namespace WizardUtils.Extensions
 {
     public static class GizmosHelper
     {
+        private const int CircleDefaultResolution = 16;
+        private const int ArcDefaultResolution = 8;
+
         public static void DrawSphereConnection(Vector3 center1, Vector3 center2, float radius1, float radius2)
         {
             Quaternion along = Quaternion.LookRotation(center2 - center1, Vector3.up);
@@ -52,8 +55,6 @@ namespace WizardUtils.Extensions
             Quaternion finalRotation = Quaternion.LookRotation(Vector3.Cross(Vector3.right, up), up) * rotation;
             Gizmos.DrawWireMesh(mesh, point, finalRotation, scale);
         }
-
-        private const int CircleDefaultResolution = 16;
 
         public static void DrawCapsule(Vector3 center, float height, float radius, int resolution = CircleDefaultResolution)
         {
@@ -109,6 +110,89 @@ namespace WizardUtils.Extensions
 
                 Gizmos.DrawLine(lastPoint, nextPoint);
                 lastPoint = nextPoint;
+            }
+#endif
+        }
+
+        public static void DrawWedge(
+    Vector3 center,
+    Vector3 forward,
+    float radius,
+    float yawSize,
+    float pitchSize,
+    int yawResolution = ArcDefaultResolution,
+    int pitchResolution = ArcDefaultResolution)
+        {
+#if UNITY_EDITOR
+            Quaternion basis = Quaternion.LookRotation(forward.normalized, Vector3.up);
+
+            Vector3[] tips = new Vector3[4];
+            int i = 0;
+
+            //spokes
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int p = -1; p <= 1; p += 2)
+                {
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(y * yawSize, Vector3.up) *
+                        Quaternion.AngleAxis(p * pitchSize, Vector3.right);
+
+                    Vector3 dir = rot * Vector3.forward;
+                    tips[i] = center + dir * radius;
+
+                    Gizmos.DrawLine(center, tips[i]);
+                    i++;
+                }
+            }
+
+            // horizontal arcs
+            for (int p = -1; p <= 1; p += 2)
+            {
+                Vector3 last = Vector3.zero;
+
+                for (int n = 0; n <= yawResolution; n++)
+                {
+                    float t = (float)n / yawResolution;
+                    float yaw = Mathf.Lerp(-yawSize, yawSize, t);
+
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(yaw, Vector3.up) *
+                        Quaternion.AngleAxis(p * pitchSize, Vector3.right);
+
+                    Vector3 point = center + (rot * Vector3.forward) * radius;
+
+                    if (n != 0)
+                        Gizmos.DrawLine(last, point);
+
+                    last = point;
+                }
+            }
+
+            // vertical arcs
+            for (int y = -1; y <= 1; y += 2)
+            {
+                Vector3 last = Vector3.zero;
+
+                for (int n = 0; n <= pitchResolution; n++)
+                {
+                    float t = (float)n / pitchResolution;
+                    float pitch = Mathf.Lerp(-pitchSize, pitchSize, t);
+
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(y * yawSize, Vector3.up) *
+                        Quaternion.AngleAxis(pitch, Vector3.right);
+
+                    Vector3 point = center + (rot * Vector3.forward) * radius;
+
+                    if (n != 0)
+                        Gizmos.DrawLine(last, point);
+
+                    last = point;
+                }
             }
 #endif
         }

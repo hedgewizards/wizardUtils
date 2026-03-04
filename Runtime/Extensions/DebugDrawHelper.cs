@@ -12,6 +12,7 @@ namespace WizardUtils.Extensions
     public static class DebugDrawHelper
     {
         private const int CircleDefaultResolution = 16;
+        private const int ArcDefaultResolution = 8;
         private const int DefaultDrawDuration = 0;
 
         public static void DrawSquare(Vector3 center, float radius, Quaternion orientation, Color color, float duration = DefaultDrawDuration)
@@ -168,6 +169,91 @@ namespace WizardUtils.Extensions
 
                 Debug.DrawLine(lastPoint, nextPoint, color, duration);
                 lastPoint = nextPoint;
+            }
+#endif
+        }
+
+        public static void DrawWedge(
+    Vector3 center,
+    Vector3 forward,
+    float radius,
+    float yawSize,
+    float pitchSize,
+    Color color,
+    int yawResolution = ArcDefaultResolution,
+    int pitchResolution = ArcDefaultResolution,
+    float duration = DefaultDrawDuration)
+        {
+#if UNITY_EDITOR
+            Quaternion basis = Quaternion.LookRotation(forward.normalized, Vector3.up);
+
+            Vector3[] tips = new Vector3[4];
+            int i = 0;
+
+            // spokes
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int p = -1; p <= 1; p += 2)
+                {
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(y * yawSize, Vector3.up) *
+                        Quaternion.AngleAxis(p * pitchSize, Vector3.right);
+
+                    Vector3 dir = rot * Vector3.forward;
+                    tips[i] = center + dir * radius;
+
+                    Debug.DrawLine(center, tips[i], color, duration);
+                    i++;
+                }
+            }
+
+            // horizontal arcs
+            for (int p = -1; p <= 1; p += 2)
+            {
+                Vector3 last = Vector3.zero;
+
+                for (int n = 0; n <= yawResolution; n++)
+                {
+                    float t = (float)n / yawResolution;
+                    float yaw = Mathf.Lerp(-yawSize, yawSize, t);
+
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(yaw, Vector3.up) *
+                        Quaternion.AngleAxis(p * pitchSize, Vector3.right);
+
+                    Vector3 point = center + (rot * Vector3.forward) * radius;
+
+                    if (n != 0)
+                        Debug.DrawLine(last, point, color, duration);
+
+                    last = point;
+                }
+            }
+
+            // vertical arcs
+            for (int y = -1; y <= 1; y += 2)
+            {
+                Vector3 last = Vector3.zero;
+
+                for (int n = 0; n <= pitchResolution; n++)
+                {
+                    float t = (float)n / pitchResolution;
+                    float pitch = Mathf.Lerp(-pitchSize, pitchSize, t);
+
+                    Quaternion rot =
+                        basis *
+                        Quaternion.AngleAxis(y * yawSize, Vector3.up) *
+                        Quaternion.AngleAxis(pitch, Vector3.right);
+
+                    Vector3 point = center + (rot * Vector3.forward) * radius;
+
+                    if (n != 0)
+                        Debug.DrawLine(last, point, color, duration);
+
+                    last = point;
+                }
             }
 #endif
         }
