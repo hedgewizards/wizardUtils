@@ -138,11 +138,10 @@ namespace WizardUtils.UI
             int axis = 0;
             float size = rectTransform.rect.size[axis];
             float alignmentOnAxis = GetAlignmentOnAxis(axis);
+            float frontPadding = (axis == 0 ? padding.left : padding.top);
 
             for (int rowId = 0; rowId < RowInfos.Count; rowId++)
             {
-                float innerSize = size - (axis == 0 ? padding.horizontal : padding.vertical);
-
                 float pos = (axis == 0 ? padding.left : padding.top);
                 float itemFlexibleMultiplier = 0;
                 float surplusSpace = size - RowInfos[rowId].WidthPreferred;
@@ -150,7 +149,7 @@ namespace WizardUtils.UI
                 if (surplusSpace > 0)
                 {
                     if (RowInfos[rowId].WidthFlexible == 0)
-                        pos = GetStartOffset(axis, RowInfos[rowId].WidthPreferred);
+                        pos = GetStartOffset(axis, RowInfos[rowId].WidthPreferred + frontPadding);
                     else if (RowInfos[rowId].WidthFlexible > 0)
                         itemFlexibleMultiplier = surplusSpace / RowInfos[rowId].WidthFlexible;
                 }
@@ -186,10 +185,7 @@ namespace WizardUtils.UI
         {
             int axis = 1;
             float size = rectTransform.rect.size[axis];
-            float alignmentOnAxis = GetAlignmentOnAxis(axis);
             float rowAlignmentOnAxis = axis == 1 ? GetVerticalRowAlignment() : 0;
-
-            float innerSize = size - (axis == 0 ? padding.horizontal : padding.vertical);
 
             float pos = (axis == 0 ? padding.left : padding.top);
             float itemFlexibleMultiplier = 0;
