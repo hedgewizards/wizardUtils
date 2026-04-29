@@ -9,10 +9,10 @@ using System.Reflection;
 
 namespace WizardUtils.InspectorAttributes
 {
-    [CustomPropertyDrawer(typeof(QuickCreateableAttribute))]
-    public class QuickCreateableDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(QuickCreatableAttribute))]
+    public class QuickCreatableDrawer : PropertyDrawer
     {
-        new QuickCreateableAttribute attribute => (QuickCreateableAttribute)base.attribute;
+        new QuickCreatableAttribute attribute => (QuickCreatableAttribute)base.attribute;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Layout: property field + plus button

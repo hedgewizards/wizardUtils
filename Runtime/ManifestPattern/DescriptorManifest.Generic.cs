@@ -12,7 +12,7 @@ namespace WizardUtils
     public class DescriptorManifest<T> : DescriptorManifest, IDescriptorManifest<T>
         where T : ManifestedDescriptor
     {
-        [QuickCreateable(true)]
+        [QuickCreatable(true)]
         public List<T> Items;
 #if UNITY_EDITOR
         private static DescriptorManifest<T> Editor_GlobalManifest; 
