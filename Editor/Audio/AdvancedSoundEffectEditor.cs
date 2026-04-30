@@ -7,15 +7,7 @@ using WizardUtils.Audio;
 [CustomEditor(typeof(AdvancedSoundEffect))]
 public class AdvancedSoundEffectEditor : Editor
 {
-    private AdvancedSoundEffectTester CurrentTester;
-
-    public void OnDisable()
-    {
-        if (CurrentTester != null)
-        {
-            CurrentTester.StopPlaying();
-        }
-    }
+    private static AdvancedSoundEffectTester CurrentTester;
 
     public override void OnInspectorGUI()
     {
@@ -25,8 +17,10 @@ public class AdvancedSoundEffectEditor : Editor
         if (((AdvancedSoundEffect)target).AudioType == null)
         {
             EditorGUILayout.HelpBox("Select an Audio Type!", MessageType.Error);
+            return;
         }
-        else if (GUILayout.Button("Play"))
+        
+        if (GUILayout.Button("Play"))
         {
             if (CurrentTester != null)
             {
@@ -36,10 +30,26 @@ public class AdvancedSoundEffectEditor : Editor
             {
                 GameObject playObject = new GameObject();
                 playObject.hideFlags = HideFlags.HideAndDontSave;
-                CurrentTester = playObject.AddComponent<AdvancedSoundEffectTester>();
+                CurrentTester = new AdvancedSoundEffectTester();
             }
 
             CurrentTester.PlaySound((AdvancedSoundEffect)target);
+        }
+
+        if (CurrentTester != null
+            && CurrentTester.IsPlaying)
+        {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Stop"))
+            {
+                CurrentTester.StopPlaying(false);
+            }
+            else if (GUILayout.Button("Hard Stop"))
+            {
+                CurrentTester.StopPlaying();
+            }
+            GUILayout.EndHorizontal();
+
         }
     }
 }

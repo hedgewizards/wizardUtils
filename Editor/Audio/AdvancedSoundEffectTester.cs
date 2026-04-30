@@ -1,44 +1,36 @@
 ﻿using System;
 using System.Collections;
+using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace WizardUtils.Audio
 {
     [ExecuteInEditMode]
-    public class AdvancedSoundEffectTester : MonoBehaviour
+    public class AdvancedSoundEffectTester
     {
         private AudioSource AudioSource;
+        private AdvancedSoundEffect LastSound;
 
-        [NonSerialized]
-        private bool IsPlaying;
-        [NonSerialized]
-        private bool Initialized;
+        private bool isPlaying;
 
         private bool VolumeIsAnimated;
-        private IEnumerator VolumeAnimationCoroutine;
+        private EditorCoroutine VolumeAnimationCoroutine;
 
-        public void Update()
+        public AdvancedSoundEffectTester()
         {
-            if (!IsPlaying)
-            {
-                DestroyImmediate(gameObject);
-                return;
-            }
-
-            if (VolumeAnimationCoroutine != null)
-            {
-                if (!VolumeAnimationCoroutine.MoveNext())
-                {
-                    VolumeAnimationCoroutine = null;
-                }
-            }
+            GameObject playObject = new GameObject();
+            playObject.hideFlags = HideFlags.HideAndDontSave;
+            AudioSource = playObject.AddComponent<AudioSource>();
         }
+
+        public bool IsPlaying => isPlaying;
 
         public void PlaySound(AdvancedSoundEffect sound)
         {
-            if (IsPlaying) StopPlaying();
-            if (!Initialized) Initialize();
-            IsPlaying = true;
+            if (isPlaying) StopPlaying();
+            isPlaying = true;
+            LastSound = sound;
 
             AudioClip clip = RandomHelper.FromCollection(new System.Random(), sound.Clips);
             float volume = sound.VolumeRange > 0 ? UnityEngine.Random.Range(sound.Volume - sound.VolumeRange, sound.Volume + sound.VolumeRange) : sound.Volume;
@@ -58,11 +50,11 @@ namespace WizardUtils.Audio
                 {
                     float fadeOutTime = Mathf.Min(sound.FadeOutTime, Mathf.Max(0, clipLength - fadeInTime));
                     float delay = (clipLength - fadeInTime - fadeOutTime);
-                    VolumeAnimationCoroutine = FadeInAndOutVolumeAsync(fadeInTime, delay, fadeOutTime, volume);
+                    VolumeAnimationCoroutine = EditorCoroutineUtility.StartCoroutine(FadeInAndOutVolumeAsync(fadeInTime, delay, fadeOutTime, volume), AudioSource);
                 }
                 else
                 {
-                    VolumeAnimationCoroutine = FadeInVolumeAsync(fadeInTime, volume);
+                    VolumeAnimationCoroutine = EditorCoroutineUtility.StartCoroutine(FadeInVolumeAsync(fadeInTime, volume), AudioSource);
                 }
             }
             else
@@ -72,7 +64,7 @@ namespace WizardUtils.Audio
                 {
                     float fadeOutTime = Mathf.Min(sound.FadeOutTime, clipLength);
                     float delay = (clipLength - fadeOutTime);
-                    VolumeAnimationCoroutine = FadeOutVolumeAsync(delay, fadeOutTime, volume);
+                    VolumeAnimationCoroutine = EditorCoroutineUtility.StartCoroutine(FadeOutVolumeAsync(delay, fadeOutTime, volume), AudioSource);
                 }
             }
 
@@ -82,14 +74,23 @@ namespace WizardUtils.Audio
             AudioSource.Play();
         }
 
-        private void Initialize()
+        public void StopPlaying(bool hard = true)
         {
-            AudioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        public void StopPlaying()
-        {
-            IsPlaying = false;
+            if (!hard && isPlaying && LastSound != null && LastSound.FadeOutTime > 0)
+            {
+                VolumeAnimationCoroutine = EditorCoroutineUtility.StartCoroutine(FadeOutVolumeAsync(0, LastSound.FadeOutTime, AudioSource.volume), this);
+            }
+            else
+            {
+                isPlaying = false;
+                AudioSource.Stop();
+                if (VolumeAnimationCoroutine != null)
+                {
+                    EditorCoroutineUtility.StopCoroutine(VolumeAnimationCoroutine);
+                    VolumeIsAnimated = false;
+                }
+                return;
+            }
         }
 
         #region Volume Fading
@@ -105,7 +106,7 @@ namespace WizardUtils.Audio
 
             if (delay > 0)
             {
-                yield return new WaitForSeconds(delay);
+                yield return new EditorWaitForSeconds(delay);
             }
             enumerator = InternalLerpVolumeAsync(fadeOutDuration, normalVolume, 0);
             while (enumerator.MoveNext())
@@ -131,7 +132,7 @@ namespace WizardUtils.Audio
             VolumeIsAnimated = true;
             if (delay > 0)
             {
-                yield return new WaitForSeconds(delay);
+                yield return new EditorWaitForSeconds(delay);
             }
             IEnumerator enumerator = InternalLerpVolumeAsync(duration, normalVolume, 0);
             while (enumerator.MoveNext())
@@ -140,30 +141,16 @@ namespace WizardUtils.Audio
             }
             VolumeIsAnimated = false;
         }
-
-        private IEnumerator FadeOutAndStopAsync(float duration)
-        {
-            float normalVolume = AudioSource.volume;
-            VolumeIsAnimated = true;
-            IEnumerator enumerator = InternalLerpVolumeAsync(duration, normalVolume, 0);
-            while (enumerator.MoveNext())
-            {
-                yield return enumerator.Current;
-            }
-            VolumeIsAnimated = false;
-            AudioSource.Stop();
-        }
-
 
         private IEnumerator InternalLerpVolumeAsync(float duration, float initialVolume, float finalVolume)
         {
-            float startTime = Time.time;
+            double startTime = EditorApplication.timeSinceStartup;
             float t = 0;
             while (t < 1)
             {
-                t = (Time.time - startTime) / duration;
+                t = (float)((EditorApplication.timeSinceStartup - startTime) / duration);
                 AudioSource.volume = Mathf.Lerp(initialVolume, finalVolume, t);
-                yield return null;
+                yield return new EditorWaitForSeconds(0.01f);
             }
             AudioSource.volume = finalVolume;
         }
