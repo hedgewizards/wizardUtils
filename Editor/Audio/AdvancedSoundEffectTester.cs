@@ -19,15 +19,14 @@ namespace WizardUtils.Audio
 
         public AdvancedSoundEffectTester()
         {
-            GameObject playObject = new GameObject();
-            playObject.hideFlags = HideFlags.HideAndDontSave;
-            AudioSource = playObject.AddComponent<AudioSource>();
+            CreateAudioSource();
         }
 
         public bool IsPlaying => isPlaying;
 
         public void PlaySound(AdvancedSoundEffect sound)
         {
+            if (AudioSource == null) CreateAudioSource();
             if (isPlaying) StopPlaying();
             isPlaying = true;
             LastSound = sound;
@@ -91,6 +90,13 @@ namespace WizardUtils.Audio
                 }
                 return;
             }
+        }
+
+        private void CreateAudioSource()
+        {
+            GameObject playObject = new GameObject();
+            playObject.hideFlags = HideFlags.HideAndDontSave;
+            AudioSource = playObject.AddComponent<AudioSource>();
         }
 
         #region Volume Fading
