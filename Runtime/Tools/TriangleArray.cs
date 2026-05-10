@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace WizardUtils
 {
@@ -197,6 +198,27 @@ namespace WizardUtils
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
+        }
+
+        public string ToString(int maxLength)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int y = 1; y < maxLength; y++)
+            {
+                for (int x = 0; x < y; x++)
+                {
+                    sb.Append(AtUnsafe(x, y));
+                    sb.Append('\t');
+                }
+                sb.Append('\n');
+            }
+
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToString(size);
         }
     }
 }
