@@ -14,7 +14,7 @@ namespace WizardUtils.InspectorAttributes
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var condition = (ShouldDrawConditionAttribute)attribute;
-            bool shouldDraw = CalculateShouldDraw(property, condition.ShouldHideMethodName);
+            bool shouldDraw = CalculateShouldDraw(property, condition.ShouldDrawMethodName);
 
             if (shouldDraw)
                 EditorGUI.PropertyField(position, property, label, true);
@@ -23,7 +23,7 @@ namespace WizardUtils.InspectorAttributes
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var cond = (ShouldDrawConditionAttribute)attribute;
-            bool shouldDraw = CalculateShouldDraw(property, cond.ShouldHideMethodName);
+            bool shouldDraw = CalculateShouldDraw(property, cond.ShouldDrawMethodName);
 
             return shouldDraw ? EditorGUI.GetPropertyHeight(property, label, true) : 0;
         }

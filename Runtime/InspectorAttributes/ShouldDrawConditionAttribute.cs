@@ -4,11 +4,11 @@ namespace WizardUtils.InspectorAttributes
 {
     public class ShouldDrawConditionAttribute : PropertyAttribute
     {
-        public string ShouldHideMethodName;
+        public string ShouldDrawMethodName;
 
-        public ShouldDrawConditionAttribute(string shouldHideMethodName)
+        public ShouldDrawConditionAttribute(string shouldDrawMethodName)
         {
-            ShouldHideMethodName = shouldHideMethodName;
+            ShouldDrawMethodName = shouldDrawMethodName;
         }
     }
 }
