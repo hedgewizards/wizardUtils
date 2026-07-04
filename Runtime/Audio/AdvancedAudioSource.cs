@@ -24,6 +24,16 @@ namespace WizardUtils.Audio
             random = new System.Random();
         }
 
+        public void SetVolume(float volume)
+        {
+            if (VolumeAnimationCoroutine != null)
+            {
+                StopCoroutine(VolumeAnimationCoroutine);
+            }
+
+            AudioSource.volume = volume;
+        }
+
         public virtual void PlayAdvancedSound(AdvancedSoundEffect sound, Transform soundParent = null)
         {
             AudioClip clip = RandomHelper.FromCollection(random, sound.Clips);
