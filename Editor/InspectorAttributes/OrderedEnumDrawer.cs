@@ -19,17 +19,31 @@ public class OrderedEnumDrawer : PropertyDrawer
             return;
         }
 
-        Type enumType = fieldInfo.FieldType;
-
-        if (!_cachedEnumMenu.TryGetValue(enumType, out List<DisplayableEnum> menuEntries))
+        Type fieldType = fieldInfo.FieldType;
+        Type internalFieldType = fieldType;
+        if (fieldType.IsArray)
         {
-            menuEntries = Enum.GetValues(enumType)
+            internalFieldType = fieldType.GetElementType();
+        }
+        else
+        {
+            var enumerableType = fieldType.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+            if (enumerableType != null)
+            {
+                internalFieldType = enumerableType.GetGenericArguments()[0];
+            }
+        }
+
+        if (!_cachedEnumMenu.TryGetValue(internalFieldType, out List<DisplayableEnum> menuEntries))
+        {
+            menuEntries = Enum.GetValues(internalFieldType)
                 .Cast<Enum>()
                 .Select(e => new DisplayableEnum(e))
                 .OrderBy(e => e.Path)
                 .ToList();
 
-            _cachedEnumMenu[enumType] = menuEntries;
+            _cachedEnumMenu[internalFieldType] = menuEntries;
         }
 
         Rect buttonRect = EditorGUI.PrefixLabel(position, label);
