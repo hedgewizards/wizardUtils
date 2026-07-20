@@ -255,7 +255,18 @@ namespace WizardUtils
             float leftAngle = Mathf.Atan2(left.y, left.x) * Mathf.Rad2Deg;
             float rightAngle = Mathf.Atan2(right.y, right.x) * Mathf.Rad2Deg;
 
-            float baseBetween = leftAngle - rightAngle;
+            return AngleBetween(leftAngle, rightAngle);
+        }
+
+        /// <summary>
+        /// Gives the angle between two Vector2s relative to (0,0), giving a negative answer if left is clockwise of right
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>Angle in Degrees</returns>
+        public static float AngleBetween(float left, float right)
+        {
+            float baseBetween = left - right;
             if (Mathf.Abs(baseBetween) > 180)
             {
                 return baseBetween - 360 * Mathf.Sign(baseBetween);
