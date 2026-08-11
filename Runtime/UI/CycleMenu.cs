@@ -10,7 +10,7 @@ namespace WizardUtils.UI
 {
     public class CycleMenu : MonoBehaviour
     {
-        public UnityEvent<int> OnItemSelected;
+        public event Action<int> OnItemSelected;
         public TextMeshProUGUI DisplayNameText;
         public Button NextButton;
         public Button PreviousButton;
