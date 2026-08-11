@@ -29,6 +29,16 @@ namespace WizardUtils
 
         public override void Remove(object descriptor) => Remove((T)descriptor);
 
+        public int IndexOfKey(string key)
+        {
+            for (int n = 0; n < Items.Count; n++)
+            {
+                if (Items[n].GetKey() == key) return n;
+            }
+
+            return -1;
+        }
+
         public bool TryGetIndexOf(T descriptor, out int index)
         {
             index = Items.IndexOf(descriptor);
