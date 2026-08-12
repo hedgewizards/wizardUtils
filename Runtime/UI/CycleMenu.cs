@@ -60,6 +60,12 @@ namespace WizardUtils.UI
             }
         }
 
+        public void SelectItemSilent(int id)
+        {
+            CurrentIndex = id;
+            IsDirty = true;
+        }
+
         public void SelectItem(int id)
         {
             CurrentIndex = id;
