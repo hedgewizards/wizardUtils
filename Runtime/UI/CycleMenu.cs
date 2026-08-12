@@ -11,6 +11,7 @@ namespace WizardUtils.UI
     public class CycleMenu : MonoBehaviour
     {
         public event Action<int> OnItemSelected;
+        public TextMeshProUGUI LabelText;
         public TextMeshProUGUI DisplayNameText;
         public Button NextButton;
         public Button PreviousButton;
@@ -32,6 +33,16 @@ namespace WizardUtils.UI
         {
             MenuItems = new SortedList<int, string>();
             IsDirty = true;
+        }
+
+        public void SetLabel(string text)
+        {
+            LabelText.text = text;
+        }
+
+        public void ClearMenuItems()
+        {
+            MenuItems.Clear();
         }
 
         public void AddMenuItem(int id, string displayText)
