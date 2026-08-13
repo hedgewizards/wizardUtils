@@ -11,7 +11,7 @@ namespace WizardUtils.Configurations
     {
         public string Read(string key, string defaultValue = null);
 
-        public void Write(string key, string value, bool writeToConfig = false);
+        public void Write(string key, string value, bool persist = false);
 
         public void Save();
 
