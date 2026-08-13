@@ -27,6 +27,7 @@ namespace WizardUtils.UI.Pages
 
         public override void Appear(bool instant)
         {
+            base.Appear(instant);
             if (CanvasGroup == null) CanvasGroup = GetComponent<CanvasGroup>();
             if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
             if (instant || AppearDurationSeconds == 0)
@@ -47,6 +48,7 @@ namespace WizardUtils.UI.Pages
 
         public override void Disappear(bool instant)
         {
+            base.Disappear(instant);
             if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
             if (instant || DisappearDurationSeconds == 0)
             {

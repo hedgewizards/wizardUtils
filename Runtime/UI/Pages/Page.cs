@@ -7,6 +7,8 @@ namespace WizardUtils.UI.Pages
     {
         public event EventHandler<NavigateBackEventArgs> OnNavigateBack;
         public event EventHandler<NavigateToEventArgs> OnNavigateTo;
+        public event EventHandler OnAppearing;
+        public event EventHandler OnDisappearing;
 
         public void NavigateBack() => NavigateBack(false);
         public void NavigateBack(bool instant)
@@ -32,8 +34,14 @@ namespace WizardUtils.UI.Pages
         public abstract float AppearDurationSeconds { get; }
         public abstract float DisappearDurationSeconds { get; }
 
-        public abstract void Appear(bool instant);
-        public abstract void Disappear(bool instant);
+        public virtual void Appear(bool instant)
+        {
+            OnAppearing?.Invoke(this, null);
+        }
+        public virtual void Disappear(bool instant)
+        {
+            OnDisappearing?.Invoke(this, null);
+        }
 
         #region IPage
         float IPage.AppearDurationSeconds => AppearDurationSeconds;
