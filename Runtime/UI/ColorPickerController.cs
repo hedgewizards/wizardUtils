@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -17,12 +18,14 @@ namespace WizardUtils.UI
         float CurrentValue => CurrentHSV.z;
         Vector3 CurrentHSV;
 
-        public UnityEvent<Color> OnColorChanged;
+        public event Action<Color> OnColorChanged;
+        public TextMeshProUGUI LabelText;
         public PointerHoldLocator PointerLocator;
         public Image HueValDot;
         public Image SatDot;
         public Image HueValField;
         public Image SatField;
+        public Image PreviewImage;
         public UnityEngine.UI.Slider SatSlider;
         ToggleableUIElement pickerMenu;
 
@@ -48,6 +51,7 @@ namespace WizardUtils.UI
             PointerLocator.OnDrag.AddListener(OnPointerLocated);
             pickerMenu = GetComponent<ToggleableUIElement>();
             SatSlider.onValueChanged.AddListener(OnSatSliderChanged);
+            Close();
         }
 
         private void OnSatSliderChanged(float newSaturation)
@@ -56,6 +60,11 @@ namespace WizardUtils.UI
             UpdateStoredRGB();
             OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();
+        }
+
+        public void SetLabel(string text)
+        {
+            LabelText.text = text;
         }
 
         public void Open()
@@ -80,6 +89,13 @@ namespace WizardUtils.UI
             isSaving = false;
         }
 
+        public void PickColorSilent(Color color)
+        {
+            currentColor = color;
+            UpdateStoredHSV();
+            UpdateVisuals();
+        }
+
         private void UpdateStoredHSV()
         {
             Color.RGBToHSV(currentColor, out float H, out float S, out float V);
@@ -99,6 +115,10 @@ namespace WizardUtils.UI
 
         private void UpdateVisuals()
         {
+            if (PreviewImage != null)
+            {
+                PreviewImage.color = CurrentColor;
+            }
             if (HueValDot != null)
             {
                 HueValDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
