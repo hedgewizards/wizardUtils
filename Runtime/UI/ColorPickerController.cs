@@ -10,6 +10,13 @@ namespace WizardUtils.UI
 {
     public class ColorPickerController : MonoBehaviour
     {
+        public enum Modes
+        {
+            HV_S,
+            SV_H
+        }
+
+        public Modes Mode;
         [SerializeField]
         private Color currentColor = Color.white;
         public Color CurrentColor => currentColor;
@@ -20,13 +27,13 @@ namespace WizardUtils.UI
 
         public event Action<Color> OnColorChanged;
         public TextMeshProUGUI LabelText;
-        public PointerHoldLocator PointerLocator;
-        public Image HueValDot;
-        public Image SatDot;
-        public Image HueValField;
-        public Image SatField;
+        public PointerHoldLocator XYLocator;
+        public UnityEngine.UI.Slider Slider;
+        public Image XYDot;
+        public Image SliderDot;
+        public Image XYField;
+        public Image SliderField;
         public Image PreviewImage;
-        public UnityEngine.UI.Slider SatSlider;
         ToggleableUIElement pickerMenu;
 
         [Range(0,1)]
@@ -38,25 +45,49 @@ namespace WizardUtils.UI
         [Range(0, 1)]
         public float BottomPadding;
 
-        int ShaderSaturationId;
-        int ShaderHueId;
-        int ShaderValueId;
+        int SliderConstantShaderProperty;
+        int ShaderConstantValueXId;
+        int ShaderConstantValueYId;
+
+        private bool MaterialsInstanced;
 
         private void Awake()
         {
             UpdateStoredHSV();
-            ShaderSaturationId = Shader.PropertyToID("_ConstantComponentValue");
-            ShaderHueId = Shader.PropertyToID("_Hue");
-            ShaderValueId = Shader.PropertyToID("_Value");
-            PointerLocator.OnDrag.AddListener(OnPointerLocated);
+            XYField.material = new Material(XYField.material);
+            SliderField.material = new Material(SliderField.material);
+            MaterialsInstanced = true;
+
+            SliderConstantShaderProperty = Shader.PropertyToID("_ConstantComponentValue");
+            ShaderConstantValueXId = Shader.PropertyToID("_ConstantX");
+            ShaderConstantValueYId = Shader.PropertyToID("_ConstantY");
+            XYLocator.OnDrag.AddListener(OnPointerLocated);
             pickerMenu = GetComponent<ToggleableUIElement>();
-            SatSlider.onValueChanged.AddListener(OnSatSliderChanged);
+            Slider.onValueChanged.AddListener(OnSliderChanged);
             Close();
         }
 
-        private void OnSatSliderChanged(float newSaturation)
+        private void OnDestroy()
         {
-            CurrentHSV = new Vector3(CurrentHue, newSaturation, CurrentValue);
+            if (MaterialsInstanced)
+            {
+                Destroy(XYField.material);
+                Destroy(SliderField.material);
+            }
+        }
+
+        private void OnSliderChanged(float newSliderValue)
+        {
+
+            if (Mode == Modes.HV_S)
+            {
+                CurrentHSV = new Vector3(CurrentHue, newSliderValue, CurrentValue);
+            }
+            else if (Mode == Modes.SV_H)
+            {
+                CurrentHSV = new Vector3(newSliderValue, CurrentSaturation, CurrentValue);
+
+            }
             UpdateStoredRGB();
             OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();
@@ -119,59 +150,107 @@ namespace WizardUtils.UI
             {
                 PreviewImage.color = CurrentColor;
             }
-            if (HueValDot != null)
+            if (XYDot != null)
             {
-                HueValDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
+                XYDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
 
-                var parent = HueValDot.rectTransform.parent as RectTransform;
+                var parent = XYDot.rectTransform.parent as RectTransform;
                 var width = parent.rect.width;
                 var height = parent.rect.height;
 
-                Vector2 parametricPoint = CalculateColorSpaceHueValDotPoint();
+                Vector2 parametricPoint = CalculateColorSpaceXYDotPoint();
 
-                HueValDot.rectTransform.localPosition = new Vector3()
+                XYDot.rectTransform.localPosition = new Vector3()
                 {
                     x = parametricPoint.x * width,
                     y = parametricPoint.y * height,
-                    z = HueValDot.rectTransform.localPosition.z
+                    z = XYDot.rectTransform.localPosition.z
                 };
             }
 
-            if (SatDot != null)
+            if (SliderDot != null)
             {
-                SatDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
+                SliderDot.color = CurrentValue > 0.5f ? Color.black : Color.white;
             }
 
-            if (HueValField != null)
+            if (XYField != null)
             {
-                HueValField.material.SetFloat(ShaderSaturationId, CurrentSaturation);
+                if (Mode == Modes.HV_S)
+                {
+                    XYField.material.SetFloat(SliderConstantShaderProperty, CurrentSaturation);
+                }
+                else if (Mode == Modes.SV_H)
+                {
+                    XYField.material.SetFloat(SliderConstantShaderProperty, CurrentHue);
+                }
             }
 
-            if (SatField != null)
+            if (SliderField != null)
             {
-                SatField.material.SetFloat(ShaderHueId, CurrentHue);
-                SatField.material.SetFloat(ShaderValueId, CurrentValue);
+                if (Mode == Modes.HV_S)
+                {
+                    SliderField.material.SetFloat(ShaderConstantValueXId, CurrentHue);
+                    SliderField.material.SetFloat(ShaderConstantValueYId, CurrentValue);
+                }
+                else if (Mode == Modes.SV_H)
+                {
+                    SliderField.material.SetFloat(ShaderConstantValueXId, 1);
+                    SliderField.material.SetFloat(ShaderConstantValueYId, 1);
+                }
             }
 
-            if (SatSlider != null)
+            if (Slider != null)
             {
-                SatSlider.value = CurrentSaturation;
+                if (Mode == Modes.HV_S)
+                {
+                    Slider.value = CurrentSaturation;
+                }
+                else if (Mode == Modes.SV_H)
+                {
+                    Slider.value = CurrentHue;
+                }
             }
         }
 
-        private Vector2 CalculateColorSpaceHueValDotPoint()
+        private Vector2 CalculateColorSpaceXYDotPoint()
         {
-            float x = Mathf.Lerp(LeftPadding, 1 - RightPadding, CurrentHue);
-            float y = Mathf.Lerp(BottomPadding, 1 - TopPadding, CurrentValue);
+            float rawX, rawY;
+
+            if (Mode == Modes.HV_S)
+            {
+                rawX = CurrentHue;
+                rawY = CurrentValue;
+            }
+            else if (Mode == Modes.SV_H)
+            {
+                rawX = CurrentSaturation;
+                rawY = CurrentValue;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+
+            float x = Mathf.Lerp(LeftPadding, 1 - RightPadding, rawX);
+            float y = Mathf.Lerp(BottomPadding, 1 - TopPadding, rawY);
 
             return new Vector2(x, y);
         }
 
         private void OnPointerLocated(Vector2 parametric)
         {
-            float H = Mathf.InverseLerp(LeftPadding, 1 - RightPadding, parametric.x);
-            float V = Mathf.InverseLerp(BottomPadding, 1 - TopPadding, parametric.y);
-            CurrentHSV = new Vector3(H, CurrentSaturation, V);
+            float X = Mathf.InverseLerp(LeftPadding, 1 - RightPadding, parametric.x);
+            float Y = Mathf.InverseLerp(BottomPadding, 1 - TopPadding, parametric.y);
+            if (Mode == Modes.HV_S)
+            {
+                CurrentHSV = new Vector3(X, CurrentSaturation, Y);
+            }
+            else if (Mode == Modes.SV_H)
+            {
+                CurrentHSV = new Vector3(CurrentHue, X, Y);
+            }
+
             UpdateStoredRGB();
             OnColorChanged?.Invoke(currentColor);
             UpdateVisuals();

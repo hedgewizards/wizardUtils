@@ -18,7 +18,6 @@ namespace WizardUtils.UI
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            Debug.Log("drag");
             TestPoint(eventData.position, eventData.pressEventCamera);
         }
 
