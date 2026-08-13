@@ -18,6 +18,7 @@ namespace WizardUtils.UI
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
+            Debug.Log("drag");
             TestPoint(eventData.position, eventData.pressEventCamera);
         }
 
@@ -31,19 +32,12 @@ namespace WizardUtils.UI
             RectTransform rectTransform = transform as RectTransform;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, position, camera, out Vector2 localPoint))
             {
-                var localPointParametric = localPoint / new Vector2()
+                var localPointParametric = new Vector2()
                 {
-                    x = rectTransform.rect.width,
-                    y = rectTransform.rect.height
+                    x = Mathf.Clamp01(localPoint.x / rectTransform.rect.width),
+                    y = Mathf.Clamp01(localPoint.y / rectTransform.rect.height),
                 };
-                if (localPointParametric.x >= 0
-                    && localPointParametric.x <= 1
-                    && localPointParametric.y >= 0
-                    && localPointParametric.y <= 1
-                    )
-                {
-                    OnDrag?.Invoke(localPointParametric);
-                }
+                OnDrag?.Invoke(localPointParametric);
             }
         }
     }
