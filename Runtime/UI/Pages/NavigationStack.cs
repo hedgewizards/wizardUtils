@@ -161,7 +161,7 @@ namespace WizardUtils.UI.Pages
                 MonoBehaviour pageMono = (MonoBehaviour)e.Page;
                 if (pageMono.transform.parent != transform)
                 {
-                    pageMono.transform.parent = transform;
+                    pageMono.transform.SetParent(transform);
                 }
                 Push(e.Page, e.Instant);
             }
