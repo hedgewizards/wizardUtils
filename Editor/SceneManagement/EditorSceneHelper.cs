@@ -26,29 +26,44 @@ namespace WizardUtils.SceneManagement
             return false;
         }
 
-        public static void SetSceneEnabledInBuildSettings(SceneAsset asset, bool enabled)
+        /// <summary>
+        /// Set scene enabled in build settings
+        /// </summary>
+        /// <param name="asset"></param>
+        /// <param name="enabled"></param>
+        /// <returns>the buildId of the scene if enabled, otherwise -1</returns>
+        public static int SetSceneEnabledInBuildSettings(SceneAsset asset, bool enabled)
         {
             string assetPath = AssetDatabase.GetAssetPath(asset);
+            int sceneId = -1;
 
             List<EditorBuildSettingsScene> list = new List<EditorBuildSettingsScene>();
             list.AddRange(EditorBuildSettings.scenes);
 
             bool found = false;
-            foreach(var scene in list)
+            for (int i = 0; i < list.Count; i++)
             {
+                EditorBuildSettingsScene scene = list[i];
+                if (scene.enabled)
+                {
+                    sceneId++;
+                }
                 if (scene.path == assetPath)
                 {
                     found = true;
                     scene.enabled = enabled;
+                    break;
                 }
             }
 
-            if (!found)
+            if (!found && enabled)
             {
+                sceneId = list.Count();
                 list.Add(new EditorBuildSettingsScene(assetPath, enabled));
             }
 
             EditorBuildSettings.scenes = list.ToArray();
+            return enabled ? sceneId : -1;
         }
     }
 }
