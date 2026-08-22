@@ -19,6 +19,36 @@ namespace WizardUtils
             return (left, right);
         }
 
+        /// <summary>
+        /// Splits the supplied rectangle into 2 rectangles in a row
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="width">how far from the left edge in units to make the cut</param>
+        /// <param name="spacing">how much space to leave between the 2 cuts</param>
+        /// <returns></returns>
+        public static (Rect left, Rect right) CutRectHorizontallyAbsoluteLeft(Rect rect, float width, float spacing = 2)
+        {
+            Rect left = new Rect(rect.x, rect.y, width, rect.height);
+            Rect right = new Rect(left.width + spacing, rect.y, rect.width - left.width - spacing, rect.height);
+
+            return (left, right);
+        }
+
+        /// <summary>
+        /// Splits the supplied rectangle into 2 rectangles in a row
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="width">how far from the right edge in units to make the cut</param>
+        /// <param name="spacing">how much space to leave between the 2 cuts</param>
+        /// <returns></returns>
+        public static (Rect left, Rect right) CutRectHorizontallyAbsoluteRight(Rect rect, float width, float spacing = 2)
+        {
+            Rect left = new Rect(rect.x, rect.y, rect.width - width - spacing, rect.height);
+            Rect right = new Rect(rect.x + left.width + spacing, rect.y, width, rect.height);
+
+            return (left, right);
+        }
+
         public static Rect[] SplitRectHorizontally(Rect rect, float[] partFractions, float spacing = 0)
         {
             Rect[] results = new Rect[partFractions.Length];
