@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace WizardUtils.SceneManagement
@@ -27,6 +29,25 @@ namespace WizardUtils.SceneManagement
             }
 
             throw new KeyNotFoundException($"Failed to find BuildIndex for scene named '{sceneName}'");
+        }
+
+        public static T FindComponentOnRootObjects<T>(Scene scene)
+            where T : Component
+        {
+            if (!scene.IsValid() || !scene.isLoaded)
+            {
+                throw new InvalidOperationException($"Tried to inspect unloaded scene {scene}");
+            }
+
+            foreach(var root in scene.GetRootGameObjects())
+            {
+                if (root.TryGetComponent<T>(out T result))
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
     }
 }
