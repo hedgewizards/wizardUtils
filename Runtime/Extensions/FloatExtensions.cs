@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace WizardUtils.Extensions
 {
@@ -30,6 +31,12 @@ namespace WizardUtils.Extensions
         public static float Wrap(this float x, float min, float max)
         {
             return (x - min).PositiveModulo(max - min) + min;
+        }
+
+        public static float Remap(float inMin, float inMax, float outMin, float outMax, float value)
+        {
+            float tReal = Mathf.InverseLerp(inMin, inMax, value);
+            return Mathf.Lerp(outMin, outMax, tReal);
         }
     }
 }
