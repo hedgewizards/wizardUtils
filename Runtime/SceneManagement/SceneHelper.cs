@@ -7,6 +7,20 @@ namespace WizardUtils.SceneManagement
 {
     public static class SceneHelper
     {
+        public static bool TryGetLoadedScene(int buildId, out Scene scene)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                scene = SceneManager.GetSceneAt(i);
+
+                if (scene.buildIndex == buildId && scene.isLoaded)
+                    return true;
+            }
+
+            scene = default;
+            return false;
+        }
+
         public static void DeactivateScene(Scene scene)
         {
             foreach(var gameObject in scene.GetRootGameObjects())
