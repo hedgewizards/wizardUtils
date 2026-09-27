@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
 
 namespace WizardUtils.AssetPalettes
@@ -21,6 +22,7 @@ namespace WizardUtils.AssetPalettes
             {
                 var self = target as AssetPalette;
                 Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
+                if (self.Entries == null) self.Entries = new AssetPaletteEntry[0];
 
                 Undo.RecordObject(self, "Add Selection to Palette");
                 var newArray = new AssetPaletteEntry[self.Entries.Length + selectedObjects.Length];
