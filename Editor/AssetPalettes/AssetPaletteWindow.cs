@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,14 +9,21 @@ namespace WizardUtils.AssetPalettes
 {
     public class AssetPaletteWindow : EditorWindow
     {
-        public AssetPalette[] Palettes;
+        #region Constants
 
+        #endregion
+
+        #region Components
+        private AssetGridWidget<AssetPalette> PalettesWidget;
+        private AssetPaletteWidget AssetsWidget;
         private ScrollView scrollView;
-        private readonly Dictionary<AssetPalette, VisualElement> paletteContainers = new();
+        #endregion
 
-        private const float cellWidth = 80f;
-        private const float cellHeight = 80f;
-        private const float padding = 4f;
+        #region Variables
+        public List<AssetPalette> AssetPalettes;
+        public AssetPalette SelectedPalette;
+        #endregion
+
 
         [MenuItem("Window/WizardUtils/Asset Palette")]
         private static void ShowWindow()
@@ -27,194 +34,99 @@ namespace WizardUtils.AssetPalettes
 
         private void OnEnable()
         {
+            if (AssetPalettes == null)
+            {
+                AssetPalettes = new List<AssetPalette>();
+            }
+
             rootVisualElement.Clear();
 
-            rootVisualElement.Add(new IMGUIContainer(() =>
-            {
-                SerializedObject so = new SerializedObject(this);
-                SerializedProperty palettesProp = so.FindProperty(nameof(Palettes));
-
-                EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(palettesProp, true);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    so.ApplyModifiedProperties();
-                    SyncGridsWithPaletteArray();
-                }
-            }));
-            
             scrollView = new ScrollView();
             rootVisualElement.Add(scrollView);
 
-            SyncGridsWithPaletteArray();
+            CreatePalettesWidget();
+            CreateAssetsWidget();
         }
 
-        public void AddPalette(AssetPalette palette)
+        public void AddPalette(AssetPalette palette, bool setSelected = false)
         {
-            if (palette == null)
-                return;
-
-            if (Palettes != null && Palettes.Contains(palette))
-                return;
-
-            var list = Palettes != null ? Palettes.ToList() : new List<AssetPalette>();
-            list.Add(palette);
-            Palettes = list.ToArray();
-
-            AddGrid(palette);
-        }
-
-        public void RemovePalette(AssetPalette palette)
-        {
-            if (palette == null || Palettes == null)
-                return;
-
-            if (!Palettes.Contains(palette))
-                return;
-
-            Palettes = Palettes.Where(p => p != palette).ToArray();
-            RemoveGrid(palette);
-        }
-        private void SyncGridsWithPaletteArray()
-        {
-            var desired = new HashSet<AssetPalette>(
-                (Palettes ?? Array.Empty<AssetPalette>()).Where(p => p != null)
-            );
-
-            foreach (var existing in paletteContainers.Keys.ToList())
+            PalettesWidget.AddAsset(palette);
+            if (setSelected)
             {
-                if (!desired.Contains(existing))
-                    RemoveGrid(existing);
+                PalettesWidget.SelectAsset(palette);
             }
-
-            if (Palettes != null)
-            {
-                foreach (var palette in Palettes)
-                {
-                    if (palette == null)
-                        continue;
-
-                    if (!paletteContainers.ContainsKey(palette))
-                        AddGrid(palette);
-                }
-            }
-
-            ReorderGrids();
         }
 
-        private void AddGrid(AssetPalette palette)
+        #region Palettes Widget
+        private void CreatePalettesWidget()
         {
-            if (palette == null || paletteContainers.ContainsKey(palette))
-                return;
-
-            var container = new VisualElement();
-            container.style.flexDirection = FlexDirection.Column;
-
-            var label = new Label(palette.name);
+            var label = new Label("Asset Palettes");
             label.style.unityFontStyleAndWeight = FontStyle.Bold;
-            container.Add(label);
+            scrollView.Add(label);
 
-            var grid = CreateGrid();
-            container.Add(grid);
-
-            paletteContainers.Add(palette, container);
-            scrollView.Add(container);
-
-            UpdatePalette(grid, palette);
+            PalettesWidget = new AssetGridWidget<AssetPalette>(AssetPalettes, SelectedPalette);
+            PalettesWidget.FormatName = PalettesWidget_FormatName;
+            PalettesWidget.SetupImage = PalettesWidget_SetupImage;
+            PalettesWidget.OnAssetsListChanged += PalettesWidget_AssetsChanged;
+            PalettesWidget.OnSelectedAssetChanged += PalettesWidget_SelectedAssetChanged;
+            scrollView.Add(PalettesWidget);
         }
-        private void RemoveGrid(AssetPalette palette)
-        {
-            if (!paletteContainers.TryGetValue(palette, out var container))
-                return;
 
-            container.RemoveFromHierarchy();
-            paletteContainers.Remove(palette);
+        private void PalettesWidget_SelectedAssetChanged(AssetPalette obj)
+        {
+            AssetsWidget.SetAssetPalette(obj);
         }
-        private void ReorderGrids()
-        {
-            if (Palettes == null)
-                return;
 
-            for (int i = 0; i < Palettes.Length; i++)
+        private void PalettesWidget_AssetsChanged()
+        {
+            AssetPalettes = new List<AssetPalette>();
+            AssetPalettes.AddRange(PalettesWidget.GetAssets());
+        }
+        private static string PalettesWidget_FormatName(string arg)
+        {
+            return Regex.Replace(
+                arg.Replace("palette", "", StringComparison.OrdinalIgnoreCase).Replace("_", " "),
+                @"\s+",
+                " "
+            ).Trim();
+        }
+
+        private void PalettesWidget_SetupImage(Image image, AssetPalette palette)
+        {
+            if (palette.Entries != null && palette.Entries.Length > 0)
             {
-                var palette = Palettes[i];
-                if (palette == null)
-                    continue;
-
-                if (paletteContainers.TryGetValue(palette, out var container))
-                {
-                    container.RemoveFromHierarchy();
-                    scrollView.Add(container);
-                }
+                image.LazyLoadAssetPreview(palette.Entries[0].Asset);
+            }
+            else
+            {
+                image.LazyLoadAssetPreview(palette);
             }
         }
+        #endregion
 
-        private VisualElement CreateGrid()
+        #region Assets Widget
+        public string Asset_FormatName(string arg)
         {
-            var grid = new VisualElement();
-            grid.style.flexDirection = FlexDirection.Row;
-            grid.style.flexWrap = Wrap.Wrap;
-            grid.style.alignContent = Align.FlexStart;
-            grid.style.marginBottom = 10;
-            return grid;
-        }
-
-        private void UpdatePalette(VisualElement paletteGrid, AssetPalette palette)
-        {
-            paletteGrid.Clear();
-
-            if (palette == null)
-                return;
-
-            for (int i = 0; i < palette.Entries.Length; i++)
+            if (arg.Length > 12)
             {
-                var cell = new VisualElement();
-                cell.style.width = cellWidth;
-                cell.style.height = cellHeight;
-                cell.style.marginRight = padding;
-                cell.style.marginBottom = padding;
-
-                var image = new Image
-                {
-                    scaleMode = ScaleMode.ScaleToFit,
-                    tooltip = palette.Entries[i].Tooltip
-                };
-
-                image.LazyLoadAssetPreview(palette.Entries[i].Asset);
-                image.style.flexGrow = 1;
-
-                var label = new Label(palette.Entries[i].DisplayName);
-                label.style.maxWidth = cellWidth;
-                label.style.overflow = Overflow.Hidden;
-                label.style.unityTextAlign = TextAnchor.MiddleCenter;
-                label.style.textOverflow = TextOverflow.Clip;
-
-                cell.Add(image);
-                cell.Add(label);
-
-                paletteGrid.Add(cell);
-
-                var asset = palette.Entries[i].Asset;
-
-                cell.RegisterCallback<MouseDownEvent>(evt =>
-                {
-                    if (evt.button == 0)
-                    {
-                        DragAndDrop.PrepareStartDrag();
-                        DragAndDrop.StartDrag("Create From Palette");
-                        DragAndDrop.objectReferences = new UnityEngine.Object[] { asset };
-                    }
-                    else if (evt.button == 1)
-                    {
-                        EditorGUIUtility.PingObject(asset);
-                    }
-                });
-
-                cell.RegisterCallback<DragUpdatedEvent>(evt =>
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Move;
-                });
+                return $"{arg[0..9]}...";
             }
+
+            return arg;
+        }
+        #endregion
+
+        private void CreateAssetsWidget()
+        {
+            var label = new Label("Assets");
+            label.style.unityFontStyleAndWeight = FontStyle.Bold;
+            scrollView.Add(label);
+
+            AssetsWidget = new AssetPaletteWidget();
+            AssetsWidget.FormatName = Asset_FormatName;
+            scrollView.Add(AssetsWidget);
+
+            PalettesWidget_SelectedAssetChanged(PalettesWidget.SelectedAsset);
         }
     }
 }

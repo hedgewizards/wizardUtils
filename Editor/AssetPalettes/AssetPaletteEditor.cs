@@ -13,8 +13,8 @@ namespace WizardUtils.AssetPalettes
             if (GUILayout.Button("Open Palette"))
             {
                 var self = target as AssetPalette;
-                var window = EditorWindow.GetWindow<AssetPaletteWindow>(self.name);
-                window.AddPalette(self);
+                var window = EditorWindow.GetWindow<AssetPaletteWindow>("Asset Palette");
+                window.AddPalette(self, true);
                 window.Show();
             }
 
