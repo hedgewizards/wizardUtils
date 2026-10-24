@@ -10,7 +10,7 @@ namespace WizardUtils.SceneManagement
     [System.Serializable]
     public struct SceneReference
     {
-#if DEBUG
+#if UNITY_EDITOR
         [SerializeField]
         public UnityEditor.SceneAsset SceneAsset;
 #endif
@@ -18,7 +18,7 @@ namespace WizardUtils.SceneManagement
 
         public bool HasReference()
         {
-#if DEBUG
+#if UNITY_EDITOR
             return SceneAsset != null;
 #else
             return SceneId != -1;
